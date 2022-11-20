@@ -1,8 +1,8 @@
 
 public class Blank extends Piece{
 
-	public Blank(int color) {
-		super(color);
+	public Blank(String color, String name) {
+		super(color, name);
 	}
 
 	public String getPicture(int row, int col) {
@@ -19,19 +19,5 @@ public class Blank extends Piece{
 				return "images/dark/blank.png";
 			}
 		}
-	}
-
-	public boolean isBlank(){
-		return true;
-	}
-
-	@Override
-	public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
-		return true;
-	}
-
-	@Override
-	public int getColor() {
-		return color;
 	}
 }
