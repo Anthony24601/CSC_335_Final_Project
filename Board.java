@@ -5,7 +5,7 @@
 
 public class Board {
 	Piece[][] board;
-	
+
 	public Board() {
 		board = new Piece[8][8];
 		board[0][0] = new Rook("black","rook");
@@ -20,7 +20,7 @@ public class Board {
 			}
 		}
 	}
-	
+
 	public Piece get(int row, int col) {
 		return board[row][col];
 	}
