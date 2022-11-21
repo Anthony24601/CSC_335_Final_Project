@@ -9,5 +9,3 @@ public abstract class Piece {
 		this.name = name;
 	}
 
-	abstract public String getPicture(int row, int col);
-}
