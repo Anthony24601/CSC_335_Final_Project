@@ -1,18 +1,68 @@
+import java.util.ArrayList;
+
 public class Pawn extends Piece {
     private static final String FILE_NAME = "pawn.png";
-    private Board board;
+    private static final char KIND = Piece.PAWN;
 
     /**
      * Constructs a new pawn of the specified color on the
      * passed Board
      * @param color either Piece.BLACK or Piece.WHITE
-     * @param b a Board object
      */
-    public Pawn(int color, Board b) {
-        super(color);
-        board = b;
+    public Pawn(int color, int rank, int file) {
+        super(color, rank, file, "pawn");
     }
 
+    public char getKind() {
+        return KIND;
+    }
+
+    public String[] getValidMoves(Board board) {
+        ArrayList<String> moves = new ArrayList<>();
+        if (this.color == Piece.WHITE) {
+            // One space
+            if (board.isInBounds(rank+1, file) && board.isEmpty(rank+1, file)) {
+                moves.add(MoveParser.constructMove(this, rank+1, file, false));
+            }
+
+            // Two space
+            if (rank == 2 && board.isInBounds(rank+2, file) && board.isEmpty(rank+1, file) && board.isEmpty(rank+2, file)) {
+                moves.add(MoveParser.constructMove(this, rank+2, file, false));
+            }
+
+            // Capture
+            if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK) {
+                moves.add(MoveParser.constructMove(this, rank+1, file-1, true));
+            }
+            if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK) {
+                moves.add(MoveParser.constructMove(this, rank+1, file+1, true));
+            } 
+        } else {
+            // One space
+            if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
+                moves.add(MoveParser.constructMove(this, rank-1, file, false));
+            }
+
+            // Two space
+            if (rank == 7 && board.isInBounds(rank-2, file) && board.isEmpty(rank-1, file) && board.isEmpty(rank-2, file)) {
+                moves.add(MoveParser.constructMove(this, rank-2, file, false));
+            }
+
+            // Capture
+            if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE) {
+                moves.add(MoveParser.constructMove(this, rank-1, file-1, true));
+            }
+            if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE) {
+                moves.add(MoveParser.constructMove(this, rank-1, file+1, true));
+            } 
+        }
+
+        String[] ret = new String[moves.size()];
+        ret = moves.toArray(ret);
+        return ret;
+    }
+
+    /*
     public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol){
         boolean whitesMove = color==Piece.WHITE;
         int f = whitesMove? 1 : -1;
@@ -35,6 +85,9 @@ public class Pawn extends Piece {
         }
         return false; 
     }
+    */
+
+
     
     public String getPicture(int row, int col) {
         String path = "images/";
@@ -68,5 +121,14 @@ public class Pawn extends Piece {
     @Override
     public boolean isBlank() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        if (color == Piece.WHITE) {
+            return "wp";
+        } else {
+            return "bp";
+        }
     }
 }

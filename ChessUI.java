@@ -117,6 +117,7 @@ public class ChessUI extends Thread
      * @return None
      */
     private void draw_piece(Piece p, int row, int col) {
+        System.out.println("draw piece at " + row + " " + col + " source " + p.getPicture(row, col));
         Image img = new Image(display,p.getPicture(row, col));
         paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, row*100, col*100, 100, 100);
 		img.dispose();
