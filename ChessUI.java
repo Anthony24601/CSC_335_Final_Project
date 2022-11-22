@@ -63,8 +63,8 @@ public class ChessUI extends Thread
             board = player.getBoard();
             event.gc.fillRectangle(canvas.getBounds());
             if (board != null) {
-            	for (int row = 0; row < 8; row++) {
-            		for (int col = 0; col < 8; col++) {
+            	for (int row = 1; row <= 8; row++) {
+            		for (int col = 1; col <= 8; col++) {
             			draw_piece(board.get(row,col),row,col);
             		}
             	}
@@ -119,8 +119,10 @@ public class ChessUI extends Thread
     private void draw_piece(Piece p, int row, int col) {
         System.out.println("picture file " + p.getPicture(row, col) + " at  " + (row) + " " + col);
         Image img = new Image(display,p.getPicture(row, col));
-        System.out.println("img is null?" + (img==null));
-        paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, row*100, col*100, 100, 100);
+        //if want left and right, use this
+        //paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (row-1)*100, (col-1)*100, 100, 100);
+        //if want up and down, use this
+        paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (col-1)*100, (row-1)*100, 100, 100);
 		img.dispose();
     }
 }
