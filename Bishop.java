@@ -1,63 +1,59 @@
 import java.util.ArrayList;
 
-public class Rook extends Piece {
-    private static final String FILE_NAME = "rook.png";
-    final static char KIND = 'R';
+public class Bishop extends Piece {
+    private static final char KIND = Piece.BISHOP;
 
-     /**
-     * Constructs a new rook of the specified color on the
-     * passed Board
-     * @param color either Piece.BLACK or Piece.WHITE
-     * @param b a Board object
-     */
-    public Rook(int color, int rank, int file) {
-        super(color, rank, file, "rook");
+    public Bishop(int color, int rank, int file) {
+        super(color, rank, file, "bishop");
     }
 
     public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
-        int r, f;
 
-        // right
-        r = rank;
+        // up-left
+        int r = rank+1;
+        int f = file-1;
+        while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
+            moves.add(MoveParser.constructMove(this, r, f, false));
+            r++;
+            f--;            
+        }
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+            moves.add(MoveParser.constructMove(this, r, f, true));
+        }
+
+        // up-right
+        r = rank+1;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             moves.add(MoveParser.constructMove(this, r, f, false));
+            r++;
             f++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             moves.add(MoveParser.constructMove(this, r, f, true));
         }
 
-        // up
-        r = rank+1;
-        f = file;
-        while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            moves.add(MoveParser.constructMove(this, r, f, false));
-            r++;
-        }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            moves.add(MoveParser.constructMove(this, r, f, true));
-        }
-
-        // left
-        r = rank;
+        // down-left
+        r = rank-1;
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             moves.add(MoveParser.constructMove(this, r, f, false));
+            r--;
             f--;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             moves.add(MoveParser.constructMove(this, r, f, true));
         }
 
-        // down
+        // down-right
         r = rank-1;
-        f = file;
+        f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             moves.add(MoveParser.constructMove(this, r, f, false));
             r--;
+            f++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             moves.add(MoveParser.constructMove(this, r, f, true));
@@ -68,7 +64,25 @@ public class Rook extends Piece {
         return ret;
     }
 
+    public int getRank() {
+        return rank;
+    }
+
+    public int getFile() {
+        return file;
+    }
+
+    public char getKind() {
+        return KIND;
+    } 
+
+    /*
     @Override
+    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     public String getPicture(int row, int col) {
 		String path = "images/";
 		if (row%2 == 0) {
@@ -92,7 +106,8 @@ public class Rook extends Piece {
         }
         return path+FILE_NAME;
 	}
-   
+    */
+
     @Override
     public int getColor() {
         return color;
@@ -101,10 +116,5 @@ public class Rook extends Piece {
     @Override
     public boolean isBlank() {
         return false;
-    }
-
-    @Override
-    public char getKind() {
-        return KIND;
     }
 }
