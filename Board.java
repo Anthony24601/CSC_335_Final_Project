@@ -191,7 +191,8 @@ public class Board {
 	}
 
 	public Piece get(int rank, int file) {
-		return board[rank-1][file-1];
+		//return board[rank-1][file-1];
+		return board[rank][file];
 	}
 
 	/**
