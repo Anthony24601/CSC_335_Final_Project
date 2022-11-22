@@ -1,16 +1,16 @@
 import java.util.ArrayList;
 
-public class Rook extends Piece {
-    private static final String FILE_NAME = "rook.png";
-    final static char KIND = 'R';
+public class Queen extends Piece {
+    private static final String FILE_NAME = "queen.png";
+    final static char KIND = Piece.QUEEN;
 
      /**
-     * Constructs a new rook of the specified color on the
+     * Constructs a new queen of the specified color on the
      * passed Board
      * @param color either Piece.BLACK or Piece.WHITE
      * @param b a Board object
      */
-    public Rook(int color, int rank, int file) {
+    public Queen(int color, int rank, int file) {
         super(color, rank, file);
     }
 
@@ -30,12 +30,36 @@ public class Rook extends Piece {
             moves.add(MoveParser.constructMove(this, r, f, true));
         }
 
+        // up-right
+        r = rank+1;
+        f = file+1;
+        while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
+            moves.add(MoveParser.constructMove(this, r, f, false));
+            f++;
+            r++;
+        }
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+            moves.add(MoveParser.constructMove(this, r, f, true));
+        }
+
         // up
         r = rank+1;
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             moves.add(MoveParser.constructMove(this, r, f, false));
             r++;
+        }
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+            moves.add(MoveParser.constructMove(this, r, f, true));
+        }
+
+        // up-left
+        r = rank+1;
+        f = file-1;
+        while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
+            moves.add(MoveParser.constructMove(this, r, f, false));
+            r++;
+            f--;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             moves.add(MoveParser.constructMove(this, r, f, true));
@@ -52,12 +76,36 @@ public class Rook extends Piece {
             moves.add(MoveParser.constructMove(this, r, f, true));
         }
 
+        // down-left
+        r = rank-1;
+        f = file-1;
+        while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
+            moves.add(MoveParser.constructMove(this, r, f, false));
+            r--;
+            f--;
+        }
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+            moves.add(MoveParser.constructMove(this, r, f, true));
+        }
+
         // down
         r = rank-1;
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             moves.add(MoveParser.constructMove(this, r, f, false));
             r--;
+        }
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+            moves.add(MoveParser.constructMove(this, r, f, true));
+        }
+
+        // down-right
+        r = rank-1;
+        f = file+1;
+        while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
+            moves.add(MoveParser.constructMove(this, r, f, false));
+            r--;
+            f++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             moves.add(MoveParser.constructMove(this, r, f, true));
