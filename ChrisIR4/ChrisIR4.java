@@ -8,7 +8,7 @@
   * Use at your own risk. Test your program well. No guarantee this code works in all situations. 
   ******************************************************************************************************************/
 
-package src.ChrisIR4;
+package ChrisIR4;
 
 import java.util.Scanner;
 
