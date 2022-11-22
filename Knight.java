@@ -11,7 +11,7 @@ public class Knight extends Piece {
      * @param b a Board object
      */
     public Knight(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "knight");
     }
 
     public String[] getValidMoves(Board board) {

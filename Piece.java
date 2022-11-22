@@ -11,10 +11,10 @@ public abstract class Piece {
 	public final static char KING = 'K';
 
 	protected int color;
-  protected String color_string;
+	protected String color_string;
 	protected int rank;
 	protected int file;
-  protected String name;
+	protected String name;
 	
 	public Piece(int color, int rank, int file, String name) {
 		this.color = color;
@@ -69,18 +69,6 @@ public abstract class Piece {
 		}
 	}
 
-
-	public String getPicture(int row, int col) {
-		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
-			return "images/light/" + color_string + "/" + name + ".png";
-    }
-  }
-		
-  
-	abstract public char getKind();
-
-
-
 	/**
 	 * Returns the path to the image for this Piece. The row and col is
 	 * needed to check if the image is for a dark square or a light
@@ -89,7 +77,16 @@ public abstract class Piece {
 	 * @param col column this Piece is at
 	 * @return
 	 */
-	abstract public String getPicture(int row, int col);
+	public String getPicture(int row, int col) {
+		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
+			return "images/light/" + color_string + "/" + name + ".png";
+		} else {
+			return "images/dark/" + color + "/" + name + ".png";
+		}
+	}
+		
+  
+	abstract public char getKind();
 
 	/**
 	 * Returns this Piece's color

@@ -11,7 +11,7 @@ public class Rook extends Piece {
      * @param b a Board object
      */
     public Rook(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "rook");
     }
 
     public String[] getValidMoves(Board board) {

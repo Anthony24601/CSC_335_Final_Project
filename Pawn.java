@@ -10,7 +10,7 @@ public class Pawn extends Piece {
      * @param color either Piece.BLACK or Piece.WHITE
      */
     public Pawn(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "pawn");
     }
 
     public char getKind() {

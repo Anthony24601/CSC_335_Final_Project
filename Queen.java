@@ -11,7 +11,7 @@ public class Queen extends Piece {
      * @param b a Board object
      */
     public Queen(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "queen");
     }
 
     public String[] getValidMoves(Board board) {

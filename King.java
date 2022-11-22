@@ -11,7 +11,7 @@ public class King extends Piece {
      * @param b a Board object
      */
     public King(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "king");
     }
 
     public String[] getValidMoves(Board board) {

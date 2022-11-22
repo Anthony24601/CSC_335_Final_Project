@@ -5,7 +5,7 @@ public class Bishop extends Piece {
     private static final char KIND = Piece.BISHOP;
 
     public Bishop(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "bishop");
     }
 
     public String[] getValidMoves(Board board) {
