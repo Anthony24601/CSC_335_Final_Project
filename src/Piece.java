@@ -1,3 +1,4 @@
+package src;
 public abstract class Piece {
 	// colors
 	public final static int BLANK = 0;
