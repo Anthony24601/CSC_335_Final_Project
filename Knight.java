@@ -72,7 +72,7 @@ public class Knight extends Piece {
         return ret;
     }
 
-    @Override
+   /*  @Override
     public String getPicture(int row, int col) {
 		String path = "images/";
 		if (row%2 == 0) {
@@ -96,7 +96,7 @@ public class Knight extends Piece {
         }
         return path+FILE_NAME;
 	}
-   
+   */
     @Override
     public int getColor() {
         return color;

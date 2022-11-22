@@ -68,9 +68,9 @@ public class Rook extends Piece {
         return ret;
     }
 
-    @Override
+   /*  @Override
     public String getPicture(int row, int col) {
-		String path = "images/";
+		String path = "CSC_335_Final_Project/images/";
 		if (row%2 == 0) {
 			if (col%2 == 0) {
                 path += "light/";
@@ -91,7 +91,7 @@ public class Rook extends Piece {
             path += "black/";
         }
         return path+FILE_NAME;
-	}
+	}*/
    
     @Override
     public int getColor() {
