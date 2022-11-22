@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,9 +21,16 @@ public class Server extends Thread {
 	private ServerSocket listener;
 	private int port;
 	
+	private ArrayList<ObjectOutputStream> global_out;
+	int player_count;
+	int turn;
+	
 	public Server(int port) {
 		this.running = false;
 		this.port = port;
+		global_out = new ArrayList<>();
+		player_count = 0;
+		turn = 0;
 	}
 	
 	public void openServer() {
@@ -55,7 +63,7 @@ public class Server extends Thread {
 		while (running) {
 			try {
 				Socket socket = listener.accept();
-				ClientManager manager = new ClientManager(socket);
+				ClientManager manager = new ClientManager(socket, player_count++);
 				pool.execute(manager);
 			}
 			catch (IOException e) {
@@ -64,37 +72,47 @@ public class Server extends Thread {
 		}
 	}
 	
-	private static class ClientManager implements Runnable {
+	private void print_debug(String msg) {
+		System.out.println("[Server] " + msg);
+		System.out.flush();
+	}
+	
+	private class ClientManager implements Runnable {
 		private boolean running;
 		
 		private Socket socket;
+		private int id;
+
 		private ObjectInputStream in;
 		private ObjectOutputStream out;
 		
-		public ClientManager(Socket socket) {
+		public ClientManager(Socket socket, int id) {
 			this.running = false;
 			this.socket = socket;
+			this.id = id;
 		}
 		
 		@Override
 		public void run() {
-			System.out.println("[Server] New Connection: " + socket);
+			print_debug("New connection: " + socket);
 			running = true; // possibly move to another function
 			
 			// initial communication
 			try {
 				out = new ObjectOutputStream(socket.getOutputStream());
 				out.flush();
+				global_out.add(out);
 				in = new ObjectInputStream(socket.getInputStream());
 				
 				String message = (String) in.readObject();
-				System.out.println("[Server] Received client message: " + message);
-				
-				out.writeObject("Hi!");
-				System.out.println("[Server] Sending response to client " + socket);
+				print_debug("Received client request: " + message);
+
+				print_debug("Sending response to client " + id);
+		    	out.writeBoolean((turn == id));
+				out.flush();
 			} 
 			catch (IOException | ClassNotFoundException e) {
-				System.out.println("[Server] Connection failed!");
+				print_debug("Connection failed!");
 				e.printStackTrace();
 			}
 			
@@ -102,5 +120,6 @@ public class Server extends Thread {
 				// continuous communication
 			}
 		}
+		
 	}
 }

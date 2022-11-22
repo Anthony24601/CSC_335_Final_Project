@@ -21,9 +21,17 @@ public class Client extends Thread {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	
+	private int id;
+	private boolean turn_active;
+	
 	public Client(String host, int port) {
 		this.host = host;
 		this.port = port;
+	}
+	
+	public Client(String host, int port, int id) {
+		this(host, port);
+		this.id = id;
 	}
 	
 	public void openConnection() {
@@ -39,7 +47,7 @@ public class Client extends Thread {
 	
 	public void closeConnection() {
 		if (socket == null) {
-			System.out.println("  [Client] No connection active!");
+	    	print_debug("No connection active!");
 			return; 
 		}
 		try {
@@ -60,18 +68,24 @@ public class Client extends Thread {
 	    	in = new ObjectInputStream(socket.getInputStream());
 	    	
 	    	// initial communication
-	    	out.writeObject("Hello?");
-	    	System.out.println("  [Client] Sending message to socket server...");
+	    	print_debug("Sending request to socket server...");
+	    	out.writeObject("Requesting turn");
 	    	
-	    	String response = (String) in.readObject();
-	    	System.out.println("  [Client] Response: " + response);
+	    	boolean response = (boolean) in.readBoolean();
+	    	turn_active = response;
+	    	print_debug("Response: " + response);
 		}
-		catch (IOException | ClassNotFoundException e) {
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		while (running) {
 			// continual communication
 		}
+	}
+	
+	private void print_debug(String msg) {
+		System.out.println("  [Client " + id + "] " + msg);
+		System.out.flush();
 	}
 }
