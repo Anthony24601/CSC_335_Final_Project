@@ -11,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,20 +20,20 @@ public class Server extends Thread {
 	private ServerSocket listener;
 	private int port;
 	
-	private ArrayList<ObjectOutputStream> global_out;
-	int player_count;
-	int turn;
+	private ClientManager[] clients;
+	private final int MAX_PLAYERS;
+	private int turn;
 	
 	public Server(int port) {
 		this.running = false;
 		this.port = port;
-		global_out = new ArrayList<>();
-		player_count = 0;
-		turn = 0;
+		this.MAX_PLAYERS = 2; // default, maybe change
+		this.clients = new ClientManager[MAX_PLAYERS];
+		this.turn = 0;
 	}
 	
 	public void openServer() {
-		System.out.println("[Server] Server listening on port " + port);
+		print_debug("Server listening on port " + port);
 		try {
 			listener = new ServerSocket(port);
 			running = true;
@@ -49,7 +48,7 @@ public class Server extends Thread {
 		try {
 			listener.close();
 			running = false;
-			System.out.println("[Server] Server Closed.");
+			print_debug("Server closed.");
 		}
 		catch (IOException e) { 
 			e.printStackTrace(); 
@@ -59,16 +58,20 @@ public class Server extends Thread {
 	
 	@Override
 	public void run() {
-		ExecutorService pool = Executors.newFixedThreadPool(5); // change for # players?
-		while (running) {
+		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
+		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
 				Socket socket = listener.accept();
-				ClientManager manager = new ClientManager(socket, player_count++);
-				pool.execute(manager);
+				ClientManager manager = new ClientManager(socket, i);
+				clients[i] = manager;
 			}
 			catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		for (ClientManager m : clients) {
+			pool.execute(m);
 		}
 	}
 	
@@ -78,8 +81,6 @@ public class Server extends Thread {
 	}
 	
 	private class ClientManager implements Runnable {
-		private boolean running;
-		
 		private Socket socket;
 		private int id;
 
@@ -87,7 +88,6 @@ public class Server extends Thread {
 		private ObjectOutputStream out;
 		
 		public ClientManager(Socket socket, int id) {
-			this.running = false;
 			this.socket = socket;
 			this.id = id;
 		}
@@ -95,13 +95,11 @@ public class Server extends Thread {
 		@Override
 		public void run() {
 			print_debug("New connection: " + socket);
-			running = true; // possibly move to another function
 			
 			// initial communication
 			try {
 				out = new ObjectOutputStream(socket.getOutputStream());
 				out.flush();
-				global_out.add(out);
 				in = new ObjectInputStream(socket.getInputStream());
 				
 				String message = (String) in.readObject();
@@ -116,8 +114,28 @@ public class Server extends Thread {
 				e.printStackTrace();
 			}
 			
+			String move;
 			while (running) {
 				// continuous communication
+				try {
+					move = (String) in.readObject();
+					print_debug("Player " + turn + "'s move: " + move);
+					// to implement, update piece in gameModel
+					turn = (turn + 1) % clients.length;
+					print_debug("Sending turn to next player " + turn);
+					clients[turn].out.writeBoolean(true);
+					clients[turn].out.flush();
+				}
+				catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			try {
+				socket.close();
+			} catch (IOException e) {
+				print_debug("Failed to close socket " + socket);
+				e.printStackTrace();
 			}
 		}
 		

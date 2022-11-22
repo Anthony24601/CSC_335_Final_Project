@@ -20,6 +20,7 @@ public class Client extends Thread {
 	
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
+	private String request;
 	
 	private int id;
 	private boolean turn_active;
@@ -60,6 +61,10 @@ public class Client extends Thread {
 		this.interrupt();
 	}
 	
+	public void sendMove(String move) {
+		request = move;
+	}
+	
 	@Override
 	public void run() {
 		try {
@@ -71,7 +76,7 @@ public class Client extends Thread {
 	    	print_debug("Sending request to socket server...");
 	    	out.writeObject("Requesting turn");
 	    	
-	    	boolean response = (boolean) in.readBoolean();
+	    	boolean response = in.readBoolean();
 	    	turn_active = response;
 	    	print_debug("Response: " + response);
 		}
@@ -81,6 +86,37 @@ public class Client extends Thread {
 		
 		while (running) {
 			// continual communication
+			if (!turn_active) {
+				try {
+					print_debug("Waiting for my turn...");
+					turn_active = in.readBoolean();
+					print_debug("It's my turn now!");
+				} 
+				catch (IOException e) {
+					print_debug("Turn assignment failed!");
+					e.printStackTrace();
+				}
+			}
+			else if (request != null) {
+				try {
+					print_debug("Sending my move");
+					out.writeObject(request);
+					request = null;
+					turn_active = false;
+				} 
+				catch (IOException e) {
+					print_debug("Failed to send move!");
+					e.printStackTrace();
+				}
+			}
+			else {
+				try {
+					Thread.sleep(10);
+				} 
+				catch (InterruptedException e) {
+					print_debug("Thread was interrupted!");
+				}
+			}
 		}
 	}
 	
