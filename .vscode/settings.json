@@ -1,6 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "/Users/anthonyhsu/Documents/lib/swt-4.24-cocoa-macosx-x86_64/swt.jar"
+        "/Users/anthonyhsu/Documents/lib/swt-4.24-cocoa-macosx-x86_64/swt.jar",
+        "c:\\Users\\chris\\eclipse-workspace\\org.eclipse.swt\\swt.jar"
     ]
 }
