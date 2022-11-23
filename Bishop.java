@@ -82,30 +82,6 @@ public class Bishop extends Piece {
         // TODO Auto-generated method stub
         return false;
     }
-
-    public String getPicture(int row, int col) {
-		String path = "images/";
-		if (row%2 == 0) {
-			if (col%2 == 0) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		} else {
-			if (col%2 == 1) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		}
-        if(color==Piece.WHITE){
-            path += "white/";
-        }
-        else{
-            path += "black/";
-        }
-        return path+FILE_NAME;
-	}
     */
 
     @Override

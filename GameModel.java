@@ -41,8 +41,7 @@ public class GameModel {
                     return true;
                 }
             }
-        }
-
+        } 
         return false;
     }
 
