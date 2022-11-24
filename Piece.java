@@ -11,21 +11,21 @@ public abstract class Piece {
 	public final static char KING = 'K';
 
 	protected int color;
-  protected String color_string;
+	protected String color_string;
 	protected int rank;
 	protected int file;
-  protected String name;
+	protected String name;
 	
 	public Piece(int color, int rank, int file, String name) {
 		this.color = color;
-    if (color == BLANK){
-      color_string = "blank";
-    } else if (color == WHITE){
-      color_string = "white";
-    } else {
-      color_string = "black";
-    }
-    this.name = name;
+	    if (color == BLANK){
+	      color_string = "blank";
+	    } else if (color == WHITE){
+	      color_string = "white";
+	    } else {
+	      color_string = "black";
+	    }
+	    this.name = name;
 		this.rank = rank;
 		this.file = file;
 	}
@@ -64,22 +64,13 @@ public abstract class Piece {
 	public String toString() {
 		if (color == WHITE) {
 			return "w" + getKind();
-    } else {
+	    } else if (color == BLACK){
 			return "b" + getKind();
 		}
+	    else {
+	    	return "blank";
+	    }
 	}
-
-
-	public String getPicture(int row, int col) {
-		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
-			return "images/light/" + color_string + "/" + name + ".png";
-    }
-  }
-		
-  
-	abstract public char getKind();
-
-
 
 	/**
 	 * Returns the path to the image for this Piece. The row and col is
@@ -89,7 +80,16 @@ public abstract class Piece {
 	 * @param col column this Piece is at
 	 * @return
 	 */
-	abstract public String getPicture(int row, int col);
+	public String getPicture(int row, int col) {
+		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
+			return "images/light/" + color_string + "/" + name + ".png";
+		} else {
+			return "images/dark/" + color_string + "/" + name + ".png";
+		}
+	}
+		
+  
+	abstract public char getKind();
 
 	/**
 	 * Returns this Piece's color

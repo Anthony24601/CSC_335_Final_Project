@@ -10,7 +10,7 @@ public class Pawn extends Piece {
      * @param color either Piece.BLACK or Piece.WHITE
      */
     public Pawn(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "pawn");
     }
 
     public char getKind() {
@@ -86,32 +86,6 @@ public class Pawn extends Piece {
         return false; 
     }
     */
-
-
-    
-    public String getPicture(int row, int col) {
-        String path = "images/";
-		if (row%2 == 0) {
-			if (col%2 == 0) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		} else {
-			if (col%2 == 1) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		}
-        if(color==Piece.WHITE){
-            path += "white/";
-        }
-        else{
-            path += "black/";
-        }
-        return path+FILE_NAME;
-	}
 
     @Override
     public int getColor() {
