@@ -125,6 +125,7 @@ public class Server extends Thread {
 					print_debug("Sending turn to next player " + turn);
 					clients[turn].out.writeBoolean(true);
 					clients[turn].out.flush();
+					// to implement, send gamemodel to other player
 				}
 				catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();

@@ -90,6 +90,7 @@ public class Client extends Thread {
 				try {
 					print_debug("Waiting for my turn...");
 					turn_active = in.readBoolean();
+					// read game model from server here
 					print_debug("It's my turn now!");
 				} 
 				catch (IOException e) {
