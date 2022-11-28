@@ -69,7 +69,61 @@ public class Rook extends Piece {
     }
    
     public boolean canCheck(Board board) {
-        // TODO
+        int opColor = this.color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+
+        // right
+        r = rank;
+        f = file+1;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            }
+            else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            f++;
+        }
+
+        // up
+        r = rank+1;
+        f = file;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            }
+            else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            r++;
+        }
+
+        // left
+        r = rank;
+        f = file-1;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            }
+            else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            f--;
+        }
+
+        // down
+        r = rank-1;
+        f = file;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            }
+            else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            r--;
+        }
+
         return false;
     }
 

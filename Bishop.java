@@ -65,7 +65,61 @@ public class Bishop extends Piece {
     }
 
     public boolean canCheck(Board board) {
-        // TODO
+        int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+
+        // up-left
+        r = rank+1;
+        f = file-1;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            } else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            r++;
+            f--;
+        }
+
+        // up-right
+        r = rank+1;
+        f = file+1;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            } else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            r++;
+            f++;
+        }
+
+        // down-left
+        r = rank-1;
+        f = file-1;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            } else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            r--;
+            f--;
+        }
+
+        // down-right
+        r = rank-1;
+        f = file+1;
+        while (board.isInBounds(r, f)) {
+            if (board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+                return true;
+            } else if (!board.isEmpty(r, f)) {
+                break;
+            }
+            r--;
+            f++;
+        }
+        
         return false;
     }
 

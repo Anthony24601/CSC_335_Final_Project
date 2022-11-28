@@ -20,49 +20,49 @@ public class Knight extends Piece {
         boolean isCapture;
 
         // right-up
-        if (board.isInBounds(rank+1, file+2) && board.isEmpty(rank+1, file+2)) {
+        if (board.isInBounds(rank+1, file+2) && (board.isEmpty(rank+1, file+2) || board.get(rank+1, file+1).getColor() == opColor)) {
             isCapture = board.get(rank+1, file+2).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank+1, file+2, isCapture));
         }
 
         // up-right
-        if (board.isInBounds(rank+2, file+1) && board.isEmpty(rank+2, file+1)) {
+        if (board.isInBounds(rank+2, file+1) && (board.isEmpty(rank+2, file+1) || board.get(rank+2, file+1).getColor() == opColor)) {
             isCapture = board.get(rank+2, file+1).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank+2, file+1, isCapture));
         }
 
         // up-left
-        if (board.isInBounds(rank+2, file-1) && board.isEmpty(rank+2, file-1)) {
+        if (board.isInBounds(rank+2, file-1) && (board.isEmpty(rank+2, file-1) || board.get(rank+2, file-1).getColor() == opColor)) {
             isCapture = board.get(rank+2, file-1).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank+2, file-1, isCapture));
         }
 
         // left-up
-        if (board.isInBounds(rank+1, file-2) && board.isEmpty(rank+1, file-2)) {
+        if (board.isInBounds(rank+1, file-2) && (board.isEmpty(rank+1, file-2) || board.get(rank+1, file-2).getColor() == opColor)) {
             isCapture = board.get(rank+1, file-2).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank+1, file-2, isCapture));
         }
 
         // left-down
-        if (board.isInBounds(rank-1, file-2) && board.isEmpty(rank-1, file-2)) {
+        if (board.isInBounds(rank-1, file-2) && (board.isEmpty(rank-1, file-2) || board.get(rank-1, file-2).getColor() == opColor)) {
             isCapture = board.get(rank-1, file-2).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank-1, file-2, isCapture));
         }
 
         // down-left
-        if (board.isInBounds(rank-2, file-1) && board.isEmpty(rank-2, file-1)) {
+        if (board.isInBounds(rank-2, file-1) && (board.isEmpty(rank-2, file-1) || board.get(rank-2, file-1).getColor() == opColor)) {
             isCapture = board.get(rank-2, file-1).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank-2, file-1, isCapture));
         }
 
         // down-right
-        if (board.isInBounds(rank-2, file+1) && board.isEmpty(rank-2, file+1)) {
+        if (board.isInBounds(rank-2, file+1) && (board.isEmpty(rank-2, file+1) || board.get(rank-2, file+1).getColor() == opColor)) {
             isCapture = board.get(rank-2, file+1).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank-2, file+1, isCapture));
         }
 
         // right-down
-        if (board.isInBounds(rank-1, file+2) && board.isEmpty(rank-1, file+2)) {
+        if (board.isInBounds(rank-1, file+2) && (board.isEmpty(rank-1, file+2) || board.get(rank-1, file+2).getColor() == opColor)) {
             isCapture = board.get(rank-1, file+2).getColor() == opColor;
             moves.add(MoveParser.constructMove(this, rank-1, file+2, isCapture));
         }
@@ -73,7 +73,58 @@ public class Knight extends Piece {
     }
    
     public boolean canCheck(Board board) {
-        // TODO
+        int opColor = this.color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+
+        // right-up
+        r = rank+1;
+        f = file+2;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up-right
+        r = rank+2;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up-left
+        r = rank+2;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // left-up
+        r = rank+1;
+        f = file-2;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // left-down
+        r = rank-1;
+        f = file-2;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down-left
+        r = rank-2;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down-right
+        r = rank-2;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
         return false;
     }
 

@@ -73,7 +73,65 @@ public class King extends Piece {
     } 
    
     public boolean canCheck(Board board) {
-        // TODO
+        int opColor = this.color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+        
+        // right
+        r = rank;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up-right
+        r = rank+1;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up
+        r = rank+1;
+        f = file;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up-left
+        r = rank+1;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // left
+        r = rank;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down-left
+        r = rank-1;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down
+        r = rank-1;
+        f = file;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down-right
+        r = rank-1;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
         return false;
     }
 

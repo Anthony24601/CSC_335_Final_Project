@@ -63,7 +63,21 @@ public class Pawn extends Piece {
     }
 
     public boolean canCheck(Board board) {
-        // TODO
+        if (this.color == Piece.WHITE) {
+            if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK && board.get(rank+1, file-1).getKind() == 'K') {
+                return true;
+            }
+            if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK && board.get(rank+1, file+1).getKind() == 'K') {
+                return true;
+            }
+        } else {
+            if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE && board.get(rank-1, file-1).getKind() == 'K') {
+                return true;
+            }
+            if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE && board.get(rank-1, file+1).getKind() == 'K') {
+                return true;
+            } 
+        }
         return false;
     }
 

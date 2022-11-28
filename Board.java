@@ -109,19 +109,29 @@ public class Board {
 			}
 		}
 
-		//adjustSameSpace(moveMap);
+		adjustSameSpace(moveMap);
 		return moveMap;
 	}
 
-	private void adjustSameSpace(Map<String, String[]> moveMap) {
-		ArrayList<String> otherMoves = new ArrayList<>();
-
-		for (Map.Entry<String, String[]> me : moveMap.entrySet()) {
-			for (String move : me.getValue()) {
-				if (otherMoves.contains(move)) {
-				} else {
-					otherMoves.add(me.getKey() + ":" + move);
-				}
+	private void adjustSameSpace(ArrayList<String> moveMap) {
+		String entry1, entry2, loc1, loc2, move1, move2;
+		for (int i = 0; i < moveMap.size(); i++) {
+			entry1 = moveMap.get(i);
+			for (int j = i+1; j < moveMap.size(); j++) {
+				entry2 = moveMap.get(j);
+				move1 = entry1.split(":")[1];
+				move2 = entry2.split(":")[1];
+				if (move1.equals(move2)) {
+					loc1 = entry1.split(":")[0];
+					loc2 = entry2.split(":")[0];
+					if (loc1.charAt(0) == loc2.charAt(0)) {
+						moveMap.set(i, loc1 + ":" + String.format("%c%d%s", move1.charAt(0), loc1.charAt(1), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%d%s", move2.charAt(0), loc2.charAt(1), move2.substring(1)));
+					} else {
+						moveMap.set(i, loc1 + ":" + String.format("%c%c%s", move1.charAt(0), loc1.charAt(0), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%c%s", move2.charAt(0), loc2.charAt(0), move2.substring(1)));
+					}
+				} 
 			}
 		}
 	}
