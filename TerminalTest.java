@@ -16,6 +16,9 @@ public class TerminalTest {
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
+        Board board = new Board(false);
+        gameModel.setCurrentBoard(board);
+        
         boolean result;
 
         if (AUTO) {
@@ -67,7 +70,7 @@ public class TerminalTest {
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
                 result = interpretMove(move);
-                if (!result) {
+                if (!result && !move.equals("q")) {
                     System.out.println("Invalid move. Please try again.");
                 }
             } while (!move.equals(SENTINEL));

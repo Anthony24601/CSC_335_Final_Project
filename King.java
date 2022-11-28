@@ -72,6 +72,11 @@ public class King extends Piece {
         return ret;
     } 
    
+    public boolean canCheck(Board board) {
+        // TODO
+        return false;
+    }
+
     @Override
     public int getColor() {
         return color;
@@ -85,5 +90,10 @@ public class King extends Piece {
     @Override
     public char getKind() {
         return KIND;
+    }
+
+    @Override
+    public King copy() {
+        return new King(color, rank, file);
     }
 }

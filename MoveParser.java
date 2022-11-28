@@ -6,7 +6,6 @@ public class MoveParser {
         return move.charAt(0) >= 'a' && move.charAt(0) <= 'h' ? 0 : move.charAt(0);
     }
 
-
     public static String constructMove(Piece p, int toRank, int toFile, boolean addCapture) {
         StringBuilder out = new StringBuilder();
         if (p.getKind() != 0) {

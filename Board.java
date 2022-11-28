@@ -12,7 +12,8 @@ public class Board {
 	public final static int MAX_ROW = RANKS - 1;
 	public final static int MAX_COLUMN = FILES - 1;
 
-	private ArrayList<Piece> kings;
+	private Piece blackKing;
+	private Piece whiteKing;
 	private ArrayList<Piece> queens;
 	private ArrayList<Piece> bishops;
 	private ArrayList<Piece> knights;
@@ -21,40 +22,46 @@ public class Board {
 
 	private Piece[][] board;
 
-	public Board() {
+	public Board(boolean isBlank) {
 		board = new Piece[8][8];
-		kings = new ArrayList<>();
 		queens = new ArrayList<>();
 		bishops = new ArrayList<>();
 		knights = new ArrayList<>();
 		rooks = new ArrayList<>();
 		pawns = new ArrayList<>();
-		reset();
-		//temp_board();
-	} 
-
-	/**
-	 * Attemps a move on the chess board.
-	 * @param fromRank
-	 * @param fromFile
-	 * @param toRank
-	 * @param toFile
-	 * @return true if the move was made, false if the move was not
-	 * 		made (invalid move)
-	public boolean attemptMove(int fromRank, int fromFile, int toRank, int toFile){
-		// change arguement to a String of chess notation??
-		Piece selectedPiece = board[fromRank][fromFile];
-		if(selectedPiece.isValidMove(fromRank, fromFile, toRank, toFile)){
-			// place selected piece in new postion and a blank in the old position
-			board[fromRank][fromFile] = new Blank(Piece.BLANK);
-			board[toRank][toFile] = selectedPiece;
+		if (isBlank) {
+			for (int r = 0; r < RANKS; r++) {
+				for (int f = 0; f < FILES; f++) {
+					board[r][f] = new Blank(Piece.BLANK, r, f);
+				}
+			}
+		} else {
+			//reset();
+			temp_board();
 		}
-		else{
-			return false;
-		}
-		return true;
 	}
-	 */
+	
+	public Board copy() {
+		Board newBoard = new Board(true);
+		
+		newBoard.blackKing = blackKing.copy();
+		newBoard.whiteKing = whiteKing.copy();
+
+		newBoard.placePiece(newBoard.blackKing);
+		newBoard.placePiece(newBoard.whiteKing);
+		for (Piece q : queens) 
+			newBoard.placePiece(q.copy());
+		for (Piece b : bishops)
+			newBoard.placePiece(b.copy());
+		for (Piece n : knights)
+			newBoard.placePiece(n.copy());
+		for (Piece r : rooks)
+			newBoard.placePiece(r.copy());
+		for (Piece p : pawns)
+			newBoard.placePiece(p.copy());
+
+		return newBoard;
+	}
 
 	public Map<String, String[]> getMoves(boolean isWhite) {
 		Map<String, String[]> moveMap = new HashMap<>();
@@ -79,7 +86,7 @@ public class Board {
 
 		switch (kind) {
 			case 0: pieces = pawns; break;
-			case 'K': pieces = kings; break;
+			case 'K': pieces.add(blackKing); pieces.add(whiteKing); break;
 			case 'Q': pieces = queens; break;
 			case 'B': pieces = bishops; break;
 			case 'N': pieces = knights; break;
@@ -111,58 +118,47 @@ public class Board {
 		Rook rightBlackR = new Rook(Piece.BLACK, 8, 8);
 		Rook leftWhiteR = new Rook(Piece.WHITE, 1, 1);
 		Rook rightWhiteR = new Rook(Piece.WHITE, 1, 8);
-		rooks.add(leftBlackR);
-		rooks.add(rightBlackR);
-		rooks.add(leftWhiteR);
-		rooks.add(rightWhiteR);
-		board[7][0] = leftBlackR;
-		board[7][7] = rightBlackR;
-		board[0][0] = leftWhiteR;
-		board[0][7] = rightWhiteR;
+		
+		placePiece(leftBlackR);
+		placePiece(rightBlackR);
+		placePiece(leftWhiteR);
+		placePiece(rightWhiteR);
 
 		// knights
 		Knight leftBlackN = new Knight(Piece.BLACK, 8, 2);
 		Knight rightBlackN = new Knight(Piece.BLACK, 8, 7);
 		Knight leftWhiteN = new Knight(Piece.WHITE, 1, 2);
 		Knight rightWhiteN = new Knight(Piece.WHITE, 1, 7);
-		knights.add(leftBlackN);
-		knights.add(rightBlackN);
-		knights.add(leftWhiteN);
-		knights.add(rightWhiteN);
-		board[7][1] = leftBlackN;
-		board[7][6] = rightBlackN;
-		board[0][1] = leftWhiteN;
-		board[0][6] = rightWhiteN;
+		
+		placePiece(leftBlackN);
+		placePiece(rightBlackN);
+		placePiece(leftWhiteN);
+		placePiece(rightWhiteN);
 		
 		// bishops
 		Bishop leftBlackB = new Bishop(Piece.BLACK, 8, 3);
 		Bishop rightBlackB = new Bishop(Piece.BLACK, 8, 6);
 		Bishop leftWhiteB = new Bishop(Piece.WHITE, 1, 3);
 		Bishop rightWhiteB = new Bishop(Piece.WHITE, 1, 6);
-		bishops.add(leftBlackB);
-		bishops.add(rightBlackB);
-		bishops.add(leftWhiteB);
-		bishops.add(rightWhiteB);
-		board[7][2] = leftBlackB;
-		board[7][5] = rightBlackB;
-		board[0][2] = leftWhiteB;
-		board[0][5] = rightWhiteB;
+		
+		placePiece(leftBlackB);
+		placePiece(rightBlackB);
+		placePiece(leftWhiteB);
+		placePiece(rightWhiteB);
 		
 		//queens
 		Queen blackQueen = new Queen(Piece.BLACK, 8, 4);
 		Queen whiteQueen = new Queen(Piece.WHITE, 1, 4);
-		queens.add(blackQueen);
-		queens.add(whiteQueen);
-		board[7][3] = blackQueen;
-		board[0][3] = whiteQueen;
+		
+		placePiece(blackQueen);
+		placePiece(whiteQueen);
 		
 		// kings
-		King blackKing = new King(Piece.BLACK, 8, 5);
-		King whiteKing = new King(Piece.WHITE, 1, 5);
-		kings.add(blackKing);
-		kings.add(whiteKing);
-		board[7][4] = blackKing;
-		board[0][4] = whiteKing;
+		blackKing = new King(Piece.BLACK, 8, 5);
+		whiteKing = new King(Piece.WHITE, 1, 5);
+		
+		placePiece(blackKing);
+		placePiece(whiteKing);
 		
 		// pawns
 		for (int f = 1; f <= 8; f++) {
@@ -182,23 +178,52 @@ public class Board {
 			}
 		}
 		// USED FOR DEBUGGING MOVES
-		Rook r = new Rook(Piece.WHITE, 2, 3);
-		Queen q = new Queen(Piece.BLACK, 7, 7);
-		rooks.add(r);
-		queens.add(q);
-		board[1][2] = r;
-		board[6][6] = q;
+		whiteKing = new King(Piece.WHITE, 1, 4);
+		blackKing = new King(Piece.BLACK, 8, 4);
+		Rook bkr = new Rook(Piece.BLACK, 8, 1);
+		Rook bqr = new Rook(Piece.BLACK, 8, 8);
+		
+		placePiece(whiteKing);
+		placePiece(blackKing);
+		placePiece(bkr);
+		placePiece(bqr);
 	}
 
 	public Piece get(int rank, int file) {
-		return board[rank-1][file-1];
+		return this.board[rank-1][file-1];
 	}
 
-	/**
-	 * Returns true if there is a check mate occuring on the board
-	 * @return
-	 */
-	public boolean hasCheckmate() {
+	public boolean hasCheck(boolean isWhite) {
+		for (Piece p : pawns) {
+			if (p.canCheck(this))
+				return true; 
+		}
+		for (Piece r : rooks) {
+			if (r.canCheck(this))
+				return true; 
+		}
+		for (Piece n : knights) {
+			if (n.canCheck(this))
+				return true; 
+		}
+		for (Piece b : bishops) {
+			if (b.canCheck(this))
+				return true; 
+		}
+		for (Piece q : queens) {
+			if (q.canCheck(this))
+				return true; 
+		}
+
+		if (isWhite && whiteKing.canCheck(this))
+			return true;
+		else if (!isWhite && blackKing.canCheck(this))
+			return true;
+
+		return false;
+	}
+	
+	public boolean hasCheckmate(boolean isWhite) {
 		// TODO
         return false;
     }
@@ -212,9 +237,47 @@ public class Board {
 	}
 
 	public Piece move(String loc, String move) {
+		if (move.equals("0-0")) {
+			Piece rook, king;
+			// White King
+			if (loc.equals("d1")) {
+				rook = get(1, 1);
+				king = get(1, 4);
+				move(rook, 1, 3, false);
+				move(king, 1, 2, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 1);
+				king = get(8, 4);
+				move(rook, 8, 3, false);
+				move(king, 8, 2, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null; 	
+		} else if (move.equals("0-0-0")) {
+			Piece rook, king;
+			// White King
+			if (loc.equals("d1")) {
+				rook = get(1, 8);
+				king = get(1, 4);
+				move(rook, 1, 5, false);
+				move(king, 1, 6, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 8);
+				king = get(8, 4);
+				move(rook, 8, 5, false);
+				move(king, 8, 6, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null;
+		}
+
 		int r1 = loc.charAt(1)-'0';
 		int f1 = loc.charAt(0)-'a'+1;
-		Piece piece = get(r1, f1);
+		Piece piece = this.get(r1, f1);
 
 		int r2, f2;
 		boolean isCapture = false;
@@ -247,6 +310,31 @@ public class Board {
 		piece.setFile(toFile);		
 
 		return capturedPiece;
+	}
+
+	public void placePiece(Piece piece) {
+		int rank, file;
+		switch (piece.getKind()) {
+			case 0:
+				pawns.add(piece);
+				break;
+			case 'R':
+				rooks.add(piece);
+				break;
+			case 'N':
+				knights.add(piece);
+				break;
+			case 'B':
+				bishops.add(piece);
+				break;
+			case 'Q':
+				queens.add(piece);
+				break;
+		}
+		
+		rank = piece.getRank();
+		file = piece.getFile();
+		board[rank-1][file-1] = piece;
 	}
 
 	public void removePiece(Piece piece) {
