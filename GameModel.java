@@ -120,10 +120,10 @@ public class GameModel {
                 return false;
 
             // Check if King would be in check moving across
-            String c1 = "Kc1";
-            String b1 = "Kb1";
-            if (c1.equals(addCheck("d1", c1)) && b1.equals(addCheck("d1", b1)) && currentBoard.isEmpty(1, 3) && currentBoard.isEmpty(1, 2)) {
-                currentBoard.move("d1", "0-0");     // TODO: Add Check for logs
+            String f1 = "Kf1";
+            String g1 = "Kg1";
+            if (f1.equals(addCheck("e1", f1)) && g1.equals(addCheck("e1", g1)) && currentBoard.isEmpty(1, 6) && currentBoard.isEmpty(1, 7)) {
+                currentBoard.move("e1", "0-0");     // TODO: Add Check for logs
                 whiteKingHasMoved = true;
                 whiteKingRookHasMoved = true;
                 whitesTurn = !whitesTurn;
@@ -153,10 +153,10 @@ public class GameModel {
                 return false;
             }
 
-            String e1 = "Ke1";
-            String f1 = "Kf1";
-            if (e1.equals(addCheck("d1", e1)) && f1.equals(addCheck("d1", f1)) && currentBoard.isEmpty(1, 7)) {
-                currentBoard.move("d1", "0-0-0");
+            String d1 = "Kd1";
+            String c1 = "Kc1";
+            if (d1.equals(addCheck("e1", d1)) && c1.equals(addCheck("e1", c1)) && currentBoard.isEmpty(1, 2)) {
+                currentBoard.move("e1", "0-0-0");
                 whiteKingHasMoved = true;
                 whiteQueenRookHasMoved = true;
                 return true;
