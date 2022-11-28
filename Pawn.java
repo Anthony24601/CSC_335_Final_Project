@@ -37,6 +37,11 @@ public class Pawn extends Piece {
             if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK) {
                 moves.add(MoveParser.constructMove(this, rank+1, file+1, true));
             } 
+
+            // Promotion
+            if(rank==7){
+                moves.add(MoveParser.constructPromotionMove(rank+1, file, Piece.QUEEN));
+            }
         } else {
             // One space
             if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
@@ -55,6 +60,11 @@ public class Pawn extends Piece {
             if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE) {
                 moves.add(MoveParser.constructMove(this, rank-1, file+1, true));
             } 
+
+            // Promotion
+             if(rank==2){
+                moves.add(MoveParser.constructPromotionMove(rank-1, file, Piece.QUEEN));
+            }
         }
 
         String[] ret = new String[moves.size()];

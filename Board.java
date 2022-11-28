@@ -36,8 +36,8 @@ public class Board {
 				}
 			}
 		} else {
-			//reset();
-			temp_board();
+			reset();
+			//temp_board();
 		}
 	}
 	
@@ -236,42 +236,12 @@ public class Board {
 	}
 
 	public Piece move(String loc, String move) {
+
+		// Castling
 		if (move.equals("0-0")) {
-			Piece rook, king;
-			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 1);
-				king = get(1, 4);
-				move(rook, 1, 3, false);
-				move(king, 1, 2, false);
-			} else if (loc.equals("d8")) {
-				rook = get(8, 1);
-				king = get(8, 4);
-				move(rook, 8, 3, false);
-				move(king, 8, 2, false);
-			} else {
-				System.out.println("lol wat?");
-				System.exit(300);
-			}
-			return null; 	
+			return kingsideCastleMove(loc); 	
 		} else if (move.equals("0-0-0")) {
-			Piece rook, king;
-			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 8);
-				king = get(1, 4);
-				move(rook, 1, 5, false);
-				move(king, 1, 6, false);
-			} else if (loc.equals("d8")) {
-				rook = get(8, 8);
-				king = get(8, 4);
-				move(rook, 8, 5, false);
-				move(king, 8, 6, false);
-			} else {
-				System.out.println("lol wat?");
-				System.exit(300);
-			}
-			return null;
+			return queensideCastleMove(loc);
 		}
 
 		int r1 = loc.charAt(1)-'0';
@@ -294,6 +264,11 @@ public class Board {
 		r2 = move.charAt(1)-'0';
 		f2 = move.charAt(0)-'a'+1;
 
+		// Pawn promotion
+		if(move.contains("=")){
+			return pawnPromotionMove(piece, r2, f2);
+		}
+
 		return move(piece, r2, f2, isCapture);
 	}
 
@@ -309,6 +284,57 @@ public class Board {
 		piece.setFile(toFile);		
 
 		return capturedPiece;
+	}
+
+	private Piece kingsideCastleMove(String loc){
+		Piece rook, king;
+			// White King
+			if (loc.equals("d1")) {
+				rook = get(1, 1);
+				king = get(1, 4);
+				move(rook, 1, 3, false);
+				move(king, 1, 2, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 1);
+				king = get(8, 4);
+				move(rook, 8, 3, false);
+				move(king, 8, 2, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null; 	
+	}
+
+	private Piece queensideCastleMove(String loc){
+		Piece rook, king;
+			// White King
+			if (loc.equals("d1")) {
+				rook = get(1, 8);
+				king = get(1, 4);
+				move(rook, 1, 5, false);
+				move(king, 1, 6, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 8);
+				king = get(8, 4);
+				move(rook, 8, 5, false);
+				move(king, 8, 6, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null;
+	}
+
+	/**
+	 * Places a newly constructed Queen of the same color at the indicated
+	 * location on this Board, and removes the old piece
+	 */
+	private Piece pawnPromotionMove(Piece piece, int toRank, int toFile){
+		Queen newQueen = new Queen(piece.getColor(), toRank, toFile);
+		placePiece(newQueen);
+		removePiece(piece);
+		return null;
 	}
 
 	public void placePiece(Piece piece) {

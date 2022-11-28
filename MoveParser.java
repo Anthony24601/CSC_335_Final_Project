@@ -24,4 +24,13 @@ public class MoveParser {
 
         return out.toString();
     }
+
+    /**
+     * Constructs a move string for a pawn promotion event.
+     * Is in form <newLocation>=<newType> (for example e8=Q means moves to e8 and 
+     * promotes to a Queen)
+     */
+    public static String constructPromotionMove(int toRank, int toFile, char newType){
+        return String.format("%c%d=%c", toRank, toFile, newType);
+    }
 }
