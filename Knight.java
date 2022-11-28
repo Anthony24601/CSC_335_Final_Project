@@ -72,6 +72,11 @@ public class Knight extends Piece {
         return ret;
     }
    
+    public boolean canCheck(Board board) {
+        // TODO
+        return false;
+    }
+
     @Override
     public int getColor() {
         return color;
@@ -85,5 +90,10 @@ public class Knight extends Piece {
     @Override
     public char getKind() {
         return KIND;
+    }
+
+    @Override
+    public Knight copy() {
+        return new Knight(color, rank, file);
     }
 }

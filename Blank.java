@@ -8,6 +8,20 @@ public class Blank extends Piece{
 	public String[] getValidMoves(Board board) {
 		return null;
 	}
+    
+	public boolean canCheck(Board board) {
+        return false;
+    }
+
+	public boolean isBlank(){
+		return true;
+	}
+
+	@Override
+	public int getColor() {
+		return color;
+	}
+
 	@Override
 	public char getKind() {
 		return 0;
@@ -23,17 +37,8 @@ public class Blank extends Piece{
 		return 0;
 	}
 
-	public boolean isBlank(){
-		return true;
-	}
-
-	/*@Override
-	public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
-		return true;
-	}*/
-
 	@Override
-	public int getColor() {
-		return color;
+	public Blank copy() {
+		return new Blank(color, rank, file);
 	}
 }

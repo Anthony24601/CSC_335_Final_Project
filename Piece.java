@@ -18,19 +18,21 @@ public abstract class Piece {
 	
 	public Piece(int color, int rank, int file, String name) {
 		this.color = color;
-    if (color == BLANK){
-      color_string = "blank";
-    } else if (color == WHITE){
-      color_string = "white";
-    } else {
-      color_string = "black";
-    }
-    this.name = name;
+		if (color == BLANK){
+			color_string = "blank";
+		} else if (color == WHITE){
+			color_string = "white";
+		} else {
+			color_string = "black";
+		}
+		this.name = name;
 		this.rank = rank;
 		this.file = file;
 	}
 	
 	abstract public String[] getValidMoves(Board board);
+	abstract public boolean canCheck(Board board);
+	abstract public Piece copy();
 
 	protected int getRank() {
 		return rank;

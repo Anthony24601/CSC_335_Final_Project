@@ -62,30 +62,10 @@ public class Pawn extends Piece {
         return ret;
     }
 
-    /*
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol){
-        boolean whitesMove = color==Piece.WHITE;
-        int f = whitesMove? 1 : -1;
-        boolean canMoveOne = isInBounds(fromRow + f, fromCol) && board.get(fromRow + f, fromCol).isBlank();
-        boolean canMoveTwo = whitesMove ? fromRow == 2 && board.get(fromRow+f*2, fromCol).isBlank()
-                                        : fromRow == 7 && board.get(fromRow+f*2, fromCol).isBlank();
-        boolean canCaptureLeft = isInBounds(fromRow+f, fromCol-1)
-                && board.get(fromRow+f, fromCol-1).getColor()!=this.color;
-        boolean canCaptureRight = isInBounds(fromRow+f, fromCol+1)
-                && board.get(fromRow+f, fromCol+1).getColor()!=this.color;
-
-        if (canMoveOne && toRow == fromRow+f && toCol == fromCol) {
-            return true;
-        } else if (canMoveTwo && toRow == fromRow+f*2 && toCol == fromCol) {
-            return true;
-        } else if (canCaptureLeft && toRow == fromRow+f && toCol == fromCol-1) {
-            return true;
-        } else if (canCaptureRight && toRow == fromRow+f && toCol == fromCol+1) {
-            return true;
-        }
-        return false; 
+    public boolean canCheck(Board board) {
+        // TODO
+        return false;
     }
-    */
 
     @Override
     public int getColor() {
@@ -104,5 +84,10 @@ public class Pawn extends Piece {
         } else {
             return "bp";
         }
+    }
+
+    @Override
+    public Pawn copy() {
+        return new Pawn(color, rank, file);
     }
 }

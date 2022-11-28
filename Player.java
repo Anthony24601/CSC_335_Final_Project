@@ -5,7 +5,7 @@ public class Player {
 	static ChessUI ui;
 	
 	public Player() {
-		board = new Board();
+		board = new Board(false);
 		ui = new ChessUI(this);
 	}
 	

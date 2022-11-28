@@ -64,6 +64,11 @@ public class Bishop extends Piece {
         return ret;
     }
 
+    public boolean canCheck(Board board) {
+        // TODO
+        return false;
+    }
+
     public int getRank() {
         return rank;
     }
@@ -92,5 +97,10 @@ public class Bishop extends Piece {
     @Override
     public boolean isBlank() {
         return false;
+    }
+
+    @Override
+    public Bishop copy() {
+        return new Bishop(color, rank, file);
     }
 }

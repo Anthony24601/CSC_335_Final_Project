@@ -68,6 +68,11 @@ public class Rook extends Piece {
         return ret;
     }
    
+    public boolean canCheck(Board board) {
+        // TODO
+        return false;
+    }
+
     @Override
     public int getColor() {
         return color;
@@ -81,5 +86,10 @@ public class Rook extends Piece {
     @Override
     public char getKind() {
         return KIND;
+    }
+
+    @Override
+    public Rook copy() {
+        return new Rook(color, rank, file);
     }
 }
