@@ -53,7 +53,7 @@ public class TerminalTest {
             for (String move : sampleGame) {
                 gameModel.printBoard();
                 isInvalidMove(move);
-                result = gameModel.makeMove(move);
+                result = interpretMove(move);
                 while (!result) {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);

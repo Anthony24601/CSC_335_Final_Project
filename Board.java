@@ -274,16 +274,16 @@ public class Board {
 		if (move.equals("0-0")) {
 			Piece rook, king;
 			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 1);
-				king = get(1, 4);
-				move(rook, 1, 3, false);
-				move(king, 1, 2, false);
-			} else if (loc.equals("d8")) {
-				rook = get(8, 1);
-				king = get(8, 4);
-				move(rook, 8, 3, false);
-				move(king, 8, 2, false);
+			if (loc.equals("e1")) {
+				rook = get(1, 8);
+				king = get(1, 5);
+				move(rook, 1, 6, false);
+				move(king, 1, 7, false);
+			} else if (loc.equals("e8")) {
+				rook = get(8, 8);
+				king = get(8, 5);
+				move(rook, 8, 6, false);
+				move(king, 8, 7, false);
 			} else {
 				System.out.println("lol wat?");
 				System.exit(300);
@@ -292,16 +292,16 @@ public class Board {
 		} else if (move.equals("0-0-0")) {
 			Piece rook, king;
 			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 8);
-				king = get(1, 4);
-				move(rook, 1, 5, false);
-				move(king, 1, 6, false);
-			} else if (loc.equals("d8")) {
-				rook = get(8, 8);
-				king = get(8, 4);
-				move(rook, 8, 5, false);
-				move(king, 8, 6, false);
+			if (loc.equals("e1")) {
+				rook = get(1, 1);
+				king = get(1, 5);
+				move(rook, 1, 4, false);
+				move(king, 1, 3, false);
+			} else if (loc.equals("e8")) {
+				rook = get(8, 1);
+				king = get(8, 5);
+				move(rook, 8, 4, false);
+				move(king, 8, 3, false);
 			} else {
 				System.out.println("lol wat?");
 				System.exit(300);
@@ -316,6 +316,12 @@ public class Board {
 		int r2, f2;
 		boolean isCapture = false;
 		if (move.charAt(0) < 'a') {
+			move = move.substring(1);
+		}
+		if (move.charAt(0) >= 'a' && move.charAt(0) <= 'h' && move.charAt(1) >= 'a' && move.charAt(1) <= 'h') {
+			move = move.substring(1);
+		}
+		if (move.charAt(0) >= '1' && move.charAt(0) <= '8' && move.charAt(1) >= 'a' && move.charAt(1) <= 'h') {
 			move = move.substring(1);
 		}
 		if (move.charAt(0) == 'x') {

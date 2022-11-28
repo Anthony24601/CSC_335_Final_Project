@@ -133,10 +133,10 @@ public class GameModel {
             if (blackKingHasMoved || blackKingRookHasMoved)
                 return false;
 
-            String c8 = "Kc8";
-            String b8 = "Kb8";
-            if (c8.equals(addCheck("d8", c8)) && b8.equals(addCheck("d8", b8)) && currentBoard.isEmpty(8, 3) && currentBoard.isEmpty(8, 2)) {
-                currentBoard.move("d8", "0-0");     // TODO: Add Check for logs
+            String f8 = "Kf8";
+            String g8 = "Kg8";
+            if (f8.equals(addCheck("e8", f8)) && g8.equals(addCheck("e8", g8)) && currentBoard.isEmpty(8, 6) && currentBoard.isEmpty(8, 7)) {
+                currentBoard.move("e8", "0-0");     // TODO: Add Check for logs
                 blackKingHasMoved = true;
                 blackKingRookHasMoved = true;
                 whitesTurn = !whitesTurn;
@@ -166,9 +166,9 @@ public class GameModel {
                 return false;
             }
 
-            String e8 = "Ke8";
-            String f8 = "Kf8";
-            if (e8.equals(addCheck("d8", e8)) && f8.equals(addCheck("d8", f8)) && currentBoard.isEmpty(8, 7)) {
+            String d8 = "Ke8";
+            String c8 = "Kf8";
+            if (d8.equals(addCheck("e8", d8)) && c8.equals(addCheck("e8", c8)) && currentBoard.isEmpty(8, 2)) {
                 currentBoard.move("d8", "0-0-0");
                 blackKingHasMoved = true;
                 blackQueenRookHasMoved = true;
