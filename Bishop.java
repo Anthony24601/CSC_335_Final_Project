@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Bishop extends Piece {
     private static final char KIND = Piece.BISHOP;
 
+    GameModel gameModel = GameModel.getInstance();
+
     public Bishop(int color, int rank, int file) {
         super(color, rank, file, "bishop");
     }
@@ -10,53 +12,70 @@ public class Bishop extends Piece {
     public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        String move;
 
         // up-left
         int r = rank+1;
         int f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            moves.add(MoveParser.constructMove(this, r, f, false));
+            move = MoveParser.constructMove(this, r, f, false);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
             r++;
             f--;            
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            moves.add(MoveParser.constructMove(this, r, f, true));
+            move = MoveParser.constructMove(this, r, f, true);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // up-right
         r = rank+1;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            moves.add(MoveParser.constructMove(this, r, f, false));
+            move = MoveParser.constructMove(this, r, f, false);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
             r++;
             f++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            moves.add(MoveParser.constructMove(this, r, f, true));
+            move = MoveParser.constructMove(this, r, f, true);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // down-left
         r = rank-1;
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            moves.add(MoveParser.constructMove(this, r, f, false));
+            move = MoveParser.constructMove(this, r, f, false);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
             r--;
             f--;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            moves.add(MoveParser.constructMove(this, r, f, true));
+            move = MoveParser.constructMove(this, r, f, true);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // down-right
         r = rank-1;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            moves.add(MoveParser.constructMove(this, r, f, false));
+            move = MoveParser.constructMove(this, r, f, false);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
             r--;
             f++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            moves.add(MoveParser.constructMove(this, r, f, true));
+            move = MoveParser.constructMove(this, r, f, true);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         String[] ret = new String[moves.size()];

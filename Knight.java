@@ -4,6 +4,8 @@ public class Knight extends Piece {
     private static final String FILE_NAME = "knight.png";
     final static char KIND = Piece.KNIGHT;
 
+    GameModel gameModel = GameModel.getInstance();
+
      /**
      * Constructs a new king of the specified color on the
      * passed Board
@@ -17,54 +19,88 @@ public class Knight extends Piece {
     public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+        String move;
         boolean isCapture;
 
         // right-up
-        if (board.isInBounds(rank+1, file+2) && (board.isEmpty(rank+1, file+2) || board.get(rank+1, file+1).getColor() == opColor)) {
-            isCapture = board.get(rank+1, file+2).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+1, file+2, isCapture));
+        r = rank+1;
+        f = file+2;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // up-right
-        if (board.isInBounds(rank+2, file+1) && (board.isEmpty(rank+2, file+1) || board.get(rank+2, file+1).getColor() == opColor)) {
-            isCapture = board.get(rank+2, file+1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+2, file+1, isCapture));
+        r = rank+2;
+        f = file+1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // up-left
-        if (board.isInBounds(rank+2, file-1) && (board.isEmpty(rank+2, file-1) || board.get(rank+2, file-1).getColor() == opColor)) {
-            isCapture = board.get(rank+2, file-1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+2, file-1, isCapture));
+        r = rank+2;
+        f = file-1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // left-up
-        if (board.isInBounds(rank+1, file-2) && (board.isEmpty(rank+1, file-2) || board.get(rank+1, file-2).getColor() == opColor)) {
-            isCapture = board.get(rank+1, file-2).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+1, file-2, isCapture));
+        r = rank+1;
+        f = file-2;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // left-down
-        if (board.isInBounds(rank-1, file-2) && (board.isEmpty(rank-1, file-2) || board.get(rank-1, file-2).getColor() == opColor)) {
-            isCapture = board.get(rank-1, file-2).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-1, file-2, isCapture));
+        r = rank-1;
+        f = file-2;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // down-left
-        if (board.isInBounds(rank-2, file-1) && (board.isEmpty(rank-2, file-1) || board.get(rank-2, file-1).getColor() == opColor)) {
-            isCapture = board.get(rank-2, file-1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-2, file-1, isCapture));
+        r = rank-2;
+        f = file-1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // down-right
-        if (board.isInBounds(rank-2, file+1) && (board.isEmpty(rank-2, file+1) || board.get(rank-2, file+1).getColor() == opColor)) {
-            isCapture = board.get(rank-2, file+1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-2, file+1, isCapture));
+        r = rank-2;
+        f = file+1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         // right-down
-        if (board.isInBounds(rank-1, file+2) && (board.isEmpty(rank-1, file+2) || board.get(rank-1, file+2).getColor() == opColor)) {
-            isCapture = board.get(rank-1, file+2).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-1, file+2, isCapture));
+        r = rank-1;
+        f = file+2;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            move = gameModel.addCheck(getLoc(), move);
+            moves.add(move);
         }
 
         String[] ret = new String[moves.size()];

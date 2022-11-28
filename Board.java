@@ -1,8 +1,8 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 
 public class Board {
+	final static boolean USE_TEMP_BOARD = true;
+
 	final static int RANKS = 8;
     final static int FILES = 8;
 
@@ -36,8 +36,11 @@ public class Board {
 				}
 			}
 		} else {
-			reset();
-			//temp_board();
+			if (USE_TEMP_BOARD) {
+				temp_board();
+			} else {
+				reset();
+			}
 		}
 	}
 	
@@ -64,7 +67,6 @@ public class Board {
 	}
 
 	public ArrayList<String> getMoves(boolean isWhite) {
-		//Map<String, String[]> moveMap = new HashMap<>();
 		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -73,7 +75,6 @@ public class Board {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					//moveMap.put(loc, board[r][f].getValidMoves(this));
 					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
 				}
 			}
@@ -97,11 +98,9 @@ public class Board {
 			case 'R': pieces = rooks; break;
 		}
 
-		//Map<String, String[]> moveMap = new HashMap<>();
 		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				//moveMap.put(p.getLoc(), p.getValidMoves(this));
 				String[] validMoves = p.getValidMoves(this);
 				for (String vm : validMoves) {
 					moveMap.add(p.getLoc() + ":" + vm);
@@ -212,40 +211,48 @@ public class Board {
 			}
 		}
 		// USED FOR DEBUGGING MOVES
-		whiteKing = new King(Piece.WHITE, 1, 4);
-		blackKing = new King(Piece.BLACK, 8, 4);
-		Rook bkr = new Rook(Piece.BLACK, 8, 1);
-		Rook bqr = new Rook(Piece.BLACK, 8, 8);
+		whiteKing = new King(Piece.WHITE, 1, 5);
+		blackKing = new King(Piece.BLACK, 8, 3);
+		Queen wq = new Queen(Piece.WHITE, 2, 8);
+		Rook br = new Rook(Piece.BLACK, 7, 5);
 		
 		placePiece(whiteKing);
 		placePiece(blackKing);
-		placePiece(bkr);
-		placePiece(bqr);
+		placePiece(wq);
+		placePiece(br);
 	}
 
 	public Piece get(int rank, int file) {
 		return this.board[rank-1][file-1];
 	}
 
+	public Piece get(String loc) {
+		int rank = loc.charAt(1)-'0';
+		int file = loc.charAt(0)-'a'+1;
+		return get(rank, file);
+	}
+
 	public boolean hasCheck(boolean isWhite) {
+		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
 		for (Piece p : pawns) {
-			if (p.canCheck(this))
-				return true; 
+			if (p.getColor() == ownColor && p.canCheck(this)) {
+				return true;
+			} 
 		}
 		for (Piece r : rooks) {
-			if (r.canCheck(this))
+			if (r.getColor() == ownColor && r.canCheck(this))
 				return true; 
 		}
 		for (Piece n : knights) {
-			if (n.canCheck(this))
+			if (n.getColor() == ownColor && n.canCheck(this))
 				return true; 
 		}
 		for (Piece b : bishops) {
-			if (b.canCheck(this))
+			if (b.getColor() == ownColor && b.canCheck(this))
 				return true; 
 		}
 		for (Piece q : queens) {
-			if (q.canCheck(this))
+			if (q.getColor() == ownColor && q.canCheck(this))
 				return true; 
 		}
 

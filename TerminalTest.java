@@ -12,7 +12,7 @@ public class TerminalTest {
     final static String INVALID_SECOND_ERROR = "To move string is improperly formatted.";
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
-    final static boolean AUTO = true;
+    final static boolean AUTO = false;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -58,12 +58,6 @@ public class TerminalTest {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
                 }
-                /*
-                String cont = ChrisIR4.getString("Press enter to continue, or enter 'q' to stop: ");
-                if (cont.equals("q")) {
-                    break;
-                }
-                */
             }
         } else {
             String move;
