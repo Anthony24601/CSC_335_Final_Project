@@ -70,32 +70,8 @@ public class King extends Piece {
         String[] ret = new String[moves.size()];
         ret = moves.toArray(ret);
         return ret;
-    }
-
-   /*  public String getPicture(int row, int col) {
-		String path = "images/";
-		if (row%2 == 0) {
-			if (col%2 == 0) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		} else {
-			if (col%2 == 1) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		}
-        if(color==Piece.WHITE){
-            path += "white/";
-        }
-        else{
-            path += "black/";
-        }
-        return path+FILE_NAME;
-	}
-   */
+    } 
+   
     @Override
     public int getColor() {
         return color;
