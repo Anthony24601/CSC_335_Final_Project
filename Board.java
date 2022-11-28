@@ -36,8 +36,8 @@ public class Board {
 				}
 			}
 		} else {
-			//reset();
-			temp_board();
+			reset();
+			//temp_board();
 		}
 	}
 	
@@ -63,8 +63,9 @@ public class Board {
 		return newBoard;
 	}
 
-	public Map<String, String[]> getMoves(boolean isWhite) {
-		Map<String, String[]> moveMap = new HashMap<>();
+	public ArrayList<String> getMoves(boolean isWhite) {
+		//Map<String, String[]> moveMap = new HashMap<>();
+		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -72,7 +73,8 @@ public class Board {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.put(loc, board[r][f].getValidMoves(this));
+					//moveMap.put(loc, board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
 				}
 			}
 		}
@@ -80,26 +82,48 @@ public class Board {
 		return moveMap;
 	}
 
-	public Map<String, String[]> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
 		switch (kind) {
 			case 0: pieces = pawns; break;
 			case 'K': pieces.add(blackKing); pieces.add(whiteKing); break;
-			case 'Q': pieces = queens; break;
+			case 'Q': 
+				pieces = queens;
+				break;
 			case 'B': pieces = bishops; break;
 			case 'N': pieces = knights; break;
 			case 'R': pieces = rooks; break;
 		}
 
-		Map<String, String[]> moveMap = new HashMap<>();
+		//Map<String, String[]> moveMap = new HashMap<>();
+		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				moveMap.put(p.getLoc(), p.getValidMoves(this));
+				//moveMap.put(p.getLoc(), p.getValidMoves(this));
+				String[] validMoves = p.getValidMoves(this);
+				for (String vm : validMoves) {
+					moveMap.add(p.getLoc() + ":" + vm);
+				}
 			}
 		}
+
+		//adjustSameSpace(moveMap);
 		return moveMap;
+	}
+
+	private void adjustSameSpace(Map<String, String[]> moveMap) {
+		ArrayList<String> otherMoves = new ArrayList<>();
+
+		for (Map.Entry<String, String[]> me : moveMap.entrySet()) {
+			for (String move : me.getValue()) {
+				if (otherMoves.contains(move)) {
+				} else {
+					otherMoves.add(me.getKey() + ":" + move);
+				}
+			}
+		}
 	}
 
 

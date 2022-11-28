@@ -12,7 +12,7 @@ public class TerminalTest {
     final static String INVALID_SECOND_ERROR = "To move string is improperly formatted.";
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
-    final static boolean AUTO = false;
+    final static boolean AUTO = true;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -23,22 +23,31 @@ public class TerminalTest {
 
         if (AUTO) {
             String[] sampleGame = {
-                "d4",   "e6",
-                "Nf3",  "Qf6",
-                "Qd3",  "c5",
-                "g3",   "Bd6",
-                "dxc5", "Nc6",
-                "cxd6", "Qf8",
                 "e4",   "e5",
-                "b3",   "Qd8",
-                "Qd5",  "g6",
-                "Bg5",  "Nf6",
-                "Nc3",  "Qb6",
-                "Bxf6", "h6",
-                "Bxh8", "h5",
-                "Ng5",  "Ke8",
-                "Qxf7+","Kd8",
-                "Qf8#"
+                "Nf3",  "Nc6",
+                "d4",   "exd4",
+                "Nxd4", "Bc5",
+                "Be3",  "Qf6",
+                "c3",   "Nge7",
+                "g3",   "Ne5",
+                "f4",   "c6",
+                "fxe5", "Qxe5",
+                "Bd3",  "0-0",
+                "b4",   "Re8",
+                "bxc5", "d5",
+                "Qf3",  "b5",
+                "0-0",  "Ng6",
+                "Qxf7+","Kh8",
+                "Nxc6", "Bh3",
+                "Nxe5", "Rxe5",
+                "Qb7",  "Rg8",
+                "exd5", "Rxe3",
+                "Bxg6", "hxg6",
+                "Qf7",  "Re2",
+                "Qxg6", "Bxf1",
+                "Kxf1", "Rxh2",
+                "Na3",  "Rd2",
+                "Qh5#"
             };
 
             for (String move : sampleGame) {

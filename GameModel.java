@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Map;
 
 public class GameModel {
@@ -41,6 +42,7 @@ public class GameModel {
 
     public boolean makeMove(String move, Board b) {
         char kind = MoveParser.getKind(move);
+        /*
         Map<String, String[]> moveMap = b.getMoves(kind, whitesTurn);
         
         for (Map.Entry<String, String[]> me : moveMap.entrySet()) {
@@ -56,6 +58,21 @@ public class GameModel {
                 }
             }
         } 
+        */
+        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
+        for (String entry : moveMap) {
+            String loc = entry.split(":")[0];
+            String m = entry.split(":")[1];
+            if (m.equals(move)) {
+                addHasMoved(loc, m);
+                Piece capturedPiece = b.move(loc, m);
+                if (capturedPiece != null) {
+                    b.removePiece(capturedPiece);
+                }
+                whitesTurn = !whitesTurn;
+                return true;
+            }
+        }
         return false;
     }
 
