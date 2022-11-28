@@ -64,9 +64,12 @@ public abstract class Piece {
 	public String toString() {
 		if (color == WHITE) {
 			return "w" + getKind();
-    } else {
+	    } else if (color == BLACK){
 			return "b" + getKind();
 		}
+	    else {
+	    	return "blank";
+	    }
 	}
 
 	/**
@@ -78,13 +81,13 @@ public abstract class Piece {
 	 * @return
 	 */
 	public String getPicture(int row, int col) {
+		System.out.println("getting pic " + name);
 		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
 			return "images/light/" + color_string + "/" + name + ".png";
 		} else {
-			return "images/dark/" + color + "/" + name + ".png";
+			return "images/dark/" + color_string + "/" + name + ".png";
 		}
 	}
-		
   
 	abstract public char getKind();
 

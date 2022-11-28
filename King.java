@@ -72,8 +72,7 @@ public class King extends Piece {
         return ret;
     }
 
-    @Override
-    public String getPicture(int row, int col) {
+   /*  public String getPicture(int row, int col) {
 		String path = "images/";
 		if (row%2 == 0) {
 			if (col%2 == 0) {
@@ -96,7 +95,7 @@ public class King extends Piece {
         }
         return path+FILE_NAME;
 	}
-   
+   */
     @Override
     public int getColor() {
         return color;

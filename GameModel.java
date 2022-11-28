@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-public class GameModel {
-    private Board board;
-
-    public GameModel(){
-        board = new Board();
-=======
 import java.util.Map;
 
 public class GameModel {
@@ -65,6 +58,5 @@ public class GameModel {
     public boolean castleQueenside() {
         // TODO
         return false;
->>>>>>> sprint1
     }
 }

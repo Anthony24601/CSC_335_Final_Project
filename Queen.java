@@ -115,7 +115,7 @@ public class Queen extends Piece {
         ret = moves.toArray(ret);
         return ret;
     }
-
+/* 
     @Override
     public String getPicture(int row, int col) {
 		String path = "images/";
@@ -139,7 +139,7 @@ public class Queen extends Piece {
             path += "black/";
         }
         return path+FILE_NAME;
-	}
+	}*/
    
     @Override
     public int getColor() {

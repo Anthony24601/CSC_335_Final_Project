@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
-    private static final String FILE_NAME = "bishop.png";
     private static final char KIND = Piece.BISHOP;
 
     public Bishop(int color, int rank, int file) {
