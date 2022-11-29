@@ -35,6 +35,19 @@ public class MoveParser {
         return String.format("%c%d=%c", toFile + 'a' - 1, toRank, newType);
     }
 
+    public static boolean isValidLoc(String loc) {
+        if (loc.length() != 2) {
+            return false;
+        }
+        if (loc.charAt(0) < 'a' || loc.charAt(0) > 'h') {
+            return false;
+        }
+        if (loc.charAt(1) < '1' || loc.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean movePiece(String fromLoc, String toLoc) {
         Board board = gameModel.getCurrentBoard();
         boolean whitesTurn = gameModel.isWhitesTurn();
