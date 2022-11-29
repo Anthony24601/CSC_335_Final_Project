@@ -30,16 +30,6 @@ public class Blank extends Piece{
 	}
 
 	@Override
-	public int getRank() {
-		return 0;
-	}
-
-	@Override
-	public int getFile() {
-		return 0;
-	}
-
-	@Override
 	public Blank copy() {
 		return new Blank(color, rank, file);
 	}

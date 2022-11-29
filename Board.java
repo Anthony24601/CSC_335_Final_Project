@@ -1,8 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class Board {
-	final static boolean USE_TEMP_BOARD = false;
+public class Board implements Serializable {
+	private static final long serialVersionUID = 1L;
 
+final static boolean USE_TEMP_BOARD = true;
 	final static int RANKS = 8;
     final static int FILES = 8;
 
