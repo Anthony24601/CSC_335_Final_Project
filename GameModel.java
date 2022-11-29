@@ -1,7 +1,11 @@
 import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.Map;
 
-public class GameModel {
-    private static GameModel instance;
+public class GameModel implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private static GameModel instance;
 
     private Board currentBoard;
     private boolean whitesTurn;
