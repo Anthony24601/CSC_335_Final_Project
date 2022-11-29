@@ -152,20 +152,20 @@ public class Board implements Serializable {
 		board[0][5] = rightWhiteB;
 		
 		//queens
-		Queen blackQueen = new Queen(Piece.BLACK, 8, 4);
-		Queen whiteQueen = new Queen(Piece.WHITE, 1, 4);
+		Queen blackQueen = new Queen(Piece.BLACK, 8, 5);
+		Queen whiteQueen = new Queen(Piece.WHITE, 1, 5);
 		queens.add(blackQueen);
 		queens.add(whiteQueen);
-		board[7][3] = blackQueen;
-		board[0][3] = whiteQueen;
+		board[7][4] = blackQueen;
+		board[0][4] = whiteQueen;
 		
 		// kings
-		King blackKing = new King(Piece.BLACK, 8, 5);
-		King whiteKing = new King(Piece.WHITE, 1, 5);
+		King blackKing = new King(Piece.BLACK, 8, 4);
+		King whiteKing = new King(Piece.WHITE, 1, 4);
 		kings.add(blackKing);
 		kings.add(whiteKing);
-		board[7][4] = blackKing;
-		board[0][4] = whiteKing;
+		board[7][3] = blackKing;
+		board[0][3] = whiteKing;
 		
 		// pawns
 		for (int f = 1; f <= 8; f++) {

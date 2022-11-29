@@ -1,6 +1,7 @@
 
 public class NetworkTesting {
 	public static void main(String[] args) {
+		/*
 		Server server = new Server(59896);
 		Client client_0 = new Client("127.0.0.1", 59896, 0);
 		Client client_1 = new Client("127.0.0.1", 59896, 1);
@@ -22,5 +23,6 @@ public class NetworkTesting {
 		client_1.closeConnection();
 		server.closeServer();
 		System.exit(0);
+		*/
 	}
 }

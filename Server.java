@@ -136,7 +136,7 @@ public class Server extends Thread {
 					print_debug("Player " + turn + "'s move: " + loc + ", " + move);
 					
 					// update piece in gameModel
-					//model.getCurrentBoard().move(loc, move);
+					model.getCurrentBoard().move(loc, move);
 					
 					// set next player's turn and send them the model
 					turn = (turn + 1) % clients.length;

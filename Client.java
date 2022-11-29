@@ -26,16 +26,21 @@ public class Client extends Thread {
 	private int id;
 	private boolean turn_active;
 	private GameModel model;
+	Player player;
 	
-	public Client(String host, int port) {
+	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
+		player = p;
+		id = 0;
 	}
 	
-	public Client(String host, int port, int id) {
-		this(host, port);
+	/*
+	public Client(String host, int port, int id, Player p) {
+		this(host, port, p);
 		this.id = id;
 	}
+	*/
 	
 	public void openConnection() {
 		try {
@@ -71,6 +76,10 @@ public class Client extends Thread {
 		curr_move = move;
 	}
 	
+	public boolean getTurn() {
+		return turn_active;
+	}
+	
 	@Override
 	public void run() {
 		try {
@@ -100,6 +109,7 @@ public class Client extends Thread {
 					turn_active = in.readBoolean();
 					model = (GameModel) in.readObject();
 					print_debug("It's my turn now!");
+					player.updateBoard(model.getCurrentBoard());
 				} 
 				catch (IOException | ClassNotFoundException e) {
 					print_debug("Turn assignment failed!");
