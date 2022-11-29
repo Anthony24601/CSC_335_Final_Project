@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GameModel {
     private static GameModel instance;
@@ -42,23 +41,6 @@ public class GameModel {
 
     public boolean makeMove(String move, Board b) {
         char kind = MoveParser.getKind(move);
-        /*
-        Map<String, String[]> moveMap = b.getMoves(kind, whitesTurn);
-        
-        for (Map.Entry<String, String[]> me : moveMap.entrySet()) {
-            for (String m : me.getValue()) {
-                if (m.equals(move)) {
-                    addHasMoved(me.getKey(), m);
-                    Piece capturedPiece = b.move(me.getKey(), m);
-                    if (capturedPiece != null) {
-                        b.removePiece(capturedPiece);
-                    }
-                    whitesTurn = !whitesTurn;
-                    return true;
-                }
-            }
-        } 
-        */
         ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
         for (String entry : moveMap) {
             String loc = entry.split(":")[0];
@@ -91,6 +73,13 @@ public class GameModel {
         return move;
     }
 
+    public boolean wouldPutInCheck(String loc, String move) {
+        Board futureBoard = currentBoard.copy();
+        futureBoard.move(loc, move);
+
+        return futureBoard.hasCheck(!whitesTurn);
+    }
+
     private void addHasMoved(String loc, String move) {
         int rank = loc.charAt(1)-'0';
         int file = loc.charAt(0) - 'a'+1;
@@ -106,8 +95,6 @@ public class GameModel {
             blackKingHasMoved = rank == 8 && file == 4 || blackKingHasMoved;
         }
     }
-
-
 
     public void printBoard() {
         System.out.println(currentBoard.toString());

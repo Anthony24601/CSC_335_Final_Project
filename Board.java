@@ -214,12 +214,12 @@ public class Board {
 		whiteKing = new King(Piece.WHITE, 1, 5);
 		blackKing = new King(Piece.BLACK, 8, 3);
 		Queen wq = new Queen(Piece.WHITE, 2, 8);
-		Rook br = new Rook(Piece.BLACK, 7, 5);
+		Queen bq = new Queen(Piece.BLACK, 7, 3);
 		
 		placePiece(whiteKing);
 		placePiece(blackKing);
 		placePiece(wq);
-		placePiece(br);
+		placePiece(bq);
 	}
 
 	public Piece get(int rank, int file) {

@@ -27,53 +27,69 @@ public class Pawn extends Piece {
             // One space
             if (board.isInBounds(rank+1, file) && board.isEmpty(rank+1, file)) {
                 move = MoveParser.constructMove(this, rank+1, file, false);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             }
 
             // Two space
             if (rank == 2 && board.isInBounds(rank+2, file) && board.isEmpty(rank+1, file) && board.isEmpty(rank+2, file)) {
                 move = MoveParser.constructMove(this, rank+2, file, false);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             }
 
             // Capture
             if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK) {
                 move = MoveParser.constructMove(this, rank+1, file-1, true);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             }
             if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK) {
                 move = MoveParser.constructMove(this, rank+1, file+1, true);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             } 
         } else {
             // One space
             if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
                 move = MoveParser.constructMove(this, rank-1, file, false);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             }
 
             // Two space
             if (rank == 7 && board.isInBounds(rank-2, file) && board.isEmpty(rank-1, file) && board.isEmpty(rank-2, file)) {
                 move = MoveParser.constructMove(this, rank-2, file, false);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             }
 
             // Capture
             if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE) {
                 move = MoveParser.constructMove(this, rank-1, file-1, true);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             }
             if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE) {
                 move = MoveParser.constructMove(this, rank-1, file+1, true);
-                move = gameModel.addCheck(getLoc(), move);
-                moves.add(move);
+                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                    move = gameModel.addCheck(getLoc(), move);
+                    moves.add(move);
+                }
             } 
         }
 

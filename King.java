@@ -29,8 +29,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // up-right
@@ -39,8 +41,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // up
@@ -49,8 +53,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // up-left
@@ -59,8 +65,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // left
@@ -69,8 +77,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // down-left
@@ -79,8 +89,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // down
@@ -89,8 +101,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // down-right
@@ -99,8 +113,10 @@ public class King extends Piece {
         if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = MoveParser.constructMove(this, r, f, isCapture);
-            move = gameModel.addCheck(getLoc(), move);
-            moves.add(move);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         String[] ret = new String[moves.size()];
