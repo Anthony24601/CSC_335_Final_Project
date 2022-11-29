@@ -23,6 +23,7 @@ public class Server extends Thread {
 	private ClientManager[] clients;
 	private final int MAX_PLAYERS;
 	private int turn;
+	private GameModel model;
 	
 	public Server(int port) {
 		this.running = false;
@@ -30,6 +31,7 @@ public class Server extends Thread {
 		this.MAX_PLAYERS = 2; // default, maybe change
 		this.clients = new ClientManager[MAX_PLAYERS];
 		this.turn = 0;
+		this.model = GameModel.getInstance();
 	}
 	
 	public void openServer() {
@@ -48,12 +50,12 @@ public class Server extends Thread {
 		try {
 			listener.close();
 			running = false;
+			this.interrupt();
 			print_debug("Server closed.");
 		}
 		catch (IOException e) { 
 			e.printStackTrace(); 
 		}
-		this.interrupt();
 	}
 	
 	@Override
@@ -96,38 +98,52 @@ public class Server extends Thread {
 		public void run() {
 			print_debug("New connection: " + socket);
 			
-			// initial communication
 			try {
 				out = new ObjectOutputStream(socket.getOutputStream());
 				out.flush();
 				in = new ObjectInputStream(socket.getInputStream());
 				
+				// initial communication
 				String message = (String) in.readObject();
-				print_debug("Received client request: " + message);
-
-				print_debug("Sending response to client " + id);
+				
+				print_debug("Sending turn to client " + id);
 		    	out.writeBoolean((turn == id));
+		    	
+		    	print_debug("Sending GameModel to client " + id + "...");
+		    	out.writeObject(model);
 				out.flush();
+				out.reset();
 			} 
 			catch (IOException | ClassNotFoundException e) {
-				print_debug("Connection failed!");
+				print_debug("Initial communication failed!");
 				e.printStackTrace();
 			}
 			
+			String loc;
 			String move;
 			while (running) {
 				// continuous communication
 				try {
+					// read current player's move
+					loc = (String) in.readObject();
+					if (loc.equals("bye!")) {
+						print_debug("client " + id + " disconnecting");
+						sendModel();
+						break;
+					}
+					
 					move = (String) in.readObject();
-					print_debug("Player " + turn + "'s move: " + move);
-					// to implement, update piece in gameModel
+					print_debug("Player " + turn + "'s move: " + loc + ", " + move);
+					
+					// update piece in gameModel
+					//model.getCurrentBoard().move(loc, move);
+					
+					// set next player's turn and send them the model
 					turn = (turn + 1) % clients.length;
-					print_debug("Sending turn to next player " + turn);
-					clients[turn].out.writeBoolean(true);
-					clients[turn].out.flush();
-					// to implement, send gamemodel to other player
+					sendModel();
 				}
 				catch (IOException | ClassNotFoundException e) {
+					print_debug("Communication failed.");
 					e.printStackTrace();
 				}
 			}
@@ -140,5 +156,18 @@ public class Server extends Thread {
 			}
 		}
 		
+		private void sendModel() {
+			try {
+				print_debug("Sending model to next player " + turn);
+				clients[turn].out.writeBoolean(true);
+				clients[turn].out.writeObject(model);
+				clients[turn].out.flush();
+				clients[turn].out.reset();
+			}
+			catch (IOException e) {
+				print_debug("Failed to send model (client may have disconnected).");
+				e.printStackTrace();
+			}
+		}
 	}
 }

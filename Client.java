@@ -20,10 +20,12 @@ public class Client extends Thread {
 	
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	private String request;
+	private String curr_pos;
+	private String curr_move;
 	
 	private int id;
 	private boolean turn_active;
+	private GameModel model;
 	
 	public Client(String host, int port) {
 		this.host = host;
@@ -51,18 +53,22 @@ public class Client extends Thread {
 	    	print_debug("No connection active!");
 			return; 
 		}
-		try {
-			socket.close();
+		try { 
+			// wave goodbye to server
+			out.writeObject("bye!");
+			out.flush();
+			
+			socket.close(); 
 			running = false;
+			this.interrupt();
+			print_debug("Connection closed!");
 		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		this.interrupt();
+		catch (IOException e) { e.printStackTrace(); }
 	}
 	
-	public void sendMove(String move) {
-		request = move;
+	public void sendMove(String pos, String move) {
+		curr_pos = pos;
+		curr_move = move;
 	}
 	
 	@Override
@@ -78,9 +84,11 @@ public class Client extends Thread {
 	    	
 	    	boolean response = in.readBoolean();
 	    	turn_active = response;
-	    	print_debug("Response: " + response);
+	    	
+	    	model = (GameModel) in.readObject();
+	    	print_debug("Received model!");
 		}
-		catch (IOException e) {
+		catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
@@ -90,19 +98,20 @@ public class Client extends Thread {
 				try {
 					print_debug("Waiting for my turn...");
 					turn_active = in.readBoolean();
-					// read game model from server here
+					model = (GameModel) in.readObject();
 					print_debug("It's my turn now!");
 				} 
-				catch (IOException e) {
+				catch (IOException | ClassNotFoundException e) {
 					print_debug("Turn assignment failed!");
 					e.printStackTrace();
 				}
 			}
-			else if (request != null) {
+			else if (curr_move != null) {
 				try {
 					print_debug("Sending my move");
-					out.writeObject(request);
-					request = null;
+					out.writeObject(curr_pos);
+					out.writeObject(curr_move);
+					curr_pos = curr_move = null;
 					turn_active = false;
 				} 
 				catch (IOException e) {
@@ -116,6 +125,7 @@ public class Client extends Thread {
 				} 
 				catch (InterruptedException e) {
 					print_debug("Thread was interrupted!");
+					//e.printStackTrace();
 				}
 			}
 		}

@@ -9,8 +9,8 @@ public class NetworkTesting {
 		client_0.openConnection();
 		client_1.openConnection();
 		
-		client_0.sendMove("KC3");
-		client_1.sendMove("PH5");
+		client_0.sendMove("a0", "KC3");
+		client_1.sendMove("h3", "PH5");
 		
 		try {
 			Thread.sleep(20000);
