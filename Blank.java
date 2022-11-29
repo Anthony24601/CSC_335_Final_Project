@@ -1,8 +1,10 @@
 
 public class Blank extends Piece{
+	private boolean passantState;
 
 	public Blank(int color, int rank, int file) {
 		super(color, rank, file, "blank");
+		passantState = false;
 	}
 
 	public String[] getValidMoves(Board board) {
@@ -40,5 +42,14 @@ public class Blank extends Piece{
 	@Override
 	public Blank copy() {
 		return new Blank(color, rank, file);
+	}
+
+	@Override
+	public boolean isPassant(){
+		return passantState;
+	}
+	
+	public void setPassant(boolean isPassant){
+		passantState = isPassant;
 	}
 }

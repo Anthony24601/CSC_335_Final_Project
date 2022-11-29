@@ -90,6 +90,23 @@ public abstract class Piece {
 			return "images/dark/" + color_string + "/" + name + ".png";
 		}
 	}
+
+	/**
+	 * returns true if the square this Piece is on is "en passantable",
+	 * meaning if a pawn moves to this square, it would result in a 
+	 * En Passant capture. Should only be true for Blanks.
+	 */
+	public boolean isPassant(){
+		return false;
+	}
+
+	/**
+	 * Only implemented for Blank, marks this Piece as one where an
+	 * En Passant capture could happen
+	 * @param b 
+	 */
+	public void setPassant(boolean isPassant) {
+    }
   
 	abstract public char getKind();
 

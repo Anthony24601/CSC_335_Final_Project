@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Board {
-	final static boolean USE_TEMP_BOARD = true;
+	final static boolean USE_TEMP_BOARD = false;
 
 	final static int RANKS = 8;
     final static int FILES = 8;
@@ -14,6 +14,7 @@ public class Board {
 
 	private Piece blackKing;
 	private Piece whiteKing;
+	private Piece passantSquare;
 	private ArrayList<Piece> queens;
 	private ArrayList<Piece> bishops;
 	private ArrayList<Piece> knights;
@@ -320,6 +321,8 @@ public class Board {
 
 	private Piece move(Piece piece, int toRank, int toFile, boolean isCapture) {
 		Piece capturedPiece = isCapture ? board[toRank-1][toFile-1] : null;
+		
+		resetPassantSquare();
 
 		int fromRank = piece.getRank();
 		int fromFile = piece.getFile();
@@ -329,14 +332,48 @@ public class Board {
 		piece.setRank(toRank);
 		piece.setFile(toFile);	
 
-		// Pawn promotion check
 		if(piece.getKind()==Piece.PAWN){
+			// Pawn promotion check
 			if(toRank==1||toRank==8){
 				pawnPromotionMove(piece, toRank, toFile);
+			}
+			// 2 square move -> set up passantSquare
+			if(Math.abs(fromRank-toRank)==2){
+				if(piece.getColor()==Piece.WHITE){
+					passantSquare = board[2][fromFile-1];
+					passantSquare.setPassant(true);
+				}
+				else{
+					passantSquare = board[5][fromFile-1];
+					passantSquare.setPassant(true);
+				}
+			}
+			// check if the pawn is doing an En Passant capture
+			if(isCapture && capturedPiece.isBlank()){
+				if(piece.getColor()==Piece.WHITE){
+					capturedPiece = board[4][toFile-1];
+					board[4][toFile-1] = new Blank(Piece.BLANK, 2, toFile-1);
+				}
+				else{
+					capturedPiece = board[3][toFile-1];
+					board[3][toFile-1] = new Blank(Piece.BLANK, 4, toFile-1);
+				}
 			}
 		}
 
 		return capturedPiece;
+	}
+
+	/**
+	 * Gets rid of the marking for a passant square
+	 * Sets this Board's passantSquare to null.
+	 * If there is a current passantSquare, sets that Piece's
+	 * isPassant to false.
+	 */
+	private void resetPassantSquare(){
+		if(passantSquare!=null)
+			passantSquare.setPassant(false);
+		passantSquare = null;
 	}
 
 	private Piece kingsideCastleMove(String loc){
