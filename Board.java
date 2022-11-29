@@ -1,8 +1,11 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	final static int RANKS = 8;
     final static int FILES = 8;
 

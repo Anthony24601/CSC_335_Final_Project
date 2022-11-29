@@ -1,4 +1,8 @@
-public abstract class Piece {
+import java.io.Serializable;
+
+public abstract class Piece implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	// colors
 	public final static int BLANK = 0;
 	public final static int WHITE = 10;
