@@ -23,38 +23,41 @@ public class TerminalTest {
 
         if (AUTO) {
             String[] sampleGame = {
-                "d4",   "e6",
-                "Nf3",  "Qf6",
-                "Qd3",  "c5",
-                "g3",   "Bd6",
-                "dxc5", "Nc6",
-                "cxd6", "Qf8",
                 "e4",   "e5",
-                "b3",   "Qd8",
-                "Qd5",  "g6",
-                "Bg5",  "Nf6",
-                "Nc3",  "Qb6",
-                "Bxf6", "h6",
-                "Bxh8", "h5",
-                "Ng5",  "Ke8",
-                "Qxf7+","Kd8",
-                "Qf8#"
+                "Nf3",  "Nc6",
+                "d4",   "exd4",
+                "Nxd4", "Bc5",
+                "Be3",  "Qf6",
+                "c3",   "Nge7",
+                "g3",   "Ne5",
+                "f4",   "c6",
+                "fxe5", "Qxe5",
+                "Bd3",  "0-0",
+                "b4",   "Re8",
+                "bxc5", "d5",
+                "Qf3",  "b5",
+                "0-0",  "Ng6",
+                "Qxf7+","Kh8",
+                "Nxc6", "Bh3",
+                "Nxe5", "Rxe5",
+                "Qb7",  "Rg8",
+                "exd5", "Rxe3",
+                "Bxg6", "hxg6",
+                "Qf7",  "Re2",
+                "Qxg6", "Bxf1",
+                "Kxf1", "Rxh2",
+                "Na3",  "Rd2",
+                "Qh5#"
             };
 
             for (String move : sampleGame) {
                 gameModel.printBoard();
                 isInvalidMove(move);
-                result = gameModel.makeMove(move);
+                result = interpretMove(move);
                 while (!result) {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
                 }
-                /*
-                String cont = ChrisIR4.getString("Press enter to continue, or enter 'q' to stop: ");
-                if (cont.equals("q")) {
-                    break;
-                }
-                */
             }
         } else {
             String move;

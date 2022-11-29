@@ -1,4 +1,4 @@
-import java.util.Map;
+import java.util.ArrayList;
 
 public class GameModel {
     private static GameModel instance;
@@ -41,21 +41,20 @@ public class GameModel {
 
     public boolean makeMove(String move, Board b) {
         char kind = MoveParser.getKind(move);
-        Map<String, String[]> moveMap = b.getMoves(kind, whitesTurn);
-        
-        for (Map.Entry<String, String[]> me : moveMap.entrySet()) {
-            for (String m : me.getValue()) {
-                if (m.equals(move)) {
-                    addHasMoved(me.getKey(), m);
-                    Piece capturedPiece = b.move(me.getKey(), m);
-                    if (capturedPiece != null) {
-                        b.removePiece(capturedPiece);
-                    }
-                    whitesTurn = !whitesTurn;
-                    return true;
+        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
+        for (String entry : moveMap) {
+            String loc = entry.split(":")[0];
+            String m = entry.split(":")[1];
+            if (m.equals(move)) {
+                addHasMoved(loc, m);
+                Piece capturedPiece = b.move(loc, m);
+                if (capturedPiece != null) {
+                    b.removePiece(capturedPiece);
                 }
+                whitesTurn = !whitesTurn;
+                return true;
             }
-        } 
+        }
         return false;
     }
 
@@ -74,6 +73,13 @@ public class GameModel {
         return move;
     }
 
+    public boolean wouldPutInCheck(String loc, String move) {
+        Board futureBoard = currentBoard.copy();
+        futureBoard.move(loc, move);
+
+        return futureBoard.hasCheck(!whitesTurn);
+    }
+
     private void addHasMoved(String loc, String move) {
         int rank = loc.charAt(1)-'0';
         int file = loc.charAt(0) - 'a'+1;
@@ -90,8 +96,6 @@ public class GameModel {
         }
     }
 
-
-
     public void printBoard() {
         System.out.println(currentBoard.toString());
     }
@@ -103,10 +107,10 @@ public class GameModel {
                 return false;
 
             // Check if King would be in check moving across
-            String c1 = "Kc1";
-            String b1 = "Kb1";
-            if (c1.equals(addCheck("d1", c1)) && b1.equals(addCheck("d1", b1)) && currentBoard.isEmpty(1, 3) && currentBoard.isEmpty(1, 2)) {
-                currentBoard.move("d1", "0-0");     // TODO: Add Check for logs
+            String f1 = "Kf1";
+            String g1 = "Kg1";
+            if (f1.equals(addCheck("e1", f1)) && g1.equals(addCheck("e1", g1)) && currentBoard.isEmpty(1, 6) && currentBoard.isEmpty(1, 7)) {
+                currentBoard.move("e1", "0-0");     // TODO: Add Check for logs
                 whiteKingHasMoved = true;
                 whiteKingRookHasMoved = true;
                 whitesTurn = !whitesTurn;
@@ -116,10 +120,10 @@ public class GameModel {
             if (blackKingHasMoved || blackKingRookHasMoved)
                 return false;
 
-            String c8 = "Kc8";
-            String b8 = "Kb8";
-            if (c8.equals(addCheck("d8", c8)) && b8.equals(addCheck("d8", b8)) && currentBoard.isEmpty(8, 3) && currentBoard.isEmpty(8, 2)) {
-                currentBoard.move("d8", "0-0");     // TODO: Add Check for logs
+            String f8 = "Kf8";
+            String g8 = "Kg8";
+            if (f8.equals(addCheck("e8", f8)) && g8.equals(addCheck("e8", g8)) && currentBoard.isEmpty(8, 6) && currentBoard.isEmpty(8, 7)) {
+                currentBoard.move("e8", "0-0");     // TODO: Add Check for logs
                 blackKingHasMoved = true;
                 blackKingRookHasMoved = true;
                 whitesTurn = !whitesTurn;
@@ -136,10 +140,10 @@ public class GameModel {
                 return false;
             }
 
-            String e1 = "Ke1";
-            String f1 = "Kf1";
-            if (e1.equals(addCheck("d1", e1)) && f1.equals(addCheck("d1", f1)) && currentBoard.isEmpty(1, 7)) {
-                currentBoard.move("d1", "0-0-0");
+            String d1 = "Kd1";
+            String c1 = "Kc1";
+            if (d1.equals(addCheck("e1", d1)) && c1.equals(addCheck("e1", c1)) && currentBoard.isEmpty(1, 2)) {
+                currentBoard.move("e1", "0-0-0");
                 whiteKingHasMoved = true;
                 whiteQueenRookHasMoved = true;
                 return true;
@@ -149,9 +153,9 @@ public class GameModel {
                 return false;
             }
 
-            String e8 = "Ke8";
-            String f8 = "Kf8";
-            if (e8.equals(addCheck("d8", e8)) && f8.equals(addCheck("d8", f8)) && currentBoard.isEmpty(8, 7)) {
+            String d8 = "Ke8";
+            String c8 = "Kf8";
+            if (d8.equals(addCheck("e8", d8)) && c8.equals(addCheck("e8", c8)) && currentBoard.isEmpty(8, 2)) {
                 currentBoard.move("d8", "0-0-0");
                 blackKingHasMoved = true;
                 blackQueenRookHasMoved = true;

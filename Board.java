@@ -1,8 +1,8 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 
 public class Board {
+	final static boolean USE_TEMP_BOARD = true;
+
 	final static int RANKS = 8;
     final static int FILES = 8;
 
@@ -36,8 +36,11 @@ public class Board {
 				}
 			}
 		} else {
-			reset();
-			//temp_board();
+			if (USE_TEMP_BOARD) {
+				temp_board();
+			} else {
+				reset();
+			}
 		}
 	}
 	
@@ -63,8 +66,8 @@ public class Board {
 		return newBoard;
 	}
 
-	public Map<String, String[]> getMoves(boolean isWhite) {
-		Map<String, String[]> moveMap = new HashMap<>();
+	public ArrayList<String> getMoves(boolean isWhite) {
+		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -72,7 +75,7 @@ public class Board {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.put(loc, board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
 				}
 			}
 		}
@@ -80,27 +83,58 @@ public class Board {
 		return moveMap;
 	}
 
-	public Map<String, String[]> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
 		switch (kind) {
 			case 0: pieces = pawns; break;
 			case 'K': pieces.add(blackKing); pieces.add(whiteKing); break;
-			case 'Q': pieces = queens; break;
+			case 'Q': 
+				pieces = queens;
+				break;
 			case 'B': pieces = bishops; break;
 			case 'N': pieces = knights; break;
 			case 'R': pieces = rooks; break;
 		}
 
-		Map<String, String[]> moveMap = new HashMap<>();
+		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				moveMap.put(p.getLoc(), p.getValidMoves(this));
+				String[] validMoves = p.getValidMoves(this);
+				for (String vm : validMoves) {
+					moveMap.add(p.getLoc() + ":" + vm);
+				}
 			}
 		}
+
+		adjustSameSpace(moveMap);
 		return moveMap;
 	}
+
+	private void adjustSameSpace(ArrayList<String> moveMap) {
+		String entry1, entry2, loc1, loc2, move1, move2;
+		for (int i = 0; i < moveMap.size(); i++) {
+			entry1 = moveMap.get(i);
+			for (int j = i+1; j < moveMap.size(); j++) {
+				entry2 = moveMap.get(j);
+				move1 = entry1.split(":")[1];
+				move2 = entry2.split(":")[1];
+				if (move1.equals(move2)) {
+					loc1 = entry1.split(":")[0];
+					loc2 = entry2.split(":")[0];
+					if (loc1.charAt(0) == loc2.charAt(0)) {
+						moveMap.set(i, loc1 + ":" + String.format("%c%d%s", move1.charAt(0), loc1.charAt(1), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%d%s", move2.charAt(0), loc2.charAt(1), move2.substring(1)));
+					} else {
+						moveMap.set(i, loc1 + ":" + String.format("%c%c%s", move1.charAt(0), loc1.charAt(0), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%c%s", move2.charAt(0), loc2.charAt(0), move2.substring(1)));
+					}
+				} 
+			}
+		}
+	}
+
 
 	/**
 	 * Fills up board with new Pieces in the starting positions
@@ -177,40 +211,48 @@ public class Board {
 			}
 		}
 		// USED FOR DEBUGGING MOVES
-		whiteKing = new King(Piece.WHITE, 1, 4);
-		blackKing = new King(Piece.BLACK, 8, 4);
-		Rook bkr = new Rook(Piece.BLACK, 8, 1);
-		Rook bqr = new Rook(Piece.BLACK, 8, 8);
+		whiteKing = new King(Piece.WHITE, 1, 5);
+		blackKing = new King(Piece.BLACK, 8, 3);
+		Queen wq = new Queen(Piece.WHITE, 2, 8);
+		Queen bq = new Queen(Piece.BLACK, 7, 3);
 		
 		placePiece(whiteKing);
 		placePiece(blackKing);
-		placePiece(bkr);
-		placePiece(bqr);
+		placePiece(wq);
+		placePiece(bq);
 	}
 
 	public Piece get(int rank, int file) {
 		return this.board[rank-1][file-1];
 	}
 
+	public Piece get(String loc) {
+		int rank = loc.charAt(1)-'0';
+		int file = loc.charAt(0)-'a'+1;
+		return get(rank, file);
+	}
+
 	public boolean hasCheck(boolean isWhite) {
+		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
 		for (Piece p : pawns) {
-			if (p.canCheck(this))
-				return true; 
+			if (p.getColor() == ownColor && p.canCheck(this)) {
+				return true;
+			} 
 		}
 		for (Piece r : rooks) {
-			if (r.canCheck(this))
+			if (r.getColor() == ownColor && r.canCheck(this))
 				return true; 
 		}
 		for (Piece n : knights) {
-			if (n.canCheck(this))
+			if (n.getColor() == ownColor && n.canCheck(this))
 				return true; 
 		}
 		for (Piece b : bishops) {
-			if (b.canCheck(this))
+			if (b.getColor() == ownColor && b.canCheck(this))
 				return true; 
 		}
 		for (Piece q : queens) {
-			if (q.canCheck(this))
+			if (q.getColor() == ownColor && q.canCheck(this))
 				return true; 
 		}
 
@@ -251,6 +293,12 @@ public class Board {
 		int r2, f2;
 		boolean isCapture = false;
 		if (move.charAt(0) < 'a') {
+			move = move.substring(1);
+		}
+		if (move.charAt(0) >= 'a' && move.charAt(0) <= 'h' && move.charAt(1) >= 'a' && move.charAt(1) <= 'h') {
+			move = move.substring(1);
+		}
+		if (move.charAt(0) >= '1' && move.charAt(0) <= '8' && move.charAt(1) >= 'a' && move.charAt(1) <= 'h') {
 			move = move.substring(1);
 		}
 		if (move.charAt(0) == 'x') {
