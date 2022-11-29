@@ -1,8 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class Board {
-	final static boolean USE_TEMP_BOARD = false;
+public class Board implements Serializable {
+	private static final long serialVersionUID = 1L;
 
+final static boolean USE_TEMP_BOARD = true;
 	final static int RANKS = 8;
     final static int FILES = 8;
 
@@ -14,6 +19,7 @@ public class Board {
 
 	private Piece blackKing;
 	private Piece whiteKing;
+	private Piece passantSquare;
 	private ArrayList<Piece> queens;
 	private ArrayList<Piece> bishops;
 	private ArrayList<Piece> knights;
@@ -43,7 +49,7 @@ public class Board {
 			}
 		}
 	}
-	
+
 	public Board copy() {
 		Board newBoard = new Board(true);
 		
@@ -212,7 +218,7 @@ public class Board {
 		}
 		// USED FOR DEBUGGING MOVES
 		whiteKing = new King(Piece.WHITE, 1, 5);
-		blackKing = new King(Piece.BLACK, 8, 3);
+		blackKing = new King(Piece.BLACK, 5, 3);
 		Queen wq = new Queen(Piece.WHITE, 2, 8);
 		Queen bq = new Queen(Piece.BLACK, 7, 3);
 		
@@ -220,6 +226,9 @@ public class Board {
 		placePiece(blackKing);
 		placePiece(wq);
 		placePiece(bq);
+
+		Pawn testPawn = new Pawn(Piece.WHITE, 7, 7);
+		placePiece(testPawn);
 	}
 
 	public Piece get(int rank, int file) {
@@ -278,42 +287,12 @@ public class Board {
 	}
 
 	public Piece move(String loc, String move) {
+
+		// Castling
 		if (move.equals("0-0")) {
-			Piece rook, king;
-			// White King
-			if (loc.equals("e1")) {
-				rook = get(1, 8);
-				king = get(1, 5);
-				move(rook, 1, 6, false);
-				move(king, 1, 7, false);
-			} else if (loc.equals("e8")) {
-				rook = get(8, 8);
-				king = get(8, 5);
-				move(rook, 8, 6, false);
-				move(king, 8, 7, false);
-			} else {
-				System.out.println("lol wat?");
-				System.exit(300);
-			}
-			return null; 	
+			return kingsideCastleMove(loc); 	
 		} else if (move.equals("0-0-0")) {
-			Piece rook, king;
-			// White King
-			if (loc.equals("e1")) {
-				rook = get(1, 1);
-				king = get(1, 5);
-				move(rook, 1, 4, false);
-				move(king, 1, 3, false);
-			} else if (loc.equals("e8")) {
-				rook = get(8, 1);
-				king = get(8, 5);
-				move(rook, 8, 4, false);
-				move(king, 8, 3, false);
-			} else {
-				System.out.println("lol wat?");
-				System.exit(300);
-			}
-			return null;
+			return queensideCastleMove(loc);
 		}
 
 		int r1 = loc.charAt(1)-'0';
@@ -347,6 +326,8 @@ public class Board {
 
 	private Piece move(Piece piece, int toRank, int toFile, boolean isCapture) {
 		Piece capturedPiece = isCapture ? board[toRank-1][toFile-1] : null;
+		
+		resetPassantSquare();
 
 		int fromRank = piece.getRank();
 		int fromFile = piece.getFile();
@@ -354,9 +335,101 @@ public class Board {
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
 		board[toRank-1][toFile-1] = piece;
 		piece.setRank(toRank);
-		piece.setFile(toFile);		
+		piece.setFile(toFile);	
+
+		if(piece.getKind()==Piece.PAWN){
+			// Pawn promotion check
+			if(toRank==1||toRank==8){
+				pawnPromotionMove(piece, toRank, toFile);
+			}
+			// 2 square move -> set up passantSquare
+			if(Math.abs(fromRank-toRank)==2){
+				if(piece.getColor()==Piece.WHITE){
+					passantSquare = board[2][fromFile-1];
+					passantSquare.setPassant(true);
+				}
+				else{
+					passantSquare = board[5][fromFile-1];
+					passantSquare.setPassant(true);
+				}
+			}
+			// check if the pawn is doing an En Passant capture
+			if(isCapture && capturedPiece.isBlank()){
+				if(piece.getColor()==Piece.WHITE){
+					capturedPiece = board[4][toFile-1];
+					board[4][toFile-1] = new Blank(Piece.BLANK, 2, toFile-1);
+				}
+				else{
+					capturedPiece = board[3][toFile-1];
+					board[3][toFile-1] = new Blank(Piece.BLANK, 4, toFile-1);
+				}
+			}
+		}
 
 		return capturedPiece;
+	}
+
+	/**
+	 * Gets rid of the marking for a passant square
+	 * Sets this Board's passantSquare to null.
+	 * If there is a current passantSquare, sets that Piece's
+	 * isPassant to false.
+	 */
+	private void resetPassantSquare(){
+		if(passantSquare!=null)
+			passantSquare.setPassant(false);
+		passantSquare = null;
+	}
+
+	private Piece kingsideCastleMove(String loc){
+		Piece rook, king;
+			// White King
+			if (loc.equals("d1")) {
+				rook = get(1, 1);
+				king = get(1, 4);
+				move(rook, 1, 3, false);
+				move(king, 1, 2, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 1);
+				king = get(8, 4);
+				move(rook, 8, 3, false);
+				move(king, 8, 2, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null; 	
+	}
+
+	private Piece queensideCastleMove(String loc){
+		Piece rook, king;
+			// White King
+			if (loc.equals("d1")) {
+				rook = get(1, 8);
+				king = get(1, 4);
+				move(rook, 1, 5, false);
+				move(king, 1, 6, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 8);
+				king = get(8, 4);
+				move(rook, 8, 5, false);
+				move(king, 8, 6, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null;
+	}
+
+	/**
+	 * Places a newly constructed Queen of the same color at the indicated
+	 * location on this Board, and removes the old piece
+	 */
+	private Piece pawnPromotionMove(Piece piece, int toRank, int toFile){
+		Queen newQueen = new Queen(piece.getColor(), toRank, toFile);
+		placePiece(newQueen);
+		removePiece(piece);
+		return null;
 	}
 
 	public void placePiece(Piece piece) {

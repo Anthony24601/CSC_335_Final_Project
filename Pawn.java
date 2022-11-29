@@ -43,20 +43,25 @@ public class Pawn extends Piece {
             }
 
             // Capture
-            if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK) {
+            if (board.isInBounds(rank+1, file-1) && (board.get(rank+1, file-1).getColor() == Piece.BLACK || board.get(rank+1, file-1).isPassant())) {
                 move = MoveParser.constructMove(this, rank+1, file-1, true);
                 if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                     move = gameModel.addCheck(getLoc(), move);
                     moves.add(move);
                 }
             }
-            if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK) {
+            if (board.isInBounds(rank+1, file+1) && (board.get(rank+1, file+1).getColor() == Piece.BLACK|| board.get(rank+1, file+1).isPassant())) {
                 move = MoveParser.constructMove(this, rank+1, file+1, true);
                 if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                     move = gameModel.addCheck(getLoc(), move);
                     moves.add(move);
                 }
             } 
+
+            // Promotion
+            if(rank==7){
+                moves.add(MoveParser.constructPromotionMove(rank+1, file, Piece.QUEEN));
+            }
         } else {
             // One space
             if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
@@ -91,6 +96,11 @@ public class Pawn extends Piece {
                     moves.add(move);
                 }
             } 
+
+            // Promotion
+             if(rank==2){
+                moves.add(MoveParser.constructPromotionMove(rank-1, file, Piece.QUEEN));
+            }
         }
 
         String[] ret = new String[moves.size()];
