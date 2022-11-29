@@ -43,7 +43,7 @@ public class Board {
 			}
 		}
 	}
-	
+
 	public Board copy() {
 		Board newBoard = new Board(true);
 		
@@ -212,7 +212,7 @@ public class Board {
 		}
 		// USED FOR DEBUGGING MOVES
 		whiteKing = new King(Piece.WHITE, 1, 5);
-		blackKing = new King(Piece.BLACK, 8, 3);
+		blackKing = new King(Piece.BLACK, 5, 3);
 		Queen wq = new Queen(Piece.WHITE, 2, 8);
 		Queen bq = new Queen(Piece.BLACK, 7, 3);
 		
@@ -220,6 +220,9 @@ public class Board {
 		placePiece(blackKing);
 		placePiece(wq);
 		placePiece(bq);
+
+		Pawn testPawn = new Pawn(Piece.WHITE, 7, 7);
+		placePiece(testPawn);
 	}
 
 	public Piece get(int rank, int file) {
@@ -312,11 +315,6 @@ public class Board {
 		r2 = move.charAt(1)-'0';
 		f2 = move.charAt(0)-'a'+1;
 
-		// Pawn promotion
-		if(move.contains("=")){
-			return pawnPromotionMove(piece, r2, f2);
-		}
-
 		return move(piece, r2, f2, isCapture);
 	}
 
@@ -329,7 +327,14 @@ public class Board {
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
 		board[toRank-1][toFile-1] = piece;
 		piece.setRank(toRank);
-		piece.setFile(toFile);		
+		piece.setFile(toFile);	
+
+		// Pawn promotion check
+		if(piece.getKind()==Piece.PAWN){
+			if(toRank==1||toRank==8){
+				pawnPromotionMove(piece, toRank, toFile);
+			}
+		}
 
 		return capturedPiece;
 	}

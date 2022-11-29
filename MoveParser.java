@@ -31,6 +31,6 @@ public class MoveParser {
      * promotes to a Queen)
      */
     public static String constructPromotionMove(int toRank, int toFile, char newType){
-        return String.format("%c%d=%c", toRank, toFile, newType);
+        return String.format("%c%d=%c", toFile + 'a' - 1, toRank, newType);
     }
 }
