@@ -1,8 +1,8 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 
 public class Board {
+	final static boolean USE_TEMP_BOARD = true;
+
 	final static int RANKS = 8;
     final static int FILES = 8;
 
@@ -12,7 +12,8 @@ public class Board {
 	public final static int MAX_ROW = RANKS - 1;
 	public final static int MAX_COLUMN = FILES - 1;
 
-	private ArrayList<Piece> kings;
+	private Piece blackKing;
+	private Piece whiteKing;
 	private ArrayList<Piece> queens;
 	private ArrayList<Piece> bishops;
 	private ArrayList<Piece> knights;
@@ -21,43 +22,52 @@ public class Board {
 
 	private Piece[][] board;
 
-	public Board() {
+	public Board(boolean isBlank) {
 		board = new Piece[8][8];
-		kings = new ArrayList<>();
 		queens = new ArrayList<>();
 		bishops = new ArrayList<>();
 		knights = new ArrayList<>();
 		rooks = new ArrayList<>();
 		pawns = new ArrayList<>();
-		reset();
-		//temp_board();
-	} 
-
-	/**
-	 * Attemps a move on the chess board.
-	 * @param fromRank
-	 * @param fromFile
-	 * @param toRank
-	 * @param toFile
-	 * @return true if the move was made, false if the move was not
-	 * 		made (invalid move)
-	public boolean attemptMove(int fromRank, int fromFile, int toRank, int toFile){
-		// change arguement to a String of chess notation??
-		Piece selectedPiece = board[fromRank][fromFile];
-		if(selectedPiece.isValidMove(fromRank, fromFile, toRank, toFile)){
-			// place selected piece in new postion and a blank in the old position
-			board[fromRank][fromFile] = new Blank(Piece.BLANK);
-			board[toRank][toFile] = selectedPiece;
+		if (isBlank) {
+			for (int r = 0; r < RANKS; r++) {
+				for (int f = 0; f < FILES; f++) {
+					board[r][f] = new Blank(Piece.BLANK, r, f);
+				}
+			}
+		} else {
+			if (USE_TEMP_BOARD) {
+				temp_board();
+			} else {
+				reset();
+			}
 		}
-		else{
-			return false;
-		}
-		return true;
 	}
-	 */
+	
+	public Board copy() {
+		Board newBoard = new Board(true);
+		
+		newBoard.blackKing = blackKing.copy();
+		newBoard.whiteKing = whiteKing.copy();
 
-	public Map<String, String[]> getMoves(boolean isWhite) {
-		Map<String, String[]> moveMap = new HashMap<>();
+		newBoard.placePiece(newBoard.blackKing);
+		newBoard.placePiece(newBoard.whiteKing);
+		for (Piece q : queens) 
+			newBoard.placePiece(q.copy());
+		for (Piece b : bishops)
+			newBoard.placePiece(b.copy());
+		for (Piece n : knights)
+			newBoard.placePiece(n.copy());
+		for (Piece r : rooks)
+			newBoard.placePiece(r.copy());
+		for (Piece p : pawns)
+			newBoard.placePiece(p.copy());
+
+		return newBoard;
+	}
+
+	public ArrayList<String> getMoves(boolean isWhite) {
+		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -65,7 +75,7 @@ public class Board {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.put(loc, board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
 				}
 			}
 		}
@@ -73,26 +83,56 @@ public class Board {
 		return moveMap;
 	}
 
-	public Map<String, String[]> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
 		switch (kind) {
 			case 0: pieces = pawns; break;
-			case 'K': pieces = kings; break;
-			case 'Q': pieces = queens; break;
+			case 'K': pieces.add(blackKing); pieces.add(whiteKing); break;
+			case 'Q': 
+				pieces = queens;
+				break;
 			case 'B': pieces = bishops; break;
 			case 'N': pieces = knights; break;
 			case 'R': pieces = rooks; break;
 		}
 
-		Map<String, String[]> moveMap = new HashMap<>();
+		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				moveMap.put(p.getLoc(), p.getValidMoves(this));
+				String[] validMoves = p.getValidMoves(this);
+				for (String vm : validMoves) {
+					moveMap.add(p.getLoc() + ":" + vm);
+				}
 			}
 		}
+
+		adjustSameSpace(moveMap);
 		return moveMap;
+	}
+
+	private void adjustSameSpace(ArrayList<String> moveMap) {
+		String entry1, entry2, loc1, loc2, move1, move2;
+		for (int i = 0; i < moveMap.size(); i++) {
+			entry1 = moveMap.get(i);
+			for (int j = i+1; j < moveMap.size(); j++) {
+				entry2 = moveMap.get(j);
+				move1 = entry1.split(":")[1];
+				move2 = entry2.split(":")[1];
+				if (move1.equals(move2)) {
+					loc1 = entry1.split(":")[0];
+					loc2 = entry2.split(":")[0];
+					if (loc1.charAt(0) == loc2.charAt(0)) {
+						moveMap.set(i, loc1 + ":" + String.format("%c%d%s", move1.charAt(0), loc1.charAt(1), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%d%s", move2.charAt(0), loc2.charAt(1), move2.substring(1)));
+					} else {
+						moveMap.set(i, loc1 + ":" + String.format("%c%c%s", move1.charAt(0), loc1.charAt(0), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%c%s", move2.charAt(0), loc2.charAt(0), move2.substring(1)));
+					}
+				} 
+			}
+		}
 	}
 
 
@@ -111,58 +151,47 @@ public class Board {
 		Rook rightBlackR = new Rook(Piece.BLACK, 8, 8);
 		Rook leftWhiteR = new Rook(Piece.WHITE, 1, 1);
 		Rook rightWhiteR = new Rook(Piece.WHITE, 1, 8);
-		rooks.add(leftBlackR);
-		rooks.add(rightBlackR);
-		rooks.add(leftWhiteR);
-		rooks.add(rightWhiteR);
-		board[7][0] = leftBlackR;
-		board[7][7] = rightBlackR;
-		board[0][0] = leftWhiteR;
-		board[0][7] = rightWhiteR;
+		
+		placePiece(leftBlackR);
+		placePiece(rightBlackR);
+		placePiece(leftWhiteR);
+		placePiece(rightWhiteR);
 
 		// knights
 		Knight leftBlackN = new Knight(Piece.BLACK, 8, 2);
 		Knight rightBlackN = new Knight(Piece.BLACK, 8, 7);
 		Knight leftWhiteN = new Knight(Piece.WHITE, 1, 2);
 		Knight rightWhiteN = new Knight(Piece.WHITE, 1, 7);
-		knights.add(leftBlackN);
-		knights.add(rightBlackN);
-		knights.add(leftWhiteN);
-		knights.add(rightWhiteN);
-		board[7][1] = leftBlackN;
-		board[7][6] = rightBlackN;
-		board[0][1] = leftWhiteN;
-		board[0][6] = rightWhiteN;
+		
+		placePiece(leftBlackN);
+		placePiece(rightBlackN);
+		placePiece(leftWhiteN);
+		placePiece(rightWhiteN);
 		
 		// bishops
 		Bishop leftBlackB = new Bishop(Piece.BLACK, 8, 3);
 		Bishop rightBlackB = new Bishop(Piece.BLACK, 8, 6);
 		Bishop leftWhiteB = new Bishop(Piece.WHITE, 1, 3);
 		Bishop rightWhiteB = new Bishop(Piece.WHITE, 1, 6);
-		bishops.add(leftBlackB);
-		bishops.add(rightBlackB);
-		bishops.add(leftWhiteB);
-		bishops.add(rightWhiteB);
-		board[7][2] = leftBlackB;
-		board[7][5] = rightBlackB;
-		board[0][2] = leftWhiteB;
-		board[0][5] = rightWhiteB;
+		
+		placePiece(leftBlackB);
+		placePiece(rightBlackB);
+		placePiece(leftWhiteB);
+		placePiece(rightWhiteB);
 		
 		//queens
 		Queen blackQueen = new Queen(Piece.BLACK, 8, 4);
 		Queen whiteQueen = new Queen(Piece.WHITE, 1, 4);
-		queens.add(blackQueen);
-		queens.add(whiteQueen);
-		board[7][3] = blackQueen;
-		board[0][3] = whiteQueen;
+		
+		placePiece(blackQueen);
+		placePiece(whiteQueen);
 		
 		// kings
-		King blackKing = new King(Piece.BLACK, 8, 5);
-		King whiteKing = new King(Piece.WHITE, 1, 5);
-		kings.add(blackKing);
-		kings.add(whiteKing);
-		board[7][4] = blackKing;
-		board[0][4] = whiteKing;
+		blackKing = new King(Piece.BLACK, 8, 5);
+		whiteKing = new King(Piece.WHITE, 1, 5);
+		
+		placePiece(blackKing);
+		placePiece(whiteKing);
 		
 		// pawns
 		for (int f = 1; f <= 8; f++) {
@@ -182,23 +211,60 @@ public class Board {
 			}
 		}
 		// USED FOR DEBUGGING MOVES
-		Rook r = new Rook(Piece.WHITE, 2, 3);
-		Queen q = new Queen(Piece.BLACK, 7, 7);
-		rooks.add(r);
-		queens.add(q);
-		board[1][2] = r;
-		board[6][6] = q;
+		whiteKing = new King(Piece.WHITE, 1, 5);
+		blackKing = new King(Piece.BLACK, 8, 3);
+		Queen wq = new Queen(Piece.WHITE, 2, 8);
+		Queen bq = new Queen(Piece.BLACK, 7, 3);
+		
+		placePiece(whiteKing);
+		placePiece(blackKing);
+		placePiece(wq);
+		placePiece(bq);
 	}
 
 	public Piece get(int rank, int file) {
-		return board[rank-1][file-1];
+		return this.board[rank-1][file-1];
 	}
 
-	/**
-	 * Returns true if there is a check mate occuring on the board
-	 * @return
-	 */
-	public boolean hasCheckmate() {
+	public Piece get(String loc) {
+		int rank = loc.charAt(1)-'0';
+		int file = loc.charAt(0)-'a'+1;
+		return get(rank, file);
+	}
+
+	public boolean hasCheck(boolean isWhite) {
+		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
+		for (Piece p : pawns) {
+			if (p.getColor() == ownColor && p.canCheck(this)) {
+				return true;
+			} 
+		}
+		for (Piece r : rooks) {
+			if (r.getColor() == ownColor && r.canCheck(this))
+				return true; 
+		}
+		for (Piece n : knights) {
+			if (n.getColor() == ownColor && n.canCheck(this))
+				return true; 
+		}
+		for (Piece b : bishops) {
+			if (b.getColor() == ownColor && b.canCheck(this))
+				return true; 
+		}
+		for (Piece q : queens) {
+			if (q.getColor() == ownColor && q.canCheck(this))
+				return true; 
+		}
+
+		if (isWhite && whiteKing.canCheck(this))
+			return true;
+		else if (!isWhite && blackKing.canCheck(this))
+			return true;
+
+		return false;
+	}
+	
+	public boolean hasCheckmate(boolean isWhite) {
 		// TODO
         return false;
     }
@@ -212,13 +278,57 @@ public class Board {
 	}
 
 	public Piece move(String loc, String move) {
+		if (move.equals("0-0")) {
+			Piece rook, king;
+			// White King
+			if (loc.equals("e1")) {
+				rook = get(1, 8);
+				king = get(1, 5);
+				move(rook, 1, 6, false);
+				move(king, 1, 7, false);
+			} else if (loc.equals("e8")) {
+				rook = get(8, 8);
+				king = get(8, 5);
+				move(rook, 8, 6, false);
+				move(king, 8, 7, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null; 	
+		} else if (move.equals("0-0-0")) {
+			Piece rook, king;
+			// White King
+			if (loc.equals("e1")) {
+				rook = get(1, 1);
+				king = get(1, 5);
+				move(rook, 1, 4, false);
+				move(king, 1, 3, false);
+			} else if (loc.equals("e8")) {
+				rook = get(8, 1);
+				king = get(8, 5);
+				move(rook, 8, 4, false);
+				move(king, 8, 3, false);
+			} else {
+				System.out.println("lol wat?");
+				System.exit(300);
+			}
+			return null;
+		}
+
 		int r1 = loc.charAt(1)-'0';
 		int f1 = loc.charAt(0)-'a'+1;
-		Piece piece = get(r1, f1);
+		Piece piece = this.get(r1, f1);
 
 		int r2, f2;
 		boolean isCapture = false;
 		if (move.charAt(0) < 'a') {
+			move = move.substring(1);
+		}
+		if (move.charAt(0) >= 'a' && move.charAt(0) <= 'h' && move.charAt(1) >= 'a' && move.charAt(1) <= 'h') {
+			move = move.substring(1);
+		}
+		if (move.charAt(0) >= '1' && move.charAt(0) <= '8' && move.charAt(1) >= 'a' && move.charAt(1) <= 'h') {
 			move = move.substring(1);
 		}
 		if (move.charAt(0) == 'x') {
@@ -247,6 +357,31 @@ public class Board {
 		piece.setFile(toFile);		
 
 		return capturedPiece;
+	}
+
+	public void placePiece(Piece piece) {
+		int rank, file;
+		switch (piece.getKind()) {
+			case 0:
+				pawns.add(piece);
+				break;
+			case 'R':
+				rooks.add(piece);
+				break;
+			case 'N':
+				knights.add(piece);
+				break;
+			case 'B':
+				bishops.add(piece);
+				break;
+			case 'Q':
+				queens.add(piece);
+				break;
+		}
+		
+		rank = piece.getRank();
+		file = piece.getFile();
+		board[rank-1][file-1] = piece;
 	}
 
 	public void removePiece(Piece piece) {

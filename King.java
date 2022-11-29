@@ -4,6 +4,8 @@ public class King extends Piece {
     private static final String FILE_NAME = "king.png";
     final static char KIND = Piece.KING;
 
+    GameModel gameModel = GameModel.getInstance();
+
      /**
      * Constructs a new king of the specified color on the
      * passed Board
@@ -11,92 +13,180 @@ public class King extends Piece {
      * @param b a Board object
      */
     public King(int color, int rank, int file) {
-        super(color, rank, file);
+        super(color, rank, file, "king");
     }
 
     public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+        String move;
         boolean isCapture;
 
         // right
-        if (board.isInBounds(rank, file+1) && board.isEmpty(rank, file+1)) {
-            isCapture = board.get(rank, file+1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank, file+1, isCapture));
+        r = rank;
+        f = file+1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // up-right
-        if (board.isInBounds(rank+1, file+1) && board.isEmpty(rank+1, file+1)) {
-            isCapture = board.get(rank+1, file+1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+1, file+1, isCapture));
+        r = rank+1;
+        f = file+1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // up
-        if (board.isInBounds(rank+1, file) && board.isEmpty(rank+1, file)) {
-            isCapture = board.get(rank+1, file).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+1, file, isCapture));
+        r = rank+1;
+        f = file;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // up-left
-        if (board.isInBounds(rank+1, file-1) && board.isEmpty(rank+1, file-1)) {
-            isCapture = board.get(rank+1, file-1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank+1, file-1, isCapture));
+        r = rank+1;
+        f = file-1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // left
-        if (board.isInBounds(rank, file-1) && board.isEmpty(rank, file-1)) {
-            isCapture = board.get(rank, file-1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank, file-1, isCapture));
+        r = rank;
+        f = file-1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // down-left
-        if (board.isInBounds(rank-1, file-1) && board.isEmpty(rank-1, file-1)) {
-            isCapture = board.get(rank-1, file-1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-1, file-1, isCapture));
+        r = rank-1;
+        f = file-1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // down
-        if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
-            isCapture = board.get(rank-1, file).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-1, file, isCapture));
+        r = rank-1;
+        f = file;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
         
         // down-right
-        if (board.isInBounds(rank-1, file+1) && board.isEmpty(rank-1, file+1)) {
-            isCapture = board.get(rank-1, file+1).getColor() == opColor;
-            moves.add(MoveParser.constructMove(this, rank-1, file+1, isCapture));
+        r = rank-1;
+        f = file+1;
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+            isCapture = board.get(r, f).getColor() == opColor;
+            move = MoveParser.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+                move = gameModel.addCheck(getLoc(), move);
+                moves.add(move);
+            }
         }
-
+        
         String[] ret = new String[moves.size()];
         ret = moves.toArray(ret);
         return ret;
+    } 
+   
+    public boolean canCheck(Board board) {
+        int opColor = this.color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
+        int r, f;
+        
+        // right
+        r = rank;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up-right
+        r = rank+1;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up
+        r = rank+1;
+        f = file;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // up-left
+        r = rank+1;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // left
+        r = rank;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down-left
+        r = rank-1;
+        f = file-1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down
+        r = rank-1;
+        f = file;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // down-right
+        r = rank-1;
+        f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        return false;
     }
 
-    @Override
-    public String getPicture(int row, int col) {
-		String path = "images/";
-		if (row%2 == 0) {
-			if (col%2 == 0) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		} else {
-			if (col%2 == 1) {
-                path += "light/";
-			} else {
-                path += "dark/";
-			}
-		}
-        if(color==Piece.WHITE){
-            path += "white/";
-        }
-        else{
-            path += "black/";
-        }
-        return path+FILE_NAME;
-	}
-   
     @Override
     public int getColor() {
         return color;
@@ -110,5 +200,10 @@ public class King extends Piece {
     @Override
     public char getKind() {
         return KIND;
+    }
+
+    @Override
+    public King copy() {
+        return new King(color, rank, file);
     }
 }
