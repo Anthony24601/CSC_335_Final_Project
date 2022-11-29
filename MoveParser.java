@@ -24,4 +24,8 @@ public class MoveParser {
 
         return out.toString();
     }
+
+    public static void movePiece(String fromLoc, String toLoc) {
+        
+    }
 }
