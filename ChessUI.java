@@ -34,6 +34,7 @@ public class ChessUI extends Thread
     private Shell shell;
     private Board board;
     public static Font font;
+    boolean update;
     
     /**
      * XTankUI constructor
@@ -44,6 +45,7 @@ public class ChessUI extends Thread
         this.player = player;
         display = new Display();
         font = new Font(display, "Comic Sans", 56, SWT.BOLD);
+        update = false;
     }
     
     /**
@@ -56,7 +58,7 @@ public class ChessUI extends Thread
         shell.setText("xtank");
         shell.setLayout(new FillLayout());
         shell.setSize(800, 820);
-        canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+        canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
         
         canvas.addPaintListener(event -> {
             paint_canvas = event;
@@ -75,7 +77,9 @@ public class ChessUI extends Thread
             public void mouseDown(MouseEvent e) {
             	int col = e.x/100;
     			int row = e.y/100;
-    			System.out.println(row + " " + col);
+    			player.select((char)('a' + col) + "" + (row+1));
+    			player.move();
+    			canvas.redraw();
             } 
             public void mouseUp(MouseEvent e) {} 
             public void mouseDoubleClick(MouseEvent e) {} 
@@ -87,17 +91,25 @@ public class ChessUI extends Thread
             public void keyReleased(KeyEvent e) {}
         });
     
-        //Runnable runnable = new Runner(player);
-        //display.asyncExec(runnable);
         shell.open();
         while (!shell.isDisposed()) {
+        	if (update) { 
+        		canvas.redraw();
+        		update = false;
+        	}
             if (!display.readAndDispatch()) {
                 display.sleep();
             }
         }
-
         display.dispose();      
     }
+    
+    public void update() {
+    	update = true;
+    	display.wake();
+    }
+    
+    
     
     // Private Methods ----------------------------
     
