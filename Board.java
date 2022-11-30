@@ -384,16 +384,16 @@ public class Board implements Serializable {
 	private Piece kingsideCastleMove(String loc){
 		Piece rook, king;
 			// White King
-			if (loc.equals("d1")) {
+			if (loc.equals("e1")) {
 				rook = get(1, 1);
-				king = get(1, 4);
-				move(rook, 1, 3, false);
-				move(king, 1, 2, false);
-			} else if (loc.equals("d8")) {
+				king = get(1, 5);
+				move(rook, 1, 6, false);
+				move(king, 1, 7, false);
+			} else if (loc.equals("e8")) {
 				rook = get(8, 1);
-				king = get(8, 4);
-				move(rook, 8, 3, false);
-				move(king, 8, 2, false);
+				king = get(8, 5);
+				move(rook, 8, 6, false);
+				move(king, 8, 7, false);
 			} else {
 				System.out.println("lol wat?");
 				System.exit(300);
@@ -404,16 +404,16 @@ public class Board implements Serializable {
 	private Piece queensideCastleMove(String loc){
 		Piece rook, king;
 			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 8);
-				king = get(1, 4);
-				move(rook, 1, 5, false);
-				move(king, 1, 6, false);
-			} else if (loc.equals("d8")) {
+			if (loc.equals("e1")) {
+				rook = get(1, 1);
+				king = get(1, 5);
+				move(rook, 1, 4, false);
+				move(king, 1, 3, false);
+			} else if (loc.equals("e8")) {
 				rook = get(8, 8);
-				king = get(8, 4);
-				move(rook, 8, 5, false);
-				move(king, 8, 6, false);
+				king = get(8, 5);
+				move(rook, 8, 4, false);
+				move(king, 8, 3, false);
 			} else {
 				System.out.println("lol wat?");
 				System.exit(300);

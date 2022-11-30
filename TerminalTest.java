@@ -12,8 +12,8 @@ public class TerminalTest {
     final static String INVALID_SECOND_ERROR = "To move string is improperly formatted.";
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
-    final static boolean AUTO = false;
-    final static boolean USE_NEW_MOVE_FORMAT = true;
+    final static boolean AUTO = true;
+    final static boolean USE_NEW_MOVE_FORMAT = false;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
