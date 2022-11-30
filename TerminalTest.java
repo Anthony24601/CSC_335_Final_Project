@@ -12,7 +12,8 @@ public class TerminalTest {
     final static String INVALID_SECOND_ERROR = "To move string is improperly formatted.";
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
-    final static boolean AUTO = false;
+    final static boolean AUTO = true;
+    final static boolean USE_NEW_MOVE_FORMAT = false;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -58,6 +59,14 @@ public class TerminalTest {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
                 }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("WHITE WINS!");
+                    } else {
+                        System.out.println("BLACK WINS!");
+                    }
+                    break;
+                }
             }
         } else {
             String move;
@@ -70,11 +79,21 @@ public class TerminalTest {
                 }
                 move = ChrisIR4.getString(MOVE_PROMPT);
                 while (isInvalidMove(move)) {
+                    System.out.println("Invalid format.");
+                    gameModel.printBoard();
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
                 result = interpretMove(move);
                 if (!result && !move.equals("q")) {
                     System.out.println("Invalid move. Please try again.");
+                }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("WHITE WINS!");
+                    } else {
+                        System.out.println("BLACK WINS!");
+                    }
+                    break;
                 }
             } while (!move.equals(SENTINEL));
         }
@@ -96,12 +115,41 @@ public class TerminalTest {
         else if (move.equals("0-0-0")) {
             return gameModel.castleQueenside();
         } else {
+            if (USE_NEW_MOVE_FORMAT) {
+                String fromLoc = move.split(" ")[0];
+                String toLoc = move.split(" ")[1];
+                return MoveParser.movePiece(fromLoc, toLoc);
+            }
             return gameModel.makeMove(move);
         }
     }
 
     static boolean isInvalidMove(String move) {
         if (move.toLowerCase().equals(SENTINEL)) {
+            return false;
+        }
+
+        if (USE_NEW_MOVE_FORMAT) {
+            if (!move.contains(" ")) {
+                return true;
+            }
+            String loc1 = move.split(" ")[0];
+            String loc2 = move.split(" ")[1];
+            if (loc1.length() != 2 || loc2.length() != 2) {
+                return true;
+            }
+            if (loc1.charAt(0) < 'a' || loc1.charAt(0) > 'h') {
+                return true;
+            }
+            if (loc2.charAt(0) < 'a' || loc2.charAt(0) > 'h') {
+                return true;
+            }
+            if (loc1.charAt(1) < '1' || loc1.charAt(1) > '8') {
+                return true;
+            }
+            if (loc2.charAt(1) < '1' || loc2.charAt(1) > '8') {
+                return true;
+            }
             return false;
         }
 
