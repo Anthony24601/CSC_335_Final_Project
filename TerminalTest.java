@@ -77,6 +77,7 @@ public class TerminalTest {
     public static void playGame() {
         String move = "";
         boolean result;
+        TerminalAI ai = new TerminalAI(false);
 
         do {
             gameModel.printBoard();
@@ -94,7 +95,7 @@ public class TerminalTest {
                 }
             } else {
                 if (PLAY_AGAINST_AI) {
-                    move = TerminalAI.decideOnMove();
+                    move = ai.decideOnMove();
                 } else {
                     move = ChrisIR4.getString(MOVE_PROMPT);
                     while (isInvalidMove(move)) {
