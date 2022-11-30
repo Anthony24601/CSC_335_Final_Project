@@ -12,8 +12,9 @@ public class TerminalTest {
     final static String INVALID_SECOND_ERROR = "To move string is improperly formatted.";
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
-    final static boolean AUTO = true;
+    final static boolean AUTO = false;
     final static boolean USE_NEW_MOVE_FORMAT = false;
+    final static boolean PLAY_AGAINST_AI = true;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -69,34 +70,54 @@ public class TerminalTest {
                 }
             }
         } else {
-            String move;
-            do {
-                gameModel.printBoard();
-                if (gameModel.isWhitesTurn()) {
-                    System.out.println("White's turn");
-                } else {
-                    System.out.println("Black's turn");
-                }
+            playGame();
+        }
+    }
+
+    public static void playGame() {
+        String move = "";
+        boolean result;
+
+        do {
+            gameModel.printBoard();
+            if (gameModel.isWhitesTurn()) {
+                System.out.println("White's turn");
+            } else {
+                System.out.println("Black's turn");
+            }
+            if (gameModel.isWhitesTurn()) {
                 move = ChrisIR4.getString(MOVE_PROMPT);
                 while (isInvalidMove(move)) {
                     System.out.println("Invalid format.");
                     gameModel.printBoard();
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
-                result = interpretMove(move);
-                if (!result && !move.equals("q")) {
-                    System.out.println("Invalid move. Please try again.");
-                }
-                if (gameModel.getHasCheckmate()) {
-                    if (gameModel.isWhitesTurn()) {
-                        System.out.println("WHITE WINS!");
-                    } else {
-                        System.out.println("BLACK WINS!");
+            } else {
+                if (PLAY_AGAINST_AI) {
+                    move = TerminalAI.decideOnMove();
+                } else {
+                    move = ChrisIR4.getString(MOVE_PROMPT);
+                    while (isInvalidMove(move)) {
+                        System.out.println("Invalid format.");
+                        gameModel.printBoard();
+                        move = ChrisIR4.getString(MOVE_PROMPT);
                     }
-                    break;
                 }
-            } while (!move.equals(SENTINEL));
-        }
+            }
+            result = interpretMove(move);
+            if (!result && !move.equals("q")) {
+                System.out.println("Invalid move. Please try again.");
+            }
+            if (gameModel.getHasCheckmate()) {
+                if (gameModel.isWhitesTurn()) {
+                    System.out.println("WHITE WINS!");
+                } else {
+                    System.out.println("BLACK WINS!");
+                }
+                break;
+            }
+        } while (!move.equals(SENTINEL));
+
     }
 
     public static String getMove(String prompt) {

@@ -56,7 +56,6 @@ public class MoveParser {
         for (String entry : moveMap) {
             if (fromLoc.equals(entry.split(":")[0])) {
                 String move = entry.split(":")[1];
-                // TODO: Check against pawn promotion
                 if (move.charAt(move.length()-1) == '+' || move.charAt(move.length()-1) == '#') {
                     move = move.substring(0, move.length()-1);
                 }
