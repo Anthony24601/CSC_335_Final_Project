@@ -1,4 +1,8 @@
-public abstract class Piece {
+import java.io.Serializable;
+
+public abstract class Piece implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	// colors
 	public final static int BLANK = 0;
 	public final static int WHITE = 10;
@@ -18,14 +22,14 @@ public abstract class Piece {
 	
 	public Piece(int color, int rank, int file, String name) {
 		this.color = color;
-    if (color == BLANK){
-      color_string = "blank";
-    } else if (color == WHITE){
-      color_string = "white";
-    } else {
-      color_string = "black";
-    }
-    this.name = name;
+	    if (color == BLANK){
+	      color_string = "blank";
+	    } else if (color == WHITE){
+	      color_string = "white";
+	    } else {
+	      color_string = "black";
+	    }
+	    this.name = name;
 		this.rank = rank;
 		this.file = file;
 	}

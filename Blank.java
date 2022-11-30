@@ -22,14 +22,4 @@ public class Blank extends Piece{
 	public char getKind() {
 		return 0;
 	}
-
-	@Override
-	public int getRank() {
-		return 0;
-	}
-
-	@Override
-	public int getFile() {
-		return 0;
-	}
 }
