@@ -59,6 +59,14 @@ public class TerminalTest {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
                 }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("WHITE WINS!");
+                    } else {
+                        System.out.println("BLACK WINS!");
+                    }
+                    break;
+                }
             }
         } else {
             String move;
@@ -78,6 +86,14 @@ public class TerminalTest {
                 result = interpretMove(move);
                 if (!result && !move.equals("q")) {
                     System.out.println("Invalid move. Please try again.");
+                }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("WHITE WINS!");
+                    } else {
+                        System.out.println("BLACK WINS!");
+                    }
+                    break;
                 }
             } while (!move.equals(SENTINEL));
         }
