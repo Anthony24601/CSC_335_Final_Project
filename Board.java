@@ -385,12 +385,12 @@ public class Board implements Serializable {
 		Piece rook, king;
 			// White King
 			if (loc.equals("e1")) {
-				rook = get(1, 1);
+				rook = get(1, 8);
 				king = get(1, 5);
 				move(rook, 1, 6, false);
 				move(king, 1, 7, false);
 			} else if (loc.equals("e8")) {
-				rook = get(8, 1);
+				rook = get(8, 8);
 				king = get(8, 5);
 				move(rook, 8, 6, false);
 				move(king, 8, 7, false);
@@ -410,7 +410,7 @@ public class Board implements Serializable {
 				move(rook, 1, 4, false);
 				move(king, 1, 3, false);
 			} else if (loc.equals("e8")) {
-				rook = get(8, 8);
+				rook = get(8, 1);
 				king = get(8, 5);
 				move(rook, 8, 4, false);
 				move(king, 8, 3, false);
