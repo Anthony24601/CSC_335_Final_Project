@@ -9,7 +9,7 @@ public class Player {
 	String selected2;
 	
 	public Player() {
-		board = new Board();
+		board = new Board(false);
 		client = new Client("127.0.0.1", 59896, this);
 	}
 	
