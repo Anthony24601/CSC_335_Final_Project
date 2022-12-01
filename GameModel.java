@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.io.Serializable;
 import java.util.Map;
@@ -16,8 +15,6 @@ public class GameModel implements Serializable {
     private boolean blackQueenRookHasMoved = false;
     private boolean whiteKingHasMoved = false;
     private boolean blackKingHasMoved = false;
-
-    private boolean hasCheckmate = false;
 
     private GameModel(){
         whitesTurn = true;
@@ -42,41 +39,27 @@ public class GameModel implements Serializable {
         return whitesTurn;
     }
 
-    public boolean getHasCheckmate() {
-        return hasCheckmate;
-    }
-
     public boolean makeMove(String move) {
         return makeMove(move, currentBoard);
     }
 
     public boolean makeMove(String move, Board b) {
         char kind = MoveParser.getKind(move);
-        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
+        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn, this);
         for (String entry : moveMap) {
             String loc = entry.split(":")[0];
             String m = entry.split(":")[1];
             if (m.equals(move)) {
                 addHasMoved(loc, m);
                 Piece capturedPiece = b.move(loc, m);
-                if (move.charAt(move.length()-1) == '#') {
-                    hasCheckmate = true;
-                } else {
-                    whitesTurn = !whitesTurn;
-                }      
+                if (capturedPiece != null) {
+                    b.removePiece(capturedPiece);
+                }
+                whitesTurn = !whitesTurn;
                 return true;
             }
-        } 
-        return false;
-    }
-
-    public ArrayList<String> getAllPossibleMoves() {
-        ArrayList<String> moves = new ArrayList<>();
-        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
-        for (char kind : pieceKinds) {
-            moves.addAll(currentBoard.getMoves(kind, whitesTurn));
         }
-        return moves;
+        return false;
     }
 
     public String addCheck(String loc, String move) {
@@ -84,12 +67,9 @@ public class GameModel implements Serializable {
         futureBoard.move(loc, move);
 
         if (futureBoard.hasCheck(whitesTurn)) {
-            whitesTurn = !whitesTurn;
             if (futureBoard.hasCheckmate(whitesTurn)) {
-                whitesTurn = !whitesTurn;
                 return move + "#";
             } else {
-                whitesTurn = !whitesTurn;
                 return move + "+";
             }
         }
@@ -97,10 +77,9 @@ public class GameModel implements Serializable {
         return move;
     }
 
-    public boolean wouldPutInCheck(String loc, String move, Board b) {
-        Board futureBoard = b.copy();
+    public boolean wouldPutInCheck(String loc, String move) {
+        Board futureBoard = currentBoard.copy();
         futureBoard.move(loc, move);
-
         return futureBoard.hasCheck(!whitesTurn);
     }
 

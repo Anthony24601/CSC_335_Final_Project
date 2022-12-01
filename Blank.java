@@ -7,7 +7,7 @@ public class Blank extends Piece{
 		passantState = false;
 	}
 
-	public String[] getValidMoves(Board board) {
+	public String[] getValidMoves(Board board, GameModel gameModel) {
 		return null;
 	}
     
@@ -28,7 +28,7 @@ public class Blank extends Piece{
 	public char getKind() {
 		return 0;
 	}
-  
+
 	@Override
 	public Blank copy() {
 		return new Blank(color, rank, file);

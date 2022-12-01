@@ -9,6 +9,7 @@ public class Player {
 	Client client;
 	String selected1;
 	String selected2;
+	
 	String[] possible_moves;
 	
 	public Player() {
@@ -38,14 +39,10 @@ public class Player {
 		int rank = select.charAt(1)-'0';
 		int file = select.charAt(0)-'a'+1;
 		if (client.getTurn()) {
-			System.out.println("yay");
-			System.out.println(client.getColor());
-			System.out.println(selected1);
-			System.out.println(possible_moves.length);
 			if (selected1 == null || possible_moves.length == 0) {
 				if (board.get(rank, file).getColor() == client.getColor()) {
 					selected1 = select;
-					possible_moves = getMoves(board.get(rank, file).getValidMoves(board));
+					possible_moves = getMoves(board.get(rank, file).getValidMoves(board, client.getModel()));
 					ui.updatePossibles(possible_moves);
 				}
 			} else {
@@ -53,11 +50,12 @@ public class Player {
 					selected2 = select;
 					board.move(selected1, selected2);
 					client.sendMove(selected1, selected2);
-					selected1 = null;
-					selected2 = null;
-					possible_moves = new String[0];
-					ui.updatePossibles(possible_moves);
+					
 				}
+				selected1 = null;
+				selected2 = null;
+				possible_moves = new String[0];
+				ui.updatePossibles(possible_moves);
 			}
 		} else {
 			System.out.println("no");

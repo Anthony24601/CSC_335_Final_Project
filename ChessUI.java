@@ -108,18 +108,12 @@ public class ChessUI extends Thread
         		update = false;
         	}
             if (!display.readAndDispatch()) {
-                //display.sleep();
-            	try {
-					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+                display.sleep();
             }
         }
         display.dispose();      
     }
-
+    
     public void update() {
     	update = true;
     	display.wake();

@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
-	final static boolean USE_TEMP_BOARD = false;
+
+final static boolean USE_TEMP_BOARD = false;
 	final static int RANKS = 8;
     final static int FILES = 8;
 
@@ -71,7 +72,7 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
-	public ArrayList<String> getMoves(boolean isWhite) {
+	public ArrayList<String> getMoves(boolean isWhite, GameModel gamemodel) {
 		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -80,7 +81,7 @@ public class Board implements Serializable {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gamemodel));
 				}
 			}
 		}
@@ -88,7 +89,7 @@ public class Board implements Serializable {
 		return moveMap;
 	}
 
-	public ArrayList<String> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gamemodel) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -106,7 +107,7 @@ public class Board implements Serializable {
 		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				String[] validMoves = p.getValidMoves(this);
+				String[] validMoves = p.getValidMoves(this, gamemodel);
 				for (String vm : validMoves) {
 					moveMap.add(p.getLoc() + ":" + vm);
 				}
@@ -273,61 +274,8 @@ public class Board implements Serializable {
 	}
 	
 	public boolean hasCheckmate(boolean isWhite) {
-		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
-		String[] moves;
-		for (Piece p : pawns) {
-			if (p.getColor() == ownColor) {
-				moves = p.getValidMoves(this);
-				if (moves.length > 0) {
-					return false;
-				}
-			}
-		}
-		for (Piece r : rooks) {
-			if (r.getColor() == ownColor) {
-				moves = r.getValidMoves(this);
-				if (moves.length > 0) {
-					return false;
-				}
-			}
-		}
-		for (Piece n : knights) {
-			if (n.getColor() == ownColor) {
-				moves = n.getValidMoves(this);
-				if (moves.length > 0) {
-					return false;
-				}
-			}
-		}
-		for (Piece b : bishops) {
-			if (b.getColor() == ownColor) {
-				moves = b.getValidMoves(this);
-				if (moves.length > 0) {
-					return false;
-				}
-			}
-		}
-		for (Piece q : queens) {
-			if (q.getColor() == ownColor) {
-				moves = q.getValidMoves(this);
-				if (moves.length > 0) {
-					return false;
-				}
-			}
-		}
-		if (ownColor == Piece.WHITE) {
-			moves = whiteKing.getValidMoves(this);
-			if (moves.length > 0) {
-				return false;
-			}
-		} else {
-			moves = blackKing.getValidMoves(this);
-			if (moves.length > 0) {
-				return false;
-			}
-		}
-
-        return true;
+		// TODO
+        return false;
     }
 
 	public boolean isInBounds(int rank, int file) {
@@ -418,9 +366,6 @@ public class Board implements Serializable {
 			}
 		}
 
-		if (capturedPiece != null) {
-			removePiece(capturedPiece);
-		}
 		return capturedPiece;
 	}
 
@@ -439,16 +384,16 @@ public class Board implements Serializable {
 	private Piece kingsideCastleMove(String loc){
 		Piece rook, king;
 			// White King
-			if (loc.equals("e1")) {
-				rook = get(1, 8);
-				king = get(1, 5);
-				move(rook, 1, 6, false);
-				move(king, 1, 7, false);
-			} else if (loc.equals("e8")) {
-				rook = get(8, 8);
-				king = get(8, 5);
-				move(rook, 8, 6, false);
-				move(king, 8, 7, false);
+			if (loc.equals("d1")) {
+				rook = get(1, 1);
+				king = get(1, 4);
+				move(rook, 1, 3, false);
+				move(king, 1, 2, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 1);
+				king = get(8, 4);
+				move(rook, 8, 3, false);
+				move(king, 8, 2, false);
 			} else {
 				System.out.println("lol wat?");
 				System.exit(300);
@@ -459,16 +404,16 @@ public class Board implements Serializable {
 	private Piece queensideCastleMove(String loc){
 		Piece rook, king;
 			// White King
-			if (loc.equals("e1")) {
-				rook = get(1, 1);
-				king = get(1, 5);
-				move(rook, 1, 4, false);
-				move(king, 1, 3, false);
-			} else if (loc.equals("e8")) {
-				rook = get(8, 1);
-				king = get(8, 5);
-				move(rook, 8, 4, false);
-				move(king, 8, 3, false);
+			if (loc.equals("d1")) {
+				rook = get(1, 8);
+				king = get(1, 4);
+				move(rook, 1, 5, false);
+				move(king, 1, 6, false);
+			} else if (loc.equals("d8")) {
+				rook = get(8, 8);
+				king = get(8, 4);
+				move(rook, 8, 5, false);
+				move(king, 8, 6, false);
 			} else {
 				System.out.println("lol wat?");
 				System.exit(300);
