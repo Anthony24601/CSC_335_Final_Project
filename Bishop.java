@@ -9,7 +9,7 @@ public class Bishop extends Piece {
         super(color, rank, file, "bishop");
     }
 
-    public String[] getValidMoves(Board board) {
+    public String[] getValidMoves(Board board, GameModel gameModel) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         String move;
@@ -19,7 +19,7 @@ public class Bishop extends Piece {
         int f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -28,7 +28,7 @@ public class Bishop extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -39,7 +39,7 @@ public class Bishop extends Piece {
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -48,7 +48,7 @@ public class Bishop extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -59,7 +59,7 @@ public class Bishop extends Piece {
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -68,7 +68,7 @@ public class Bishop extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -79,7 +79,7 @@ public class Bishop extends Piece {
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -88,7 +88,7 @@ public class Bishop extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }

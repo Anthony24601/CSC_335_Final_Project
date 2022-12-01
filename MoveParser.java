@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class MoveParser {
-    static GameModel gameModel = GameModel.getInstance();
+    static GameModel gameModel;
 
     public static char getKind(String move) {
         return move.charAt(0) >= 'a' && move.charAt(0) <= 'h' ? 0 : move.charAt(0);
@@ -39,11 +39,11 @@ public class MoveParser {
         return true;
     }
 
-    public static boolean movePiece(String fromLoc, String toLoc) {
+    public static boolean movePiece(String fromLoc, String toLoc, GameModel gameModel) {
         Board board = gameModel.getCurrentBoard();
         boolean whitesTurn = gameModel.isWhitesTurn();
         Piece p = board.get(fromLoc);
-        ArrayList<String> moveMap = board.getMoves(p.getKind(), whitesTurn);
+        ArrayList<String> moveMap = board.getMoves(p.getKind(), whitesTurn, gameModel);
         for (String entry : moveMap) {
             if (fromLoc.equals(entry.split(":")[0])) {
                 String move = entry.split(":")[1];
