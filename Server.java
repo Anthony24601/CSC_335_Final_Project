@@ -32,7 +32,6 @@ public class Server extends Thread {
 		this.clients = new ClientManager[MAX_PLAYERS];
 		this.turn = 0;
 		this.model = GameModel.getInstance();
-		this.model.setCurrentBoard(new Board(false));
 	}
 	
 	public void openServer() {

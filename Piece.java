@@ -87,7 +87,7 @@ public abstract class Piece implements Serializable {
 	 * @return
 	 */
 	public String getPicture(int row, int col) {
-		//System.out.println("getting pic " + name);
+		System.out.println("getting pic " + name);
 		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
 			return "images/light/" + color_string + "/" + name + ".png";
 		} else {

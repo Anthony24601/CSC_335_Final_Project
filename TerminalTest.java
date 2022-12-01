@@ -13,6 +13,8 @@ public class TerminalTest {
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
     final static boolean AUTO = false;
+    final static boolean USE_NEW_MOVE_FORMAT = false;
+    final static boolean PLAY_AGAINST_AI = true;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -58,26 +60,65 @@ public class TerminalTest {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
                 }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("WHITE WINS!");
+                    } else {
+                        System.out.println("BLACK WINS!");
+                    }
+                    break;
+                }
             }
         } else {
-            String move;
-            do {
-                gameModel.printBoard();
-                if (gameModel.isWhitesTurn()) {
-                    System.out.println("White's turn");
-                } else {
-                    System.out.println("Black's turn");
-                }
+            playGame();
+        }
+    }
+
+    public static void playGame() {
+        String move = "";
+        boolean result;
+        TerminalAI ai = new TerminalAI(false);
+
+        do {
+            gameModel.printBoard();
+            if (gameModel.isWhitesTurn()) {
+                System.out.println("White's turn");
+            } else {
+                System.out.println("Black's turn");
+            }
+            if (gameModel.isWhitesTurn()) {
                 move = ChrisIR4.getString(MOVE_PROMPT);
                 while (isInvalidMove(move)) {
+                    System.out.println("Invalid format.");
+                    gameModel.printBoard();
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
-                result = interpretMove(move);
-                if (!result && !move.equals("q")) {
-                    System.out.println("Invalid move. Please try again.");
+            } else {
+                if (PLAY_AGAINST_AI) {
+                    move = ai.decideOnMove();
+                } else {
+                    move = ChrisIR4.getString(MOVE_PROMPT);
+                    while (isInvalidMove(move)) {
+                        System.out.println("Invalid format.");
+                        gameModel.printBoard();
+                        move = ChrisIR4.getString(MOVE_PROMPT);
+                    }
                 }
-            } while (!move.equals(SENTINEL));
-        }
+            }
+            result = interpretMove(move);
+            if (!result && !move.equals("q")) {
+                System.out.println("Invalid move. Please try again.");
+            }
+            if (gameModel.getHasCheckmate()) {
+                if (gameModel.isWhitesTurn()) {
+                    System.out.println("WHITE WINS!");
+                } else {
+                    System.out.println("BLACK WINS!");
+                }
+                break;
+            }
+        } while (!move.equals(SENTINEL));
+
     }
 
     public static String getMove(String prompt) {
@@ -96,12 +137,41 @@ public class TerminalTest {
         else if (move.equals("0-0-0")) {
             return gameModel.castleQueenside();
         } else {
+            if (USE_NEW_MOVE_FORMAT) {
+                String fromLoc = move.split(" ")[0];
+                String toLoc = move.split(" ")[1];
+                return MoveParser.movePiece(fromLoc, toLoc);
+            }
             return gameModel.makeMove(move);
         }
     }
 
     static boolean isInvalidMove(String move) {
         if (move.toLowerCase().equals(SENTINEL)) {
+            return false;
+        }
+
+        if (USE_NEW_MOVE_FORMAT) {
+            if (!move.contains(" ")) {
+                return true;
+            }
+            String loc1 = move.split(" ")[0];
+            String loc2 = move.split(" ")[1];
+            if (loc1.length() != 2 || loc2.length() != 2) {
+                return true;
+            }
+            if (loc1.charAt(0) < 'a' || loc1.charAt(0) > 'h') {
+                return true;
+            }
+            if (loc2.charAt(0) < 'a' || loc2.charAt(0) > 'h') {
+                return true;
+            }
+            if (loc1.charAt(1) < '1' || loc1.charAt(1) > '8') {
+                return true;
+            }
+            if (loc2.charAt(1) < '1' || loc2.charAt(1) > '8') {
+                return true;
+            }
             return false;
         }
 
