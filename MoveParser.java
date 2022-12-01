@@ -33,4 +33,66 @@ public class MoveParser {
     public static String constructPromotionMove(int toRank, int toFile, char newType){
         return String.format("%c%d=%c", toFile + 'a' - 1, toRank, newType);
     }
+
+    public static String convertAlgebraicToLocs(String move) {
+        char kind = getKind(move);
+        Board board = gameModel.getCurrentBoard();
+        ArrayList<String> moveMap = board.getMoves(kind, gameModel.isWhitesTurn());
+        String fromLoc = "";
+        String toLoc = "";
+        for (String entry : moveMap) {
+            fromLoc = entry.split(":")[0];
+            String m = entry.split(":")[1];
+            if (m.equals(move)) {
+                toLoc = getLocFromMove(move);
+                break;
+            }
+        }
+
+        if (fromLoc.isEmpty() || toLoc.isEmpty()) {
+            System.out.println("malformation of loc happened!");
+            System.out.println("Move: " + move);
+            System.out.println("FromLoc: " + fromLoc);
+            System.out.println("ToLoc: " + toLoc);
+            System.exit(600);
+        }
+        return fromLoc + " " + toLoc;
+    }
+
+    public static String getLocFromMove(String move) {
+        if (move.charAt(move.length()-1) == '+' || move.charAt(move.length()-1) == '#') {
+            move = move.substring(0, move.length()-1);
+        }
+        return move.substring(move.length()-2);
+    }
+
+    public static boolean isValidLoc(String loc) {
+        if (loc.length() != 2) {
+            return false;
+        }
+        if (loc.charAt(0) < 'a' || loc.charAt(0) > 'h') {
+            return false;
+        }
+        if (loc.charAt(1) < '1' || loc.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean movePiece(String fromLoc, String toLoc) {
+        Board board = gameModel.getCurrentBoard();
+        boolean whitesTurn = gameModel.isWhitesTurn();
+        Piece p = board.get(fromLoc);
+        ArrayList<String> moveMap = board.getMoves(p.getKind(), whitesTurn);
+        for (String entry : moveMap) {
+            if (fromLoc.equals(entry.split(":")[0])) {
+                String move = entry.split(":")[1];
+                String moveLoc = getLocFromMove(move);
+                if (moveLoc.equals(toLoc)) {
+                    return gameModel.makeMove(entry.split(":")[1]);
+                }
+            }
+        }
+        return false;
+    }
 }

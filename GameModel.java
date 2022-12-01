@@ -39,6 +39,14 @@ public class GameModel implements Serializable {
         return whitesTurn;
     }
 
+    public void flipTurn() {
+        whitesTurn = !whitesTurn;
+    }
+
+    public boolean getHasCheckmate() {
+        return hasCheckmate;
+    }
+    
     public boolean makeMove(String move) {
         return makeMove(move, currentBoard);
     }
@@ -51,24 +59,82 @@ public class GameModel implements Serializable {
             String m = entry.split(":")[1];
             if (m.equals(move)) {
                 addHasMoved(loc, m);
-                Piece capturedPiece = b.move(loc, m);
-                if (capturedPiece != null) {
-                    b.removePiece(capturedPiece);
-                }
-                whitesTurn = !whitesTurn;
+                b.move(loc, m);
+                if (move.charAt(move.length()-1) == '#') {
+                    hasCheckmate = true;
+                } else {
+                    flipTurn();
+                }      
                 return true;
             }
         }
         return false;
     }
+
+    public Piece getPieceCaptured(String loc, String move) {
+        Board futureBoard = currentBoard.copy();
+        return futureBoard.move(loc, move);
+    }
+
+    public ArrayList<String> getPossibleMoves(String loc) {
+        Piece p = currentBoard.get(loc);
+        return getPossibleMoves(p);
+    }
+
+    public ArrayList<String> getPossibleMoves(Piece p) {
+        ArrayList<String> moveMap = new ArrayList<>();
+        String loc = p.getLoc();
+        String[] validMoves = p.getValidMoves(currentBoard);
+        for (String move : validMoves) {
+            moveMap.add(loc + ":" + move);
+        }
+
+        return moveMap;
+    }
+
+    public ArrayList<String> getAllPossibleMoves() {
+        return getAllPossibleMoves(currentBoard);
+    }
+
+    public ArrayList<String> getAllPossibleMoves(Board b) {
+        ArrayList<String> moves = new ArrayList<>();
+        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
+        for (char kind : pieceKinds) {
+            moves.addAll(b.getMoves(kind, whitesTurn));
+        }
+        return moves;
+    }
+
+    public ArrayList<String> getAllPossibleOpMoves(String loc, String move) {
+        Board futureBoard = currentBoard.copy();
+        return getAllPossibleOpMoves(loc, move, futureBoard);
+    }
+
+    public ArrayList<String> getAllPossibleOpMoves(String loc, String move, Board b) {
+        b.move(loc, move);
+        flipTurn();
+
+        ArrayList<String> moves = new ArrayList<>();
+        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
+        for (char kind : pieceKinds) {
+            moves.addAll(b.getMoves(kind, whitesTurn));
+        }
+
+        flipTurn();
+        return moves;
+    }
+
     public String addCheck(String loc, String move) {
         Board futureBoard = currentBoard.copy();
         futureBoard.move(loc, move);
 
         if (futureBoard.hasCheck(whitesTurn)) {
+            flipTurn();
             if (futureBoard.hasCheckmate(whitesTurn)) {
+                flipTurn();
                 return move + "#";
             } else {
+                flipTurn();
                 return move + "+";
             }
         }
@@ -102,7 +168,12 @@ public class GameModel implements Serializable {
         System.out.println(currentBoard.toString());
     }
 
-    public boolean castleKingside() {
+    public boolean canCastleKingside() {
+        return canCastleKingside(currentBoard);
+    }
+
+    public boolean canCastleKingside(Board b) {
+        boolean result;
         if (whitesTurn) {
             // If either piece has moved, abandon
             if (whiteKingHasMoved || whiteKingRookHasMoved)
@@ -111,32 +182,43 @@ public class GameModel implements Serializable {
             // Check if King would be in check moving across
             String f1 = "Kf1";
             String g1 = "Kg1";
-            if (f1.equals(addCheck("e1", f1)) && g1.equals(addCheck("e1", g1)) && currentBoard.isEmpty(1, 6) && currentBoard.isEmpty(1, 7)) {
-                currentBoard.move("e1", "0-0");     // TODO: Add Check for logs
-                whiteKingHasMoved = true;
-                whiteKingRookHasMoved = true;
-                whitesTurn = !whitesTurn;
-                return true;
-            }
+            result = f1.equals(addCheck("e1", f1)) && g1.equals(addCheck("e1", g1)) && b.isEmpty(1, 6) && b.isEmpty(1, 7);
         } else {
             if (blackKingHasMoved || blackKingRookHasMoved)
                 return false;
-
+            
             String f8 = "Kf8";
             String g8 = "Kg8";
-            if (f8.equals(addCheck("e8", f8)) && g8.equals(addCheck("e8", g8)) && currentBoard.isEmpty(8, 6) && currentBoard.isEmpty(8, 7)) {
-                currentBoard.move("e8", "0-0");     // TODO: Add Check for logs
-                blackKingHasMoved = true;
-                blackKingRookHasMoved = true;
-                whitesTurn = !whitesTurn;
-                return true;
-            }
+            result = f8.equals(addCheck("e8", f8)) && g8.equals(addCheck("e8", g8)) && b.isEmpty(8, 6) && b.isEmpty(8, 7);
+        }
+
+        return result;
+    }
+
+    public boolean castleKingside() {
+        if (whitesTurn && canCastleKingside()) {
+            currentBoard.move("e1", "0-0");     // TODO: Add Check for logs
+            whiteKingHasMoved = true;
+            whiteKingRookHasMoved = true;
+            flipTurn();
+            return true;
+        } else if (canCastleKingside()) {
+            currentBoard.move("e8", "0-0");     // TODO: Add Check for logs
+            blackKingHasMoved = true;
+            blackKingRookHasMoved = true;
+            flipTurn();
+            return true;
         }
         
         return false;
     }
 
-    public boolean castleQueenside() {
+    public boolean canCastleQueenside() {
+        return canCastleQueenside(currentBoard);
+    }
+
+    public boolean canCastleQueenside(Board b) {
+        boolean result;
         if (whitesTurn) {
             if (whiteKingHasMoved || whiteQueenRookHasMoved) {
                 return false;
@@ -144,12 +226,7 @@ public class GameModel implements Serializable {
 
             String d1 = "Kd1";
             String c1 = "Kc1";
-            if (d1.equals(addCheck("e1", d1)) && c1.equals(addCheck("e1", c1)) && currentBoard.isEmpty(1, 2)) {
-                currentBoard.move("e1", "0-0-0");
-                whiteKingHasMoved = true;
-                whiteQueenRookHasMoved = true;
-                return true;
-            }
+            result = d1.equals(addCheck("e1", d1)) && c1.equals(addCheck("e1", c1)) && currentBoard.isEmpty(1, 2);
         } else {
             if (blackKingHasMoved || blackQueenRookHasMoved) {
                 return false;
@@ -157,12 +234,23 @@ public class GameModel implements Serializable {
 
             String d8 = "Ke8";
             String c8 = "Kf8";
-            if (d8.equals(addCheck("e8", d8)) && c8.equals(addCheck("e8", c8)) && currentBoard.isEmpty(8, 2)) {
-                currentBoard.move("d8", "0-0-0");
-                blackKingHasMoved = true;
-                blackQueenRookHasMoved = true;
-                return true;
-            }
+            result = d8.equals(addCheck("e8", d8)) && c8.equals(addCheck("e8", c8)) && currentBoard.isEmpty(8, 2);
+        }
+
+        return result;
+    }
+
+    public boolean castleQueenside() {
+        if (whitesTurn && canCastleQueenside()) {
+            currentBoard.move("e1", "0-0-0");
+            whiteKingHasMoved = true;
+            whiteQueenRookHasMoved = true;
+            return true;
+        } else if (canCastleQueenside()) {
+            currentBoard.move("d8", "0-0-0");
+            blackKingHasMoved = true;
+            blackQueenRookHasMoved = true;
+            return true;
         }
         return false;
     }
