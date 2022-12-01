@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,14 +24,24 @@ public class Server extends Thread {
 	private ClientManager[] clients;
 	private final int MAX_PLAYERS;
 	private int turn;
+	
+	private final int[] COLORS;
+	private int[] player_ids;
+			
 	private GameModel model;
 	
 	public Server(int port) {
 		this.running = false;
 		this.port = port;
-		this.MAX_PLAYERS = 2; // default, maybe change
+		this.MAX_PLAYERS = 2;
 		this.clients = new ClientManager[MAX_PLAYERS];
 		this.turn = 0;
+		
+		Random rand = new Random();
+		this.COLORS = new int[] {Piece.WHITE, Piece.BLACK};
+		int id_1 = rand.nextInt(2);
+		this.player_ids = new int[] {id_1, 1-id_1};
+		
 		this.model = GameModel.getInstance();
 	}
 	
@@ -64,8 +75,8 @@ public class Server extends Thread {
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
 				Socket socket = listener.accept();
-				ClientManager manager = new ClientManager(socket, i);
-				clients[i] = manager;
+				ClientManager manager = new ClientManager(socket, player_ids[i]);
+				clients[player_ids[i]] = manager;
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -108,6 +119,7 @@ public class Server extends Thread {
 				
 				print_debug("Sending turn to client " + id);
 		    	out.writeBoolean((turn == id));
+		    	out.writeInt(COLORS[id]);
 		    	
 		    	print_debug("Sending GameModel to client " + id + "...");
 		    	out.writeObject(model);
