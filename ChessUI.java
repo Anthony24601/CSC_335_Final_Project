@@ -62,7 +62,7 @@ public class ChessUI extends Thread
         shell.setText("Chess");
         shell.setLayout(new FillLayout());
         shell.setSize(800, 820);
-        canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+        canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
         
         canvas.addPaintListener(event -> {
             paint_canvas = event;

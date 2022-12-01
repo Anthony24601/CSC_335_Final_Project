@@ -1,9 +1,8 @@
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Player {
 	
+	public final String type;
 	Board board;
 	static ChessUI ui;
 	Client client;
@@ -12,7 +11,8 @@ public class Player {
 	
 	String[] possible_moves;
 	
-	public Player() {
+	public Player(String type) {
+		this.type = type;
 		board = new Board(false);
 		client = new Client("127.0.0.1", 59896, this);
 		possible_moves = new String[0];
@@ -61,9 +61,16 @@ public class Player {
 		}
 	}
 	
+	public void moveAI() {
+		// TODO - implement
+	}
+	
 	public void updateBoard(Board board) {
 		this.board = board;
 		ui.update();
+		if (type == "ai") {
+			moveAI();
+		}
 	}
 	
 	private String[] getMoves(String[] possible) {
