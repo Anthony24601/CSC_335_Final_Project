@@ -94,20 +94,18 @@ public class ChessUI extends Thread
         while (!shell.isDisposed()) {
         	canvas.redraw();
             if (!display.readAndDispatch()) {
-                //display.sleep();
-            	try {
-					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+                display.sleep();
             }
         }
         display.dispose();      
     }
     
+<<<<<<< Updated upstream
     public void updateUi() {
     	System.out.println("2");
+=======
+    public void update() {
+>>>>>>> Stashed changes
     	update = true;
     }
     
