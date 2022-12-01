@@ -16,7 +16,7 @@ public class TerminalAI {
         this.isWhite = isWhite;
     }
 
-    public String decideOnMove() {
+  /*public String decideOnMove() {
         Board board = gameModel.getCurrentBoard();
         switch (AI_TYPE) {
             case "random": return pickRandomMove(board);
@@ -54,7 +54,7 @@ public class TerminalAI {
 
         return bestMoves.get(rand.nextInt(bestMoves.size()));
     }
-
+*/
     private void initializeScoreVals() {
         if (scoreVals == null) {
             scoreVals = new HashMap<>();
