@@ -9,11 +9,10 @@ public class Player {
 	Client client;
 	String selected1;
 	String selected2;
-	
 	String[] possible_moves;
 	
 	public Player() {
-		board = new Board();
+		board = new Board(false);
 		client = new Client("127.0.0.1", 59896, this);
 		possible_moves = new String[0];
 	}

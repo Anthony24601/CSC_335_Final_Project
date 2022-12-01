@@ -29,7 +29,7 @@ public class Client extends Thread {
 	Player player;
 	
 	int color;
-	
+
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
@@ -44,11 +44,11 @@ public class Client extends Thread {
 		this.id = id;
 	}
 	*/
-	
+
 	public int getColor() {
 		return color;
 	}
-	
+
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);
