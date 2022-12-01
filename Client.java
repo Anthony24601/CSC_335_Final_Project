@@ -91,8 +91,8 @@ public class Client extends Thread {
 	    	print_debug("Sending request to socket server...");
 	    	out.writeObject("Requesting turn");
 	    	
-	    	turn_active = in.readBoolean();
-	    	color = in.readInt();
+	    	boolean response = in.readBoolean();
+	    	turn_active = response;
 	    	
 	    	model = (GameModel) in.readObject();
 	    	print_debug("Received model!");

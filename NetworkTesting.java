@@ -1,12 +1,6 @@
-import java.util.Random;
 
 public class NetworkTesting {
 	public static void main(String[] args) {
-		Random rand = new Random();
-		for (int i = 0; i < 10; i++) {
-			int x = rand.nextInt(2);
-			System.out.println(x);
-		}
 		/*
 		Server server = new Server(59896);
 		Client client_0 = new Client("127.0.0.1", 59896, 0);

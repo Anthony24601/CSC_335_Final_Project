@@ -1,15 +1,6 @@
-<<<<<<< Updated upstream
 
 public class Player {
 	
-=======
-import java.util.Arrays;
-
-public class Player {
-	
-	public final String type;
-	Board board;
->>>>>>> Stashed changes
 	static ChessUI ui;
 	Client client;
 
@@ -17,14 +8,8 @@ public class Player {
 	String pos_selected;
 	String move_selected;
 	
-<<<<<<< Updated upstream
 	public Player() {
 		if (ui == null) { ui = new ChessUI(this); }
-=======
-	public Player(String type) {
-		this.type = type;
-		board = new Board(false);
->>>>>>> Stashed changes
 		client = new Client("127.0.0.1", 59896, this);
 		board = new Board();
 	}
@@ -59,15 +44,8 @@ public class Player {
 		}
 	}
 	
-	public void moveAI() {
-		// TODO - implement
-	}
-	
 	public void updateBoard(Board board) {
 		this.board = board;
 		ui.update();
-		if (type == "ai") {
-			moveAI();
-		}
 	}
 }
