@@ -27,14 +27,14 @@ public class Client extends Thread {
 	private boolean turn_active;
 	private GameModel model;
 	Player player;
-	
 	int color;
-	
+  
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
 		player = p;
 		id = 0;
+		color = Piece.WHITE; //TODO Change
 	}
 	
 	/*
@@ -48,6 +48,14 @@ public class Client extends Thread {
 		return color;
 	}
 	
+	public void setColor(int color) {
+		this.color = color;
+	}
+	
+	public GameModel getModel() {
+		return model;
+	}
+
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);
@@ -97,8 +105,8 @@ public class Client extends Thread {
 	    	print_debug("Sending request to socket server...");
 	    	out.writeObject("Requesting turn");
 	    	
-	    	boolean response = in.readBoolean();
-	    	turn_active = response;
+	    	turn_active = in.readBoolean();
+	    	color = in.readInt();
 	    	
 	    	model = (GameModel) in.readObject();
 	    	print_debug("Received model!");

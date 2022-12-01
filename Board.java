@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	final static boolean USE_TEMP_BOARD = false;
+	final static boolean USE_TEMP_BOARD = true;
 
 	final static int RANKS = 8;
     final static int FILES = 8;
@@ -73,7 +73,7 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
-	public ArrayList<String> getMoves(boolean isWhite) {
+	public ArrayList<String> getMoves(boolean isWhite, GameModel gamemodel) {
 		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -82,7 +82,7 @@ public class Board implements Serializable {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gamemodel));
 				}
 			}
 		}
@@ -90,7 +90,7 @@ public class Board implements Serializable {
 		return moveMap;
 	}
 
-	public ArrayList<String> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gamemodel) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -108,7 +108,7 @@ public class Board implements Serializable {
 		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				String[] validMoves = p.getValidMoves(this);
+				String[] validMoves = p.getValidMoves(this, gamemodel);
 				for (String vm : validMoves) {
 					moveMap.add(p.getLoc() + ":" + vm);
 				}
@@ -228,8 +228,10 @@ public class Board implements Serializable {
 		placePiece(wq);
 		placePiece(bq);
 
-		Pawn testPawn = new Pawn(Piece.WHITE, 7, 7);
+		Pawn testPawn = new Pawn(Piece.WHITE, 5, 7);
 		placePiece(testPawn);
+		Pawn testPawn2 = new Pawn(Piece.BLACK, 7, 6);
+		placePiece(testPawn2);
 	}
 
 	public Piece get(int rank, int file) {
@@ -288,6 +290,7 @@ public class Board implements Serializable {
 	}
 
 	public Piece move(String loc, String move) {
+        System.out.println("move is  " + move);
 
 		// Castling
 		if (move.equals("0-0")) {
@@ -327,7 +330,7 @@ public class Board implements Serializable {
 
 	private Piece move(Piece piece, int toRank, int toFile, boolean isCapture) {
 		Piece capturedPiece = isCapture ? board[toRank-1][toFile-1] : null;
-		
+		System.out.println("is capure? " + isCapture);
 		resetPassantSquare();
 
 		int fromRank = piece.getRank();
@@ -355,7 +358,7 @@ public class Board implements Serializable {
 				}
 			}
 			// check if the pawn is doing an En Passant capture
-			if(isCapture && capturedPiece.isBlank()){
+			if((isCapture && capturedPiece.isBlank()) || (toFile!=fromFile && board[fromRank-1][fromFile-1].isBlank())){
 				if(piece.getColor()==Piece.WHITE){
 					capturedPiece = board[4][toFile-1];
 					board[4][toFile-1] = new Blank(Piece.BLANK, 2, toFile-1);
@@ -365,6 +368,7 @@ public class Board implements Serializable {
 					board[3][toFile-1] = new Blank(Piece.BLANK, 4, toFile-1);
 				}
 			}
+
 		}
 
 		return capturedPiece;

@@ -34,7 +34,7 @@ public abstract class Piece implements Serializable {
 		this.file = file;
 	}
 	
-	abstract public String[] getValidMoves(Board board);
+	abstract public String[] getValidMoves(Board board, GameModel gameModel);
 	abstract public boolean canCheck(Board board);
 	abstract public Piece copy();
 

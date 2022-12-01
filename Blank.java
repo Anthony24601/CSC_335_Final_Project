@@ -7,7 +7,7 @@ public class Blank extends Piece{
 		passantState = false;
 	}
 
-	public String[] getValidMoves(Board board) {
+	public String[] getValidMoves(Board board, GameModel gameModel) {
 		return null;
 	}
     
