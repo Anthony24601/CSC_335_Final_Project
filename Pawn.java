@@ -57,11 +57,6 @@ public class Pawn extends Piece {
                     moves.add(move);
                 }
             } 
-
-            // Promotion
-            if(rank==7){
-                moves.add(MoveParser.constructPromotionMove(rank+1, file, Piece.QUEEN));
-            }
         } else {
             // One space
             if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
@@ -95,11 +90,6 @@ public class Pawn extends Piece {
                     move = gameModel.addCheck(getLoc(), move);
                     moves.add(move);
                 }
-            } 
-
-            // Promotion
-             if(rank==2){
-                moves.add(MoveParser.constructPromotionMove(rank-1, file, Piece.QUEEN));
             }
         }
 

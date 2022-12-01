@@ -28,6 +28,8 @@ public class Board implements Serializable {
 
 	private Piece[][] board;
 
+	private ArrayList<String> moveHistory;
+
 	public Board(boolean isBlank) {
 		board = new Piece[8][8];
 		queens = new ArrayList<>();
@@ -35,6 +37,8 @@ public class Board implements Serializable {
 		knights = new ArrayList<>();
 		rooks = new ArrayList<>();
 		pawns = new ArrayList<>();
+		moveHistory = new ArrayList<>();
+
 		if (isBlank) {
 			for (int r = 0; r < RANKS; r++) {
 				for (int f = 0; f < FILES; f++) {
@@ -146,6 +150,8 @@ public class Board implements Serializable {
 	 * Fills up board with new Pieces in the starting positions
 	 */
 	public void reset(){
+		moveHistory.clear();
+
 		for (int r = 0; r < 8; r++) {
 			for (int f = 0; f < 8; f++) {
 				board[r][f] = new Blank(Piece.BLANK, r+1, f+1);
@@ -337,6 +343,11 @@ public class Board implements Serializable {
 
 	public boolean isEmpty(int rank, int file) {
 		return isInBounds(rank, file) && board[rank-1][file-1].getClass() == Blank.class;
+	}
+
+	public Piece moveAndSave(String loc, String move) {
+		moveHistory.add(move);
+		return move(loc, move);
 	}
 
 	public Piece move(String loc, String move) {
@@ -567,4 +578,8 @@ public class Board implements Serializable {
 		out.append(FOOTER);
 		return out.toString();
 	}
+
+    public ArrayList<String> getMoveHistory() {
+        return moveHistory;
+    }
 }

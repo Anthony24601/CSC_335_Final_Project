@@ -14,7 +14,9 @@ public class TerminalTest {
 
     final static boolean AUTO = false;
     final static boolean USE_NEW_MOVE_FORMAT = false;
-    final static boolean PLAY_AGAINST_AI = true;
+    final static boolean PLAY_AGAINST_AI = false;
+    final static boolean LOAD_GAME = true;
+    final static boolean SAVE_GAME = true;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -78,6 +80,7 @@ public class TerminalTest {
         String move = "";
         boolean result;
         TerminalAI ai = new TerminalAI(false);
+        loadGame();
 
         do {
             gameModel.printBoard();
@@ -118,7 +121,20 @@ public class TerminalTest {
                 break;
             }
         } while (!move.equals(SENTINEL));
+        if(SAVE_GAME){
+            String fileName = ChrisIR4.getString("Enter file to save to: ");
+            gameModel.saveGame(fileName);
+        }
+    }
 
+    private static void loadGame() {
+        if(LOAD_GAME){
+            String input = ChrisIR4.getString("Load from file? y/n");
+            if(input.equals("y")){
+                String fileName = ChrisIR4.getString("Enter file name: ");
+                gameModel.loadGame(fileName);
+            }
+        }
     }
 
     public static String getMove(String prompt) {

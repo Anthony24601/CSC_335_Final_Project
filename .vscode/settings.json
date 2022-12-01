@@ -1,6 +1,6 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\chris\\eclipse-workspace\\org.eclipse.swt\\swt.jar"
+        "C:\\Users\\15208\\eclipse-workspace\\CS 335\\org.eclipse.swt\\swt.jar"
     ]
 }

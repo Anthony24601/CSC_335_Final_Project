@@ -1,6 +1,12 @@
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Scanner;
 
 public class GameModel implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -57,7 +63,7 @@ public class GameModel implements Serializable {
             String m = entry.split(":")[1];
             if (m.equals(move)) {
                 addHasMoved(loc, m);
-                Piece capturedPiece = b.move(loc, m);
+                Piece capturedPiece = b.moveAndSave(loc, m);
                 if (move.charAt(move.length()-1) == '#') {
                     hasCheckmate = true;
                 } else {
@@ -122,7 +128,7 @@ public class GameModel implements Serializable {
     public void printBoard() {
         System.out.println(currentBoard.toString());
     }
-
+    
     public boolean castleKingside() {
         if (whitesTurn) {
             // If either piece has moved, abandon
@@ -187,4 +193,65 @@ public class GameModel implements Serializable {
         }
         return false;
     }
+
+    /**
+     * Saves the current game state to a file that 
+     * can be loaded into a different GameModel in order
+     * to resume the game
+     * @param fileName  String, name of file to save to
+     * @return true if game was saved, false otherwise
+     * 
+     */
+    public boolean saveGame(String fileName){
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+        } catch (IOException e) {
+            System.out.println("Exception while opening file");
+            return false;
+        }
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        ArrayList<String> moves = currentBoard.getMoveHistory();
+        for(String move : moves){
+            printWriter.println(move);
+        }
+        if(moves.size()%2==1){
+            printWriter.println("turn:black");
+        }
+        else{
+            printWriter.println("turn:white");
+        }
+        printWriter.close();
+        return true;
+    }
+
+    /**
+     * Reads information from a file and populates this
+     * GameModel with it
+     * @param fileName String, name of file containing info
+     * @return true if the game was loaded succesfully, false 
+     *          otherwise
+     */
+    public boolean loadGame(String fileName){
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File(fileName));
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            return false;
+        }
+
+        while(scanner.hasNext()){
+            String move = scanner.nextLine();
+            if(move.startsWith("turn:")){
+                String currentTurn = move.substring(5);
+                whitesTurn = (currentTurn.equals("white"));
+            }
+            else{
+                this.makeMove(move);
+            }
+        }
+        return true;
+    }
+
 }
