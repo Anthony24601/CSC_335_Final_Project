@@ -20,6 +20,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
@@ -36,6 +37,8 @@ public class ChessUI extends Thread
     public static Font font;
     boolean update;
     
+    String[] possible_moves;
+    
     /**
      * XTankUI constructor
      * @param player is a Player
@@ -46,6 +49,7 @@ public class ChessUI extends Thread
         display = new Display();
         font = new Font(display, "Comic Sans", 56, SWT.BOLD);
         update = false;
+        possible_moves = new String[0];
     }
     
     /**
@@ -55,7 +59,7 @@ public class ChessUI extends Thread
     public void run()
     {
         shell = new Shell(display);
-        shell.setText("xtank");
+        shell.setText("Chess");
         shell.setLayout(new FillLayout());
         shell.setSize(800, 820);
         canvas = new Canvas(shell, SWT.NO_BACKGROUND);
@@ -71,6 +75,13 @@ public class ChessUI extends Thread
             		}
             	}
             }
+            highlight(possible_moves);
+          /*
+          Color yellow = new Color(255,255,0);
+          event.gc.setBackground(yellow);
+          event.gc.setAlpha(100);
+          event.gc.fillRectangle(0,0,100,100);
+          */
         });
 
         canvas.addMouseListener(new MouseListener() {
@@ -108,7 +119,9 @@ public class ChessUI extends Thread
     	display.wake();
     }
     
-    
+    public void updatePossibles(String[] possible) {
+    	possible_moves = possible;
+    }
     
     // Private Methods ----------------------------
     
@@ -134,6 +147,20 @@ public class ChessUI extends Thread
         //if want up and down, use this
         paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (col-1)*100, (row-1)*100, 100, 100);
 		img.dispose();
+    }
+    
+    private void highlight(String[] possible) {
+    	
+    	//Updown Orientation with white on top
+    	for (String square: possible) {
+    		System.out.println(square);
+			int row = (square.charAt(1)-'0'-1)*100;
+			int col = (square.charAt(0)-'a')*100;
+			Color yellow = new Color(255,255,0);
+			paint_canvas.gc.setBackground(yellow);
+			paint_canvas.gc.setAlpha(100);
+			paint_canvas.gc.fillRectangle(col,row,100,100);
+		}
     }
 }
 

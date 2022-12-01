@@ -4,7 +4,7 @@ public class Pawn extends Piece {
     private static final String FILE_NAME = "pawn.png";
     private static final char KIND = Piece.PAWN;
 
-    GameModel gameModel = GameModel.getInstance();
+    //GameModel gameModel = GameModel.getInstance();
 
     /**
      * Constructs a new pawn of the specified color on the
@@ -19,8 +19,8 @@ public class Pawn extends Piece {
         return KIND;
     }
 
-    public String[] getValidMoves(Board board) {
-        ArrayList<String> moves = new ArrayList<>();
+    public String[] getValidMoves(Board board, GameModel gameModel) {
+    	ArrayList<String> moves = new ArrayList<>();
         String move;
 
         if (this.color == Piece.WHITE) {

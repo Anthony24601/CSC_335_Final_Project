@@ -73,7 +73,7 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
-	public ArrayList<String> getMoves(boolean isWhite) {
+	public ArrayList<String> getMoves(boolean isWhite, GameModel gamemodel) {
 		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -82,7 +82,7 @@ public class Board implements Serializable {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gamemodel));
 				}
 			}
 		}
@@ -90,7 +90,7 @@ public class Board implements Serializable {
 		return moveMap;
 	}
 
-	public ArrayList<String> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gamemodel) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -108,7 +108,7 @@ public class Board implements Serializable {
 		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				String[] validMoves = p.getValidMoves(this);
+				String[] validMoves = p.getValidMoves(this, gamemodel);
 				for (String vm : validMoves) {
 					moveMap.add(p.getLoc() + ":" + vm);
 				}

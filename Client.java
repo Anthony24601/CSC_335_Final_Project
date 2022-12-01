@@ -27,17 +27,14 @@ public class Client extends Thread {
 	private boolean turn_active;
 	private GameModel model;
 	Player player;
-	
-<<<<<<< Updated upstream
-=======
 	int color;
-	
->>>>>>> Stashed changes
+  
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
 		player = p;
 		id = 0;
+		color = Piece.WHITE; //TODO Change
 	}
 	
 	/*
@@ -47,13 +44,18 @@ public class Client extends Thread {
 	}
 	*/
 	
-<<<<<<< Updated upstream
-=======
 	public int getColor() {
 		return color;
 	}
 	
->>>>>>> Stashed changes
+	public void setColor(int color) {
+		this.color = color;
+	}
+	
+	public GameModel getModel() {
+		return model;
+	}
+
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);
