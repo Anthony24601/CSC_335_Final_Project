@@ -27,9 +27,8 @@ public class Client extends Thread {
 	private boolean turn_active;
 	private GameModel model;
 	Player player;
-	
 	int color;
-	
+  
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
@@ -56,7 +55,7 @@ public class Client extends Thread {
 	public GameModel getModel() {
 		return model;
 	}
-	
+
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);

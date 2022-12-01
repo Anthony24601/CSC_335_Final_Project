@@ -50,7 +50,6 @@ public class Player {
 					selected2 = select;
 					board.move(selected1, selected2);
 					client.sendMove(selected1, selected2);
-					
 				}
 				selected1 = null;
 				selected2 = null;
