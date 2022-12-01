@@ -119,6 +119,13 @@ public class King extends Piece {
             }
         }
         
+        if (gameModel.canCastleKingside()) {
+            moves.add("0-0");
+        }
+        if (gameModel.canCastleQueenside()) {
+            moves.add("0-0-0");
+        }
+        
         String[] ret = new String[moves.size()];
         ret = moves.toArray(ret);
         return ret;
