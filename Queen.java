@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Queen extends Piece {
     private static final String FILE_NAME = "queen.png";
     final static char KIND = Piece.QUEEN;
+    
+    GameModel gameModel = GameModel.getInstance();
 
     GameModel gameModel = GameModel.getInstance();
      /**

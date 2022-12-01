@@ -10,6 +10,7 @@ XTankUI objects are instantiated with a player object
 */
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -37,7 +38,7 @@ public class ChessUI extends Thread
     public static Font font;
     boolean update;
     
-    String[] possible_moves;
+    ArrayList<String> possible_moves;
     
     /**
      * XTankUI constructor
@@ -49,7 +50,7 @@ public class ChessUI extends Thread
         display = new Display();
         font = new Font(display, "Comic Sans", 56, SWT.BOLD);
         update = false;
-        possible_moves = new String[0];
+        possible_moves = new ArrayList<>();
     }
     
     /**
@@ -119,7 +120,7 @@ public class ChessUI extends Thread
     	display.wake();
     }
     
-    public void updatePossibles(String[] possible) {
+    public void updatePossibles(ArrayList<String> possible) {
     	possible_moves = possible;
     }
     
@@ -149,11 +150,11 @@ public class ChessUI extends Thread
 		img.dispose();
     }
     
-    private void highlight(String[] possible) {
+    private void highlight(ArrayList<String> possible) {
     	
     	//Updown Orientation with white on top
     	for (String square: possible) {
-    		System.out.println(square);
+    		//System.out.println(square);
 			int row = (square.charAt(1)-'0'-1)*100;
 			int col = (square.charAt(0)-'a')*100;
 			Color yellow = new Color(255,255,0);

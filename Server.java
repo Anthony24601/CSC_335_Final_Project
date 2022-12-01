@@ -146,10 +146,21 @@ public class Server extends Thread {
 					}
 					
 					move = (String) in.readObject();
+					//System.out.println("Player " + turn + "'s move: " + loc + ", " + move);
 					print_debug("Player " + turn + "'s move: " + loc + ", " + move);
 					
 					// update piece in gameModel
-					model.getCurrentBoard().move(loc, move);
+					//model.getCurrentBoard().move(loc, move);
+					boolean capture = false;
+					int rank_prev = loc.charAt(1)-'0';
+					int file_prev = loc.charAt(0)-'a'+1;
+					int rank = move.charAt(1)-'0';
+					int file = move.charAt(0)-'a'+1;
+					if (model.getCurrentBoard().get(rank, file).getColor() != Piece.BLANK) {
+						capture = true;
+					}
+					String temp = MoveParser.constructMove(model.getCurrentBoard().get(rank_prev, file_prev), rank, file, capture);
+					model.makeMove(temp);
 					
 					// set next player's turn and send them the model
 					turn = (turn + 1) % clients.length;
