@@ -58,11 +58,6 @@ public class GameModel implements Serializable {
             if (m.equals(move)) {
                 addHasMoved(loc, m);
                 Piece capturedPiece = b.move(loc, m);
-                /*
-                if (capturedPiece != null) {
-                    b.removePiece(capturedPiece);
-                }
-                */
                 if (move.charAt(move.length()-1) == '#') {
                     hasCheckmate = true;
                 } else {
@@ -72,6 +67,15 @@ public class GameModel implements Serializable {
             }
         }
         return false;
+    }
+
+    public ArrayList<String> getAllPossibleMoves() {
+        ArrayList<String> moves = new ArrayList<>();
+        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
+        for (char kind : pieceKinds) {
+            moves.addAll(currentBoard.getMoves(kind, whitesTurn));
+        }
+        return moves;
     }
 
     public String addCheck(String loc, String move) {
