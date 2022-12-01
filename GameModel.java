@@ -78,6 +78,22 @@ public class GameModel implements Serializable {
         return futureBoard.move(loc, move);
     }
 
+    public ArrayList<String> getPossibleMoves(String loc) {
+        Piece p = currentBoard.get(loc);
+        return getPossibleMoves(p);
+    }
+
+    public ArrayList<String> getPossibleMoves(Piece p) {
+        ArrayList<String> moveMap = new ArrayList<>();
+        String loc = p.getLoc();
+        String[] validMoves = p.getValidMoves(currentBoard);
+        for (String move : validMoves) {
+            moveMap.add(loc + ":" + move);
+        }
+
+        return moveMap;
+    }
+
     public ArrayList<String> getAllPossibleMoves() {
         return getAllPossibleMoves(currentBoard);
     }
