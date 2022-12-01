@@ -9,7 +9,7 @@ public class Bishop extends Piece {
         super(color, rank, file, "bishop");
     }
 
-    public String[] getValidMoves(Board board, GameModel gameModel) {
+    public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         String move;

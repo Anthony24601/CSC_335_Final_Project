@@ -42,7 +42,7 @@ public class Player {
 			if (selected1 == null || possible_moves.length == 0) {
 				if (board.get(rank, file).getColor() == client.getColor()) {
 					selected1 = select;
-					possible_moves = getMoves(board.get(rank, file).getValidMoves(board, client.getModel()));
+					possible_moves = getMoves(board.get(rank, file).getValidMoves(board));
 					ui.updatePossibles(possible_moves);
 				}
 			} else {

@@ -16,7 +16,7 @@ public class Rook extends Piece {
         super(color, rank, file, "rook");
     }
 
-    public String[] getValidMoves(Board board, GameModel gameModel) {
+    public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         String move;

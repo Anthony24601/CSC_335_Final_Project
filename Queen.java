@@ -4,6 +4,7 @@ public class Queen extends Piece {
     private static final String FILE_NAME = "queen.png";
     final static char KIND = Piece.QUEEN;
 
+    GameModel gameModel = GameModel.getInstance();
      /**
      * Constructs a new queen of the specified color on the
      * passed Board
@@ -14,7 +15,7 @@ public class Queen extends Piece {
         super(color, rank, file, "queen");
     }
 
-    public String[] getValidMoves(Board board, GameModel gameModel) {
+    public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         String move;
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;

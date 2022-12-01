@@ -15,6 +15,7 @@ public class GameModel implements Serializable {
     private boolean blackQueenRookHasMoved = false;
     private boolean whiteKingHasMoved = false;
     private boolean blackKingHasMoved = false;
+    private boolean hasCheckmate = false;
 
     private GameModel(){
         whitesTurn = true;
@@ -53,7 +54,7 @@ public class GameModel implements Serializable {
 
     public boolean makeMove(String move, Board b) {
         char kind = MoveParser.getKind(move);
-        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn, this);
+        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
         for (String entry : moveMap) {
             String loc = entry.split(":")[0];
             String m = entry.split(":")[1];
