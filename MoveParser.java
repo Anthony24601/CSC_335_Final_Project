@@ -35,6 +35,38 @@ public class MoveParser {
         return String.format("%c%d=%c", toFile + 'a' - 1, toRank, newType);
     }
 
+    public static String convertAlgebraicToLocs(String move) {
+        char kind = getKind(move);
+        Board board = gameModel.getCurrentBoard();
+        ArrayList<String> moveMap = board.getMoves(kind, gameModel.isWhitesTurn());
+        String fromLoc = "";
+        String toLoc = "";
+        for (String entry : moveMap) {
+            fromLoc = entry.split(":")[0];
+            String m = entry.split(":")[1];
+            if (m.equals(move)) {
+                toLoc = getLocFromMove(move);
+                break;
+            }
+        }
+
+        if (fromLoc.isEmpty() || toLoc.isEmpty()) {
+            System.out.println("malformation of loc happened!");
+            System.out.println("Move: " + move);
+            System.out.println("FromLoc: " + fromLoc);
+            System.out.println("ToLoc: " + toLoc);
+            System.exit(600);
+        }
+        return fromLoc + " " + toLoc;
+    }
+
+    public static String getLocFromMove(String move) {
+        if (move.charAt(move.length()-1) == '+' || move.charAt(move.length()-1) == '#') {
+            move = move.substring(0, move.length()-1);
+        }
+        return move.substring(move.length()-2);
+    }
+
     public static boolean isValidLoc(String loc) {
         if (loc.length() != 2) {
             return false;
@@ -56,10 +88,7 @@ public class MoveParser {
         for (String entry : moveMap) {
             if (fromLoc.equals(entry.split(":")[0])) {
                 String move = entry.split(":")[1];
-                if (move.charAt(move.length()-1) == '+' || move.charAt(move.length()-1) == '#') {
-                    move = move.substring(0, move.length()-1);
-                }
-                String moveLoc = move.substring(move.length()-2);
+                String moveLoc = getLocFromMove(move);
                 if (moveLoc.equals(toLoc)) {
                     return gameModel.makeMove(entry.split(":")[1]);
                 }
