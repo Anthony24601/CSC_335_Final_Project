@@ -1,7 +1,6 @@
-import java.util.ArrayList;
 
 public class MoveParser {
-    static GameModel gameModel = GameModel.getInstance();
+    static GameModel gameModel;
 
     public static char getKind(String move) {
         return move.charAt(0) >= 'a' && move.charAt(0) <= 'h' ? 0 : move.charAt(0);
