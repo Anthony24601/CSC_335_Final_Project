@@ -28,7 +28,7 @@ public class Blank extends Piece{
 	public char getKind() {
 		return 0;
 	}
-
+  
 	@Override
 	public Blank copy() {
 		return new Blank(color, rank, file);

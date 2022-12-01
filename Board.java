@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
-
 	final static boolean USE_TEMP_BOARD = false;
 	final static int RANKS = 8;
     final static int FILES = 8;

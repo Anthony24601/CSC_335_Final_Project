@@ -28,11 +28,14 @@ public class Client extends Thread {
 	private GameModel model;
 	Player player;
 	
+	int color;
+
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
 		player = p;
 		id = 0;
+		color = Piece.WHITE; //TODO Change
 	}
 	
 	/*
@@ -41,7 +44,11 @@ public class Client extends Thread {
 		this.id = id;
 	}
 	*/
-	
+
+	public int getColor() {
+		return color;
+	}
+
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);

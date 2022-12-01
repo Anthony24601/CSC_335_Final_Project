@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.io.Serializable;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class GameModel implements Serializable {
                 }      
                 return true;
             }
-        }
+        } 
         return false;
     }
 
