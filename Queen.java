@@ -6,7 +6,6 @@ public class Queen extends Piece {
     
     GameModel gameModel = GameModel.getInstance();
 
-    GameModel gameModel = GameModel.getInstance();
      /**
      * Constructs a new queen of the specified color on the
      * passed Board
