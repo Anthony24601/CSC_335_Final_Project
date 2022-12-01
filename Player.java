@@ -95,7 +95,6 @@ public class Player {
 	
 	public void updateBoard(Board board) {
 		this.board = board;
-		ui.updateUi();
-		System.out.println("1");
+		ui.update();
 	}
 }

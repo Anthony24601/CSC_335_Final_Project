@@ -58,22 +58,9 @@ public class GameModel implements Serializable {
                 whitesTurn = !whitesTurn;
                 return true;
             }
-<<<<<<< Updated upstream
         }
         return false;
     }
-
-    public ArrayList<String> getAllPossibleMoves() {
-        ArrayList<String> moves = new ArrayList<>();
-        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
-        for (char kind : pieceKinds) {
-            moves.addAll(currentBoard.getMoves(kind, whitesTurn));
-=======
->>>>>>> Stashed changes
-        }
-        return false;
-    }
-
     public String addCheck(String loc, String move) {
         Board futureBoard = currentBoard.copy();
         futureBoard.move(loc, move);

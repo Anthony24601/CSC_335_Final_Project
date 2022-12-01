@@ -92,7 +92,10 @@ public class ChessUI extends Thread
     
         shell.open();
         while (!shell.isDisposed()) {
-        	canvas.redraw();
+        	if (update) { 
+        		canvas.redraw();
+        		update = false;
+        	}
             if (!display.readAndDispatch()) {
                 display.sleep();
             }
@@ -100,13 +103,9 @@ public class ChessUI extends Thread
         display.dispose();      
     }
     
-<<<<<<< Updated upstream
-    public void updateUi() {
-    	System.out.println("2");
-=======
     public void update() {
->>>>>>> Stashed changes
     	update = true;
+    	display.wake();
     }
     
     
