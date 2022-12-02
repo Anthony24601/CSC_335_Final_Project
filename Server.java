@@ -159,7 +159,7 @@ public class Server extends Thread {
 					if (model.getCurrentBoard().get(rank, file).getColor() != Piece.BLANK) {
 						capture = true;
 					}
-					String temp = MoveParser.constructMove(model.getCurrentBoard().get(rank_prev, file_prev), rank, file, capture);
+					String temp = model.constructMove(model.getCurrentBoard().get(rank_prev, file_prev), rank, file, capture);
 					model.makeMove(temp);
 					
 					// set next player's turn and send them the model

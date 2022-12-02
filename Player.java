@@ -61,7 +61,7 @@ public class Player {
 					if (board.get(rank, file).getColor() != Piece.BLANK) {
 						capture = true;
 					}
-					String temp = MoveParser.constructMove(board.get(rank_prev, file_prev), rank, file, capture);
+					String temp = client.getModel().constructMove(board.get(rank_prev, file_prev), rank, file, capture);
 					boolean temp2 = client.getModel().makeMove(temp);
 					if (temp2) {
 						client.sendMove(selected1, selected2);

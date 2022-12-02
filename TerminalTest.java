@@ -55,11 +55,7 @@ public class TerminalTest {
             for (String move : sampleGame) {
                 gameModel.printBoard();
                 isInvalidMove(move);
-
-                // DEBUG TEST
-                System.out.println(MoveParser.convertAlgebraicToLocs(move));
-
-                result = interpretMove(move);
+                result = gameModel.makeMove(move);
                 while (!result) {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
@@ -78,7 +74,7 @@ public class TerminalTest {
                 while (isInvalidMove(move)) {
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
-                result = interpretMove(move);
+                result = gameModel.makeMove(move);
                 if (!result && !move.equals("q")) {
                     System.out.println("Invalid move. Please try again.");
                 }
@@ -95,17 +91,6 @@ public class TerminalTest {
         return move;
     }
     
-    private static boolean interpretMove(String move) {
-        if (move.equals("0-0")) {
-            return gameModel.castleKingside();
-        }
-        else if (move.equals("0-0-0")) {
-            return gameModel.castleQueenside();
-        } else {
-            return gameModel.makeMove(move);
-        }
-    }
-
     static boolean isInvalidMove(String move) {
         if (move.toLowerCase().equals(SENTINEL)) {
             return false;

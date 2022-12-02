@@ -53,22 +53,35 @@ public class GameModel implements Serializable {
     }
 
     public boolean makeMove(String move, Board b) {
-        char kind = MoveParser.getKind(move);
-        ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
-        for (String entry : moveMap) {
-            String loc = entry.split(":")[0];
-            String m = entry.split(":")[1];
-            if (m.equals(move)) {
-                addHasMoved(loc, m);
-                b.move(loc, m);
-                if (move.charAt(move.length()-1) == '#') {
-                    hasCheckmate = true;
-                } else {
-                    flipTurn();
-                }      
+        if (move.equals("0-0")) {
+            if (canCastleKingside(b)) {
+                castleKingside(b);
                 return true;
             }
+        } else if (move.equals("0-0-0")) {
+            if (canCastleQueenside(b)) {
+                castleQueenside(b);
+                return true;
+            }
+        } else {
+            char kind = getKindFromMove(move);
+            ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
+            for (String entry : moveMap) {
+                String loc = entry.split(":")[0];
+                String m = entry.split(":")[1];
+                if (m.equals(move)) {
+                    addHasMoved(loc, m);
+                    b.move(loc, m);
+                    if (move.charAt(move.length()-1) == '#') {
+                        hasCheckmate = true;
+                    } else {
+                        flipTurn();
+                    }      
+                    return true;
+                }
+            }
         }
+
         return false;
     }
 
@@ -196,15 +209,15 @@ public class GameModel implements Serializable {
         return result;
     }
 
-    public boolean castleKingside() {
+    public boolean castleKingside(Board b) {
         if (whitesTurn && canCastleKingside()) {
-            currentBoard.move("e1", "0-0");     // TODO: Add Check for logs
+            b.move("e1", "0-0");    
             whiteKingHasMoved = true;
             whiteKingRookHasMoved = true;
             flipTurn();
             return true;
         } else if (canCastleKingside()) {
-            currentBoard.move("e8", "0-0");     // TODO: Add Check for logs
+            b.move("e8", "0-0");     
             blackKingHasMoved = true;
             blackKingRookHasMoved = true;
             flipTurn();
@@ -241,17 +254,109 @@ public class GameModel implements Serializable {
         return result;
     }
 
-    public boolean castleQueenside() {
+    public boolean castleQueenside(Board b) {
         if (whitesTurn && canCastleQueenside()) {
-            currentBoard.move("e1", "0-0-0");
+            b.move("e1", "0-0-0");
             whiteKingHasMoved = true;
             whiteQueenRookHasMoved = true;
             return true;
         } else if (canCastleQueenside()) {
-            currentBoard.move("d8", "0-0-0");
+            b.move("e8", "0-0-0");
             blackKingHasMoved = true;
             blackQueenRookHasMoved = true;
             return true;
+        }
+        return false;
+    }
+
+    // Move Parser stuff
+    private char getKindFromMove(String move) {
+        return move.charAt(0) >= 'a' && move.charAt(0) <= 'h' ? 0 : move.charAt(0);
+    }
+
+    public String constructMove(Piece p, int toRank, int toFile, boolean addCapture) {
+        StringBuilder out = new StringBuilder();
+        if (p.getKind() != 0) {
+            out.append(p.getKind());
+        } else {
+            out.append(String.format("%c", p.getFile()+'a'-1));
+        }
+        if (addCapture) {
+            out.append('x');
+        }
+        if (p.getKind() != 0 || addCapture) {
+            out.append(String.format("%c%d", toFile + 'a' - 1, toRank ));
+        } else {
+            out.append(String.format("%d", toRank));
+        }
+
+        return out.toString();
+    }
+
+    /**
+     * Constructs a move string for a pawn promotion event.
+     * Is in form <newLocation>=<newType> (for example e8=Q means moves to e8 and 
+     * promotes to a Queen)
+     */
+    public String constructPromotionMove(int toRank, int toFile, char newType){
+        return String.format("%c%d=%c", toFile + 'a' - 1, toRank, newType);
+    }
+    
+    public String convertAlgebraicToLocs(String move) {
+        char kind = getKindFromMove(move);
+        ArrayList<String> moveMap = currentBoard.getMoves(kind, whitesTurn);
+        String fromLoc = "";
+        String toLoc = "";
+        for (String entry : moveMap) {
+            fromLoc = entry.split(":")[0];
+            String m = entry.split(":")[1];
+            if (m.equals(move)) {
+                toLoc = getLocFromMove(move);
+                break;
+            }
+        }
+
+        if (fromLoc.isEmpty() || toLoc.isEmpty()) {
+            System.out.println("malformation of loc happened!");
+            System.out.println("Move: " + move);
+            System.out.println("FromLoc: " + fromLoc);
+            System.out.println("ToLoc: " + toLoc);
+            System.exit(600);
+        }
+        return fromLoc + " " + toLoc;
+    }
+
+    public static String getLocFromMove(String move) {
+        if (move.charAt(move.length()-1) == '+' || move.charAt(move.length()-1) == '#') {
+            move = move.substring(0, move.length()-1);
+        }
+        return move.substring(move.length()-2);
+    }
+
+    public static boolean isValidLoc(String loc) {
+        if (loc.length() != 2) {
+            return false;
+        }
+        if (loc.charAt(0) < 'a' || loc.charAt(0) > 'h') {
+            return false;
+        }
+        if (loc.charAt(1) < '1' || loc.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean movePieceFromLocs(String fromLoc, String toLoc) {
+        Piece p = currentBoard.get(fromLoc);
+        ArrayList<String> moveMap = currentBoard.getMoves(p.getKind(), whitesTurn);
+        for (String entry : moveMap) {
+            if (fromLoc.equals(entry.split(":")[0])) {
+                String move = entry.split(":")[1];
+                String moveLoc = getLocFromMove(move);
+                if (moveLoc.equals(toLoc)) {
+                    return makeMove(entry.split(":")[1]);
+                }
+            }
         }
         return false;
     }
