@@ -4,8 +4,6 @@ public class Rook extends Piece {
     private static final String FILE_NAME = "rook.png";
     final static char KIND = 'R';
 
-    GameModel gameModel = GameModel.getInstance();
-
      /**
      * Constructs a new rook of the specified color on the
      * passed Board
@@ -16,7 +14,7 @@ public class Rook extends Piece {
         super(color, rank, file, "rook");
     }
 
-    public String[] getValidMoves(Board board) {
+    public String[] getValidMoves(Board board, GameModel gameModel) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         String move;
