@@ -94,6 +94,11 @@ public class Server extends Thread {
 		}
 	}
 	
+	/**
+	 * Prompts user whether they want to load an existing game. 
+	 * If yes, asks for a file to load from and then loads the
+	 * info into the GameModel
+	 */
 	private void loadGame() {
 		Scanner s = new Scanner(System.in);
 		System.out.println("Load game from a file? y/n");
@@ -111,6 +116,11 @@ public class Server extends Thread {
 		s.close();
 	}
 
+	/**
+	 * Prompts user whether they want to save the game. 
+	 * If yes, asks for a file to save to and then saves
+	 * the GameModel to it
+	 */
 	private void saveGame(){
 		Scanner s = new Scanner(System.in);
 		System.out.println("Save game to a file? y/n");
