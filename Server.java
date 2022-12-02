@@ -75,6 +75,7 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
+		loadGame();
 
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 		for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -123,8 +124,8 @@ public class Server extends Thread {
 	private void saveGame(){
 		Scanner s = new Scanner(System.in);
 		System.out.println("Save game to a file? y/n");
-		String loadGame = s.nextLine();
-		if(loadGame.equals("y")){;
+		String saveGame = s.nextLine();
+		if(saveGame.equals("y")){;
 			boolean success;
 			String fileName;
 			do{

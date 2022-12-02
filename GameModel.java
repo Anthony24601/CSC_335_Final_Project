@@ -59,6 +59,7 @@ public class GameModel implements Serializable {
     }
 
     public boolean makeMove(String move, Board b) {
+        System.out.println("in make move :)");
         if (move.equals("0-0")) {
             if (canCastleKingside(b)) {
                 castleKingside(b);
@@ -77,7 +78,7 @@ public class GameModel implements Serializable {
                 String m = entry.split(":")[1];
                 if (m.equals(move)) {
                     addHasMoved(loc, m);
-                    b.move(loc, m);
+                    b.moveAndSave(loc, m);
                     if (move.charAt(move.length()-1) == '#') {
                         hasCheckmate = true;
                     } else {
@@ -163,6 +164,7 @@ public class GameModel implements Serializable {
     }
 
     public boolean wouldPutInCheck(String loc, String move, Board b) {
+        System.out.println("would put in check");
         Board futureBoard = b.copy();
         futureBoard.move(loc, move);
         return futureBoard.hasCheck(!whitesTurn);
@@ -413,6 +415,8 @@ public class GameModel implements Serializable {
         return true;
     }
 
+    // SAVE AND LOAD GAME
+
     /**
      * Reads information from a file and populates this
      * GameModel with it
@@ -430,6 +434,7 @@ public class GameModel implements Serializable {
         }
 
         while(scanner.hasNext()){
+            System.out.println("load move");
             String move = scanner.nextLine();
             if(move.startsWith("turn:")){
                 String currentTurn = move.substring(5);
