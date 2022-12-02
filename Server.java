@@ -16,8 +16,6 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import ChrisIR4.ChrisIR4;
-
 public class Server extends Thread {
 	private boolean running;
 
@@ -75,8 +73,8 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		loadGame();
-
+		//loadGame();
+		print_debug("ready to except clients :)");
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
@@ -103,7 +101,7 @@ public class Server extends Thread {
 		Scanner s = new Scanner(System.in);
 		System.out.println("Load game from a file? y/n");
 		String loadGame = s.nextLine();
-		if(loadGame.equals("y")){;
+		if(loadGame.equals("y")){
 			boolean success;
 			String fileName;
 			do{
