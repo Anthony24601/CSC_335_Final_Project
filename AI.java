@@ -12,7 +12,8 @@ public class AI {
     private boolean isWhite;
     private Board board;
 
-    private static final String AI_TYPE = "greedy";
+    private static final String AI_TYPE = "minimax";
+    private static final int MINIMAX_LEVELS = 3;
     private static final int CAPTURE_MULTIPLIER = 3;
     
     public AI(boolean isWhite) {
@@ -30,6 +31,9 @@ public class AI {
                 break;
             case "greedy": 
                 move = pickGreedyMove(true).split(":")[1];
+                break;
+            case "minimax":
+                move = pickMinimaxMove(true, MINIMAX_LEVELS).split(":")[1];
                 break;
         }
         return move;
@@ -64,6 +68,59 @@ public class AI {
         }
 
         return bestMoves.get(rand.nextInt(bestMoves.size()));
+    }
+
+    private String pickMinimaxMove(boolean isSelf, int levels) {
+        ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
+        Random rand = new Random();
+        Board currentBoard = gameModel.getCurrentBoard();
+        
+        ArrayList<String> bestMoves = new ArrayList<>();
+        int bestPoints = Integer.MIN_VALUE;
+        int score;
+        for (String entry : allMoves) {
+            score = getMinimaxVal(entry, currentBoard, isSelf, levels);
+            if (score > bestPoints) {
+                bestMoves.clear();
+                bestMoves.add(entry);
+                bestPoints = score;
+            } else if (score == bestPoints) {
+                bestMoves.add(entry);
+            }
+        }
+
+        return bestMoves.get(rand.nextInt(bestMoves.size()));
+    }
+
+    private int getMinimaxVal(String entry, Board board, boolean isSelf, int levels) {
+        String loc = entry.split(":")[0];
+        String move = entry.split(":")[1];
+
+        Board futureBoard = board.copy();
+        futureBoard.move(loc, move);
+        ArrayList<String> nextMoves = gameModel.getAllPossibleMoves(futureBoard);
+
+        int bestPoints = isSelf ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        int score;
+        for (String nextEntry : nextMoves) {
+            if (levels <= 0) {
+                score = getMoveVal(nextEntry, isSelf);
+            } else {
+                score = getMinimaxVal(nextEntry, futureBoard, !isSelf, levels-1);
+            }
+            
+            if (isSelf) {
+                if (score > bestPoints) {
+                    bestPoints = score;
+                }
+            } else {
+                if (score < bestPoints) {
+                    bestPoints = score;
+                }
+            }
+        }
+
+        return bestPoints;
     }
 
     private void initializeScoreVals() {

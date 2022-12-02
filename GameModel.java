@@ -144,8 +144,14 @@ public class GameModel implements Serializable {
         return moves;
     }
 
+    /*
     public String addCheck(String loc, String move) {
-        Board futureBoard = currentBoard.copy();
+        return addCheck(loc, move, currentBoard);
+    }
+    */
+
+    public String addCheck(String loc, String move, Board b) {
+        Board futureBoard = b.copy();
         futureBoard.move(loc, move);
 
         if (futureBoard.hasCheck(whitesTurn)) {
@@ -202,14 +208,14 @@ public class GameModel implements Serializable {
             // Check if King would be in check moving across
             String f1 = "Kf1";
             String g1 = "Kg1";
-            result = f1.equals(addCheck("e1", f1)) && g1.equals(addCheck("e1", g1)) && b.isEmpty(1, 6) && b.isEmpty(1, 7);
+            result = f1.equals(addCheck("e1", f1, b)) && g1.equals(addCheck("e1", g1, b)) && b.isEmpty(1, 6) && b.isEmpty(1, 7);
         } else {
             if (blackKingHasMoved || blackKingRookHasMoved)
                 return false;
             
             String f8 = "Kf8";
             String g8 = "Kg8";
-            result = f8.equals(addCheck("e8", f8)) && g8.equals(addCheck("e8", g8)) && b.isEmpty(8, 6) && b.isEmpty(8, 7);
+            result = f8.equals(addCheck("e8", f8, b)) && g8.equals(addCheck("e8", g8, b)) && b.isEmpty(8, 6) && b.isEmpty(8, 7);
         }
 
         return result;
@@ -246,7 +252,7 @@ public class GameModel implements Serializable {
 
             String d1 = "Kd1";
             String c1 = "Kc1";
-            result = d1.equals(addCheck("e1", d1)) && c1.equals(addCheck("e1", c1)) && currentBoard.isEmpty(1, 2);
+            result = d1.equals(addCheck("e1", d1, b)) && c1.equals(addCheck("e1", c1, b)) && currentBoard.isEmpty(1, 2);
         } else {
             if (blackKingHasMoved || blackQueenRookHasMoved) {
                 return false;
@@ -254,7 +260,7 @@ public class GameModel implements Serializable {
 
             String d8 = "Ke8";
             String c8 = "Kf8";
-            result = d8.equals(addCheck("e8", d8)) && c8.equals(addCheck("e8", c8)) && currentBoard.isEmpty(8, 2);
+            result = d8.equals(addCheck("e8", d8, b)) && c8.equals(addCheck("e8", c8, b)) && currentBoard.isEmpty(8, 2);
         }
 
         return result;
