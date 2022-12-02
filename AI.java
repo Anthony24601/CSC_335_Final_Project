@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
-public class TerminalAI {
+public class AI {
     private static GameModel gameModel = GameModel.getInstance();
     private static Map<String, Integer> scoreVals;
     private static Map<String, Boolean> selfHasMoved;
@@ -15,7 +15,7 @@ public class TerminalAI {
     private static final String AI_TYPE = "greedy";
     private static final int CAPTURE_MULTIPLIER = 3;
     
-    public TerminalAI(boolean isWhite) {
+    public AI(boolean isWhite) {
         this.isWhite = isWhite;
         initializeScoreVals();
         initializedHasMoved();

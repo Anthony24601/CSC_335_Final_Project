@@ -4,11 +4,17 @@ public class LocalPlayer extends Player {
 	private int turn = 0;
 	
 	private GameModel model;
+
+	AI ai;
+	final static boolean HAS_AI = true;
 	
 	public LocalPlayer(String type) {
 		super(type);
 		model = GameModel.getInstance();
 		this.model.setCurrentBoard(new Board(false));
+		if (HAS_AI) {
+			ai = new AI(false);
+		}
 	}
 	
 	@Override
@@ -55,6 +61,12 @@ public class LocalPlayer extends Player {
 			selected2 = null;
 			possible_moves.clear();
 			ui.updatePossibles(possible_moves);
+
+			if (HAS_AI) {
+				model.makeMove(ai.decideOnMove());
+				turn = (turn + 1) % 2;
+				board = model.getCurrentBoard();
+			}
 		}
 
 	}
