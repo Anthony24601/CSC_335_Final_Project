@@ -182,7 +182,7 @@ public class Queen extends Piece {
         ret = moves.toArray(ret);
         return ret;
     }
-   
+
     public boolean canCheck(Board board) {
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         int r, f;
