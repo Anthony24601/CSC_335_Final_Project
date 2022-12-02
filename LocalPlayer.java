@@ -30,6 +30,12 @@ public class LocalPlayer extends Player {
 		} else {
 			if (possible_moves.contains(select)) {
 				selected2 = select;
+				boolean result = model.movePieceFromLocs(selected1, selected2);
+				board = model.getCurrentBoard();
+				if (result) {
+					turn = (turn + 1) % 2;
+				}
+				/*
 				boolean capture = false;
 				int rank_prev = selected1.charAt(1)-'0';
 				int file_prev = selected1.charAt(0)-'a'+1;
@@ -43,6 +49,7 @@ public class LocalPlayer extends Player {
 					board.move(selected1, selected2);
 					turn = (turn + 1) % 2;
 				}
+				*/
 			}
 			selected1 = null;
 			selected2 = null;

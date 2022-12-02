@@ -3,13 +3,11 @@ import java.util.ArrayList;
 public class Bishop extends Piece {
     private static final char KIND = Piece.BISHOP;
 
-    GameModel gameModel = GameModel.getInstance();
-
     public Bishop(int color, int rank, int file) {
         super(color, rank, file, "bishop");
     }
 
-    public String[] getValidMoves(Board board) {
+    public String[] getValidMoves(Board board, GameModel gameModel) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         String move;

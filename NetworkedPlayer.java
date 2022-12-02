@@ -14,6 +14,8 @@ public class NetworkedPlayer extends Player {
 	@Override
 	public void move(String select) {
 		//System.out.println(select);
+		board = client.getModel().getCurrentBoard();
+
 		int rank = select.charAt(1)-'0';
 		int file = select.charAt(0)-'a'+1;
 		System.out.println("==============");
@@ -32,6 +34,8 @@ public class NetworkedPlayer extends Player {
 			} else {
 				if (possible_moves.contains(select)) {
 					selected2 = select;
+					boolean result = client.getModel().movePieceFromLocs(selected1, selected2);
+					/*
 					boolean capture = false;
 					int rank_prev = selected1.charAt(1)-'0';
 					int file_prev = selected1.charAt(0)-'a'+1;
@@ -41,6 +45,10 @@ public class NetworkedPlayer extends Player {
 					String temp = MoveParser.constructMove(board.get(rank_prev, file_prev), rank, file, capture);
 					boolean temp2 = client.getModel().makeMove(temp);
 					if (temp2) {
+						client.sendMove(selected1, selected2);
+					}
+					*/
+					if (result) {
 						client.sendMove(selected1, selected2);
 					}
 					updateBoard(client.getModel().getCurrentBoard());

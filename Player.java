@@ -23,6 +23,10 @@ abstract class Player {
 		return board;
 	}
 
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+
 	public void run() {
 		ui.run();
 	}

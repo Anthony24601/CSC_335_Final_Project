@@ -65,7 +65,7 @@ public class GameModel implements Serializable {
             }
         } else {
             char kind = getKindFromMove(move);
-            ArrayList<String> moveMap = b.getMoves(kind, whitesTurn);
+            ArrayList<String> moveMap = b.getMoves(kind, whitesTurn, this);
             for (String entry : moveMap) {
                 String loc = entry.split(":")[0];
                 String m = entry.split(":")[1];
@@ -98,7 +98,7 @@ public class GameModel implements Serializable {
     public ArrayList<String> getPossibleMoves(Piece p) {
         ArrayList<String> moveMap = new ArrayList<>();
         String loc = p.getLoc();
-        String[] validMoves = p.getValidMoves(currentBoard);
+        String[] validMoves = p.getValidMoves(currentBoard, this);
         for (String move : validMoves) {
             moveMap.add(loc + ":" + move);
         }
@@ -114,7 +114,7 @@ public class GameModel implements Serializable {
         ArrayList<String> moves = new ArrayList<>();
         char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
         for (char kind : pieceKinds) {
-            moves.addAll(b.getMoves(kind, whitesTurn));
+            moves.addAll(b.getMoves(kind, whitesTurn, this));
         }
         return moves;
     }
@@ -131,7 +131,7 @@ public class GameModel implements Serializable {
         ArrayList<String> moves = new ArrayList<>();
         char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
         for (char kind : pieceKinds) {
-            moves.addAll(b.getMoves(kind, whitesTurn));
+            moves.addAll(b.getMoves(kind, whitesTurn, this));
         }
 
         flipTurn();
@@ -144,7 +144,7 @@ public class GameModel implements Serializable {
 
         if (futureBoard.hasCheck(whitesTurn)) {
             flipTurn();
-            if (futureBoard.hasCheckmate(whitesTurn)) {
+            if (futureBoard.hasCheckmate(whitesTurn, this)) {
                 flipTurn();
                 return move + "#";
             } else {
@@ -305,7 +305,7 @@ public class GameModel implements Serializable {
     
     public String convertAlgebraicToLocs(String move) {
         char kind = getKindFromMove(move);
-        ArrayList<String> moveMap = currentBoard.getMoves(kind, whitesTurn);
+        ArrayList<String> moveMap = currentBoard.getMoves(kind, whitesTurn, this);
         String fromLoc = "";
         String toLoc = "";
         for (String entry : moveMap) {
@@ -363,7 +363,7 @@ public class GameModel implements Serializable {
 
     public boolean movePieceFromLocs(String fromLoc, String toLoc) {
         Piece p = currentBoard.get(fromLoc);
-        ArrayList<String> moveMap = currentBoard.getMoves(p.getKind(), whitesTurn);
+        ArrayList<String> moveMap = currentBoard.getMoves(p.getKind(), whitesTurn, this);
         for (String entry : moveMap) {
             if (fromLoc.equals(entry.split(":")[0])) {
                 String move = entry.split(":")[1];

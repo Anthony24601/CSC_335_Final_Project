@@ -4,8 +4,6 @@ public class Knight extends Piece {
     private static final String FILE_NAME = "knight.png";
     final static char KIND = Piece.KNIGHT;
 
-    GameModel gameModel = GameModel.getInstance();
-
      /**
      * Constructs a new king of the specified color on the
      * passed Board
@@ -16,7 +14,7 @@ public class Knight extends Piece {
         super(color, rank, file, "knight");
     }
 
-    public String[] getValidMoves(Board board) {
+    public String[] getValidMoves(Board board, GameModel gameModel) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         int r, f;

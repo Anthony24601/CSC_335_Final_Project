@@ -151,6 +151,9 @@ public class Server extends Thread {
 
 					// update piece in gameModel
 					//model.getCurrentBoard().move(loc, move);
+					boolean result = model.movePieceFromLocs(loc, move);
+
+					/*
 					boolean capture = false;
 					int rank_prev = loc.charAt(1)-'0';
 					int file_prev = loc.charAt(0)-'a'+1;
@@ -161,10 +164,13 @@ public class Server extends Thread {
 					}
 					String temp = model.constructMove(model.getCurrentBoard().get(rank_prev, file_prev), rank, file, capture);
 					model.makeMove(temp);
+					*/
 
 					// set next player's turn and send them the model
-					turn = (turn + 1) % clients.length;
-					sendModel();
+					if (result) {
+						turn = (turn + 1) % clients.length;
+						sendModel();
+					}
 				}
 				catch (IOException | ClassNotFoundException e) {
 					print_debug("Communication failed.");

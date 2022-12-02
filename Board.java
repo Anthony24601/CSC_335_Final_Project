@@ -4,7 +4,7 @@ import java.io.Serializable;
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	final static boolean USE_TEMP_BOARD = true;
+	final static boolean USE_TEMP_BOARD = false;
 
 	final static int RANKS = 8;
     final static int FILES = 8;
@@ -70,7 +70,7 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
-	public ArrayList<String> getMoves(boolean isWhite) {
+	public ArrayList<String> getMoves(boolean isWhite, GameModel gameModel) {
 		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -79,7 +79,7 @@ public class Board implements Serializable {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.add(loc + ':' + board[r][f].getValidMoves(this));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gameModel));
 				}
 			}
 		}
@@ -87,7 +87,7 @@ public class Board implements Serializable {
 		return moveMap;
 	}
 
-	public ArrayList<String> getMoves(char kind, boolean isWhite) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gameModel) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
@@ -105,7 +105,7 @@ public class Board implements Serializable {
 		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				String[] validMoves = p.getValidMoves(this);
+				String[] validMoves = p.getValidMoves(this, gameModel);
 				for (String vm : validMoves) {
 					moveMap.add(p.getLoc() + ":" + vm);
 				}
@@ -269,12 +269,12 @@ public class Board implements Serializable {
 		return false;
 	}
 
-	public boolean hasCheckmate(boolean isWhite) {
+	public boolean hasCheckmate(boolean isWhite, GameModel gameModel) {
 		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
 		String[] moves;
 		for (Piece p : pawns) {
 			if (p.getColor() == ownColor) {
-				moves = p.getValidMoves(this);
+				moves = p.getValidMoves(this, gameModel);
 				if (moves.length > 0) {
 					return false;
 				}
@@ -282,7 +282,7 @@ public class Board implements Serializable {
 		}
 		for (Piece r : rooks) {
 			if (r.getColor() == ownColor) {
-				moves = r.getValidMoves(this);
+				moves = r.getValidMoves(this, gameModel);
 				if (moves.length > 0) {
 					return false;
 				}
@@ -290,7 +290,7 @@ public class Board implements Serializable {
 		}
 		for (Piece n : knights) {
 			if (n.getColor() == ownColor) {
-				moves = n.getValidMoves(this);
+				moves = n.getValidMoves(this, gameModel);
 				if (moves.length > 0) {
 					return false;
 				}
@@ -298,7 +298,7 @@ public class Board implements Serializable {
 		}
 		for (Piece b : bishops) {
 			if (b.getColor() == ownColor) {
-				moves = b.getValidMoves(this);
+				moves = b.getValidMoves(this, gameModel);
 				if (moves.length > 0) {
 					return false;
 				}
@@ -306,19 +306,19 @@ public class Board implements Serializable {
 		}
 		for (Piece q : queens) {
 			if (q.getColor() == ownColor) {
-				moves = q.getValidMoves(this);
+				moves = q.getValidMoves(this, gameModel);
 				if (moves.length > 0) {
 					return false;
 				}
 			}
 		}
 		if (ownColor == Piece.WHITE) {
-			moves = whiteKing.getValidMoves(this);
+			moves = whiteKing.getValidMoves(this, gameModel);
 			if (moves.length > 0) {
 				return false;
 			}
 		} else {
-			moves = blackKing.getValidMoves(this);
+			moves = blackKing.getValidMoves(this, gameModel);
 			if (moves.length > 0) {
 				return false;
 			}
