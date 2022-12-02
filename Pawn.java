@@ -75,14 +75,14 @@ public class Pawn extends Piece {
             }
 
             // Capture
-            if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE) {
+            if (board.isInBounds(rank-1, file-1) && (board.get(rank-1, file-1).getColor() == Piece.WHITE || board.get(rank-1, file-1).isPassant())) {
                 move = gameModel.constructMove(this, rank-1, file-1, true);
                 if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                     move = gameModel.addCheck(getLoc(), move);
                     moves.add(move);
                 }
             }
-            if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE) {
+            if (board.isInBounds(rank-1, file+1) && (board.get(rank-1, file+1).getColor() == Piece.WHITE || board.get(rank-1, file+1).isPassant())) {
                 move = gameModel.constructMove(this, rank-1, file+1, true);
                 if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                     move = gameModel.addCheck(getLoc(), move);
