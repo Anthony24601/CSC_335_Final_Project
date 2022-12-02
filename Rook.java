@@ -16,7 +16,7 @@ public class Rook extends Piece {
         super(color, rank, file, "rook");
     }
 
-    public String[] getValidMoves(Board board, GameModel gameModel) {
+    public String[] getValidMoves(Board board) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         String move;
@@ -26,16 +26,16 @@ public class Rook extends Piece {
         r = rank;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
             f++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -45,16 +45,16 @@ public class Rook extends Piece {
         r = rank+1;
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
             r++;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -64,16 +64,16 @@ public class Rook extends Piece {
         r = rank;
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
             f--;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -83,16 +83,16 @@ public class Rook extends Piece {
         r = rank-1;
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
             r--;
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }

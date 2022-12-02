@@ -12,8 +12,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import ChrisIR4.ChrisIR4;
 
 public class Server extends Thread {
 	private boolean running;
@@ -72,6 +75,8 @@ public class Server extends Thread {
 	
 	@Override
 	public void run() {
+		loadGame();
+
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
@@ -89,6 +94,40 @@ public class Server extends Thread {
 		}
 	}
 	
+	private void loadGame() {
+		Scanner s = new Scanner(System.in);
+		System.out.println("Load game from a file? y/n");
+		String loadGame = s.nextLine();
+		if(loadGame.equals("y")){;
+			boolean success;
+			String fileName;
+			do{
+			System.out.println("Enter file name or s to stop: ");
+			fileName = s.nextLine();
+			success = model.loadGame(fileName);
+			}
+			while(!(success || fileName.equals("s")));
+		}
+		s.close();
+	}
+
+	private void saveGame(){
+		Scanner s = new Scanner(System.in);
+		System.out.println("Save game to a file? y/n");
+		String loadGame = s.nextLine();
+		if(loadGame.equals("y")){;
+			boolean success;
+			String fileName;
+			do{
+			System.out.println("Enter file name or s to stop: ");
+			fileName = s.nextLine();
+			success = model.saveGame(fileName);
+			}
+			while(!(success || fileName.equals("s")));
+		}
+		s.close();
+	}
+
 	private void print_debug(String msg) {
 		System.out.println("[Server] " + msg);
 		System.out.flush();
@@ -141,15 +180,27 @@ public class Server extends Thread {
 					loc = (String) in.readObject();
 					if (loc.equals("bye!")) {
 						print_debug("client " + id + " disconnecting");
+						saveGame();
 						sendModel();
 						break;
 					}
 					
 					move = (String) in.readObject();
+					//System.out.println("Player " + turn + "'s move: " + loc + ", " + move);
 					print_debug("Player " + turn + "'s move: " + loc + ", " + move);
 					
 					// update piece in gameModel
-					model.getCurrentBoard().move(loc, move);
+					//model.getCurrentBoard().move(loc, move);
+					boolean capture = false;
+					int rank_prev = loc.charAt(1)-'0';
+					int file_prev = loc.charAt(0)-'a'+1;
+					int rank = move.charAt(1)-'0';
+					int file = move.charAt(0)-'a'+1;
+					if (model.getCurrentBoard().get(rank, file).getColor() != Piece.BLANK) {
+						capture = true;
+					}
+					String temp = model.constructMove(model.getCurrentBoard().get(rank_prev, file_prev), rank, file, capture);
+					model.makeMove(temp);
 					
 					// set next player's turn and send them the model
 					turn = (turn + 1) % clients.length;
