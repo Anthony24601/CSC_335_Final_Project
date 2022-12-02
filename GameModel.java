@@ -269,7 +269,8 @@ public class GameModel implements Serializable {
         return false;
     }
 
-    // Move Parser stuff
+    // Move Parser stuff ///////////////////////////////////////////////////////////
+
     private char getKindFromMove(String move) {
         return move.charAt(0) >= 'a' && move.charAt(0) <= 'h' ? 0 : move.charAt(0);
     }
@@ -326,7 +327,21 @@ public class GameModel implements Serializable {
         return fromLoc + " " + toLoc;
     }
 
-    public static String getLocFromMove(String move) {
+    public String getLocFromMove(String move) {
+        if (move.equals("0-0")) {
+            if (whitesTurn) {
+                return "g1";
+            } else {
+                return "g8";
+            }
+        }
+        else if (move.equals("0-0-0")) {
+            if (whitesTurn) {
+                return "c1";
+            } else {
+                return "c8";
+            }
+        }
         if (move.charAt(move.length()-1) == '+' || move.charAt(move.length()-1) == '#') {
             move = move.substring(0, move.length()-1);
         }

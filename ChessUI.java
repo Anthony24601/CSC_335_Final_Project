@@ -151,7 +151,6 @@ public class ChessUI extends Thread
     }
     
     private void highlight(ArrayList<String> possible) {
-    	
     	//Updown Orientation with white on top
     	for (String square: possible) {
     		//System.out.println(square);

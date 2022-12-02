@@ -1,13 +1,10 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	final static boolean USE_TEMP_BOARD = false;
+	final static boolean USE_TEMP_BOARD = true;
 
 	final static int RANKS = 8;
     final static int FILES = 8;
@@ -219,17 +216,15 @@ public class Board implements Serializable {
 		}
 		// USED FOR DEBUGGING MOVES
 		whiteKing = new King(Piece.WHITE, 1, 5);
-		blackKing = new King(Piece.BLACK, 5, 3);
-		Queen wq = new Queen(Piece.WHITE, 2, 8);
-		Queen bq = new Queen(Piece.BLACK, 7, 3);
+		blackKing = new King(Piece.BLACK, 8, 5);
+		Rook wr1 = new Rook(Piece.WHITE, 1, 1);
+		Rook wr2 = new Rook(Piece.WHITE, 1, 8);
+
 		
 		placePiece(whiteKing);
 		placePiece(blackKing);
-		placePiece(wq);
-		placePiece(bq);
-
-		Pawn testPawn = new Pawn(Piece.WHITE, 7, 7);
-		placePiece(testPawn);
+		placePiece(wr1);
+		placePiece(wr2);
 	}
 
 	public Piece get(int rank, int file) {

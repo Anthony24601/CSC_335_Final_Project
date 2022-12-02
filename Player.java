@@ -55,6 +55,8 @@ public class Player {
 			} else {
 				if (possible_moves.contains(select)) {
 					selected2 = select;
+					boolean result = client.getModel().movePieceFromLocs(selected1, selected2);
+					/*
 					boolean capture = false;
 					int rank_prev = selected1.charAt(1)-'0';
 					int file_prev = selected1.charAt(0)-'a'+1;
@@ -64,6 +66,10 @@ public class Player {
 					String temp = client.getModel().constructMove(board.get(rank_prev, file_prev), rank, file, capture);
 					boolean temp2 = client.getModel().makeMove(temp);
 					if (temp2) {
+						client.sendMove(selected1, selected2);
+					}
+					*/
+					if (result) {
 						client.sendMove(selected1, selected2);
 					}
 					updateBoard(client.getModel().getCurrentBoard());
@@ -97,13 +103,31 @@ public class Player {
 	
 	private ArrayList<String> getMoves(ArrayList<String> arrayList) {
 		for (int i = 0; i < arrayList.size(); i++) {
-			String temp = arrayList.get(i);
-			if (temp.charAt(temp.length()-1) == '+') {
-				temp = temp.substring(temp.length()-3, temp.length()-1);
-			} else {
-				temp = temp.substring(temp.length()-2);
+			String entry = arrayList.get(i);
+			String toLoc = "";
+			if (entry.split(":")[1].equals("0-0")) {
+				if (entry.split(":")[0].equals("e1")) {
+					toLoc = "g1";
+				} else if (entry.split(":")[0].equals("e8")) {
+					toLoc = "g7";
+				} else {
+					System.out.println("huh?");
+					System.exit(600);
+				}
 			}
-			arrayList.set(i, temp);
+			else if (entry.split(":")[1].equals("0-0-0")) {
+				if (entry.split(":")[0].equals("e1")) {
+					toLoc = "c1";
+				} else if (entry.split(":")[0].equals("e8")) {
+					toLoc = "c8";
+				}
+			}
+			else if (entry.charAt(entry.length()-1) == '+') {
+				toLoc = entry.substring(entry.length()-3, entry.length()-1);
+			} else {
+				toLoc = entry.substring(entry.length()-2);
+			}
+			arrayList.set(i, toLoc);
 		}
 		return arrayList;
 	}
