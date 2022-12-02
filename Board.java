@@ -275,8 +275,61 @@ public class Board implements Serializable {
 	}
 	
 	public boolean hasCheckmate(boolean isWhite) {
-		// TODO
-        return false;
+		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
+		String[] moves;
+		for (Piece p : pawns) {
+			if (p.getColor() == ownColor) {
+				moves = p.getValidMoves(this);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece r : rooks) {
+			if (r.getColor() == ownColor) {
+				moves = r.getValidMoves(this);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece n : knights) {
+			if (n.getColor() == ownColor) {
+				moves = n.getValidMoves(this);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece b : bishops) {
+			if (b.getColor() == ownColor) {
+				moves = b.getValidMoves(this);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece q : queens) {
+			if (q.getColor() == ownColor) {
+				moves = q.getValidMoves(this);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		if (ownColor == Piece.WHITE) {
+			moves = whiteKing.getValidMoves(this);
+			if (moves.length > 0) {
+				return false;
+			}
+		} else {
+			moves = blackKing.getValidMoves(this);
+			if (moves.length > 0) {
+				return false;
+			}
+		}
+
+        return true;
     }
 
 	public boolean isInBounds(int rank, int file) {

@@ -27,7 +27,7 @@ public class Queen extends Piece {
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -35,7 +35,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -46,7 +46,7 @@ public class Queen extends Piece {
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -55,7 +55,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -66,7 +66,7 @@ public class Queen extends Piece {
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -74,7 +74,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -85,7 +85,7 @@ public class Queen extends Piece {
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -94,7 +94,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -105,7 +105,7 @@ public class Queen extends Piece {
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -113,7 +113,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -124,7 +124,7 @@ public class Queen extends Piece {
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -133,7 +133,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -144,7 +144,7 @@ public class Queen extends Piece {
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -152,7 +152,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -163,7 +163,7 @@ public class Queen extends Piece {
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
             move = gameModel.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }
@@ -172,7 +172,7 @@ public class Queen extends Piece {
         }
         if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
             move = gameModel.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move);
                 moves.add(move);
             }

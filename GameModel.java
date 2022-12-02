@@ -156,8 +156,8 @@ public class GameModel implements Serializable {
         return move;
     }
 
-    public boolean wouldPutInCheck(String loc, String move) {
-        Board futureBoard = currentBoard.copy();
+    public boolean wouldPutInCheck(String loc, String move, Board b) {
+        Board futureBoard = b.copy();
         futureBoard.move(loc, move);
         return futureBoard.hasCheck(!whitesTurn);
     }
