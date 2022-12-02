@@ -366,6 +366,10 @@ public class Board implements Serializable {
 				}
 			}
 		}
+		
+		if (capturedPiece != null) {
+			removePiece(capturedPiece);
+		}
 
 		return capturedPiece;
 	}
