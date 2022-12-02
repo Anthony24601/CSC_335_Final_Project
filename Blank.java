@@ -10,7 +10,7 @@ public class Blank extends Piece{
 	public String[] getValidMoves(Board board) {
 		return null;
 	}
-    
+
 	public boolean canCheck(Board board) {
         return false;
     }
@@ -38,7 +38,7 @@ public class Blank extends Piece{
 	public boolean isPassant(){
 		return passantState;
 	}
-	
+
 	public void setPassant(boolean isPassant){
 		passantState = isPassant;
 	}
