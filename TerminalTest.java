@@ -12,7 +12,9 @@ public class TerminalTest {
     final static String INVALID_SECOND_ERROR = "To move string is improperly formatted.";
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
-    final static boolean AUTO = false;
+    final static boolean AUTO = true;
+    final static boolean USE_NEW_MOVE_FORMAT = false;
+    final static boolean PLAY_AGAINST_AI = false;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -53,10 +55,17 @@ public class TerminalTest {
             for (String move : sampleGame) {
                 gameModel.printBoard();
                 isInvalidMove(move);
-                result = interpretMove(move);
+                result = gameModel.makeMove(move);
                 while (!result) {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
+                }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("Checkmate! WHITE WINS!");
+                    } else {
+                        System.out.println("Checkmate! BLACK WINS!");
+                    }
                 }
             }
         } else {
@@ -72,9 +81,18 @@ public class TerminalTest {
                 while (isInvalidMove(move)) {
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
-                result = interpretMove(move);
+                result = gameModel.makeMove(move);
                 if (!result && !move.equals("q")) {
                     System.out.println("Invalid move. Please try again.");
+                }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("Checkmate! WHITE WINS!");
+                        break;
+                    } else {
+                        System.out.println("Checkmate! BLACK WINS!");
+                        break;
+                    }
                 }
             } while (!move.equals(SENTINEL));
         }
@@ -89,17 +107,6 @@ public class TerminalTest {
         return move;
     }
     
-    private static boolean interpretMove(String move) {
-        if (move.equals("0-0")) {
-            return gameModel.castleKingside();
-        }
-        else if (move.equals("0-0-0")) {
-            return gameModel.castleQueenside();
-        } else {
-            return gameModel.makeMove(move);
-        }
-    }
-
     static boolean isInvalidMove(String move) {
         if (move.toLowerCase().equals(SENTINEL)) {
             return false;

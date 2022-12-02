@@ -10,6 +10,7 @@ XTankUI objects are instantiated with a player object
 */
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -36,9 +37,9 @@ public class ChessUI extends Thread
     private Board board;
     public static Font font;
     boolean update;
-    
-    String[] possible_moves;
-    
+
+    ArrayList<String> possible_moves;
+
     /**
      * XTankUI constructor
      * @param player is a Player
@@ -49,9 +50,9 @@ public class ChessUI extends Thread
         display = new Display();
         font = new Font(display, "Comic Sans", 56, SWT.BOLD);
         update = false;
-        possible_moves = new String[0];
+        possible_moves = new ArrayList<>();
     }
-    
+
     /**
      * runs the UI and draws the GameModel
      * @return None
@@ -63,7 +64,7 @@ public class ChessUI extends Thread
         shell.setLayout(new FillLayout());
         shell.setSize(800, 820);
         canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
-        
+
         canvas.addPaintListener(event -> {
             paint_canvas = event;
             board = player.getBoard();
@@ -90,9 +91,9 @@ public class ChessUI extends Thread
     			int row = e.y/100;
     			player.move((char)('a' + col) + "" + (row+1));
     			canvas.redraw();
-            } 
-            public void mouseUp(MouseEvent e) {} 
-            public void mouseDoubleClick(MouseEvent e) {} 
+            }
+            public void mouseUp(MouseEvent e) {}
+            public void mouseDoubleClick(MouseEvent e) {}
         });
 
         canvas.addKeyListener(new KeyListener() {
@@ -100,10 +101,10 @@ public class ChessUI extends Thread
             }
             public void keyReleased(KeyEvent e) {}
         });
-    
+
         shell.open();
         while (!shell.isDisposed()) {
-        	if (update) { 
+        	if (update) {
         		canvas.redraw();
         		update = false;
         	}
@@ -111,20 +112,20 @@ public class ChessUI extends Thread
                 display.sleep();
             }
         }
-        display.dispose();      
+        display.dispose();
     }
-    
+
     public void update() {
     	update = true;
     	display.wake();
     }
-    
-    public void updatePossibles(String[] possible) {
+
+    public void updatePossibles(ArrayList<String> possible) {
     	possible_moves = possible;
     }
-    
+
     // Private Methods ----------------------------
-    
+
     /**
      * prints You died on the screen
      * @return None
@@ -134,7 +135,7 @@ public class ChessUI extends Thread
     	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_RED));
     	paint_canvas.gc.drawText("You Died!", 250, 250);
     }
-    
+
     /**
      * draws a piece
      * @param t is a Tank Object
@@ -148,12 +149,11 @@ public class ChessUI extends Thread
         paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (col-1)*100, (row-1)*100, 100, 100);
 		img.dispose();
     }
-    
-    private void highlight(String[] possible) {
-    	
+
+    private void highlight(ArrayList<String> possible) {
     	//Updown Orientation with white on top
     	for (String square: possible) {
-    		System.out.println(square);
+    		//System.out.println(square);
 			int row = (square.charAt(1)-'0'-1)*100;
 			int col = (square.charAt(0)-'a')*100;
 			Color yellow = new Color(255,255,0);
@@ -163,5 +163,3 @@ public class ChessUI extends Thread
 		}
     }
 }
-
-

@@ -2,7 +2,7 @@
  * File: Client.java
  * Author: Miles Gendreau
  * Course: CSC 335, Fall 2022
- * Description: This file contains the Client class, which is used for 
+ * Description: This file contains the Client class, which is used for
  * multiplayer networking.
  */
 
@@ -13,22 +13,22 @@ import java.net.Socket;
 
 public class Client extends Thread {
 	private boolean running = false;
-	
+
 	private Socket socket;
 	private String host;
 	private int port;
-	
+
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	private String curr_pos;
 	private String curr_move;
-	
+
 	private int id;
 	private boolean turn_active;
 	private GameModel model;
 	Player player;
 	int color;
-  
+
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
@@ -36,22 +36,22 @@ public class Client extends Thread {
 		id = 0;
 		color = Piece.WHITE; //TODO Change
 	}
-	
+
 	/*
 	public Client(String host, int port, int id, Player p) {
 		this(host, port, p);
 		this.id = id;
 	}
 	*/
-	
+
 	public int getColor() {
 		return color;
 	}
-	
+
 	public void setColor(int color) {
 		this.color = color;
 	}
-	
+
 	public GameModel getModel() {
 		return model;
 	}
@@ -61,60 +61,60 @@ public class Client extends Thread {
 			socket = new Socket(host, port);
 			running = true;
 			this.start();
-		} 
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void closeConnection() {
 		if (socket == null) {
 	    	print_debug("No connection active!");
-			return; 
+			return;
 		}
-		try { 
+		try {
 			// wave goodbye to server
 			out.writeObject("bye!");
 			out.flush();
-			
-			socket.close(); 
+
+			socket.close();
 			running = false;
 			this.interrupt();
 			print_debug("Connection closed!");
-		} 
+		}
 		catch (IOException e) { e.printStackTrace(); }
 	}
-	
+
 	public void sendMove(String pos, String move) {
 		curr_pos = pos;
 		curr_move = move;
 	}
-	
+
 	public boolean getTurn() {
 		return turn_active;
 	}
-	
+
 	@Override
 	public void run() {
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
 	    	out.flush();
 	    	in = new ObjectInputStream(socket.getInputStream());
-	    	
+
 	    	// initial communication
 	    	print_debug("Sending request to socket server...");
 	    	out.writeObject("Requesting turn");
-	    	
+
 	    	turn_active = in.readBoolean();
 	    	color = in.readInt();
-	    	
+
 	    	model = (GameModel) in.readObject();
 	    	print_debug("Received model!");
 		}
 		catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		while (running) {
 			// continual communication
 			if (!turn_active) {
@@ -124,7 +124,7 @@ public class Client extends Thread {
 					model = (GameModel) in.readObject();
 					print_debug("It's my turn now!");
 					player.updateBoard(model.getCurrentBoard());
-				} 
+				}
 				catch (IOException | ClassNotFoundException e) {
 					print_debug("Turn assignment failed!");
 					e.printStackTrace();
@@ -137,7 +137,7 @@ public class Client extends Thread {
 					out.writeObject(curr_move);
 					curr_pos = curr_move = null;
 					turn_active = false;
-				} 
+				}
 				catch (IOException e) {
 					print_debug("Failed to send move!");
 					e.printStackTrace();
@@ -146,7 +146,7 @@ public class Client extends Thread {
 			else {
 				try {
 					Thread.sleep(10);
-				} 
+				}
 				catch (InterruptedException e) {
 					print_debug("Thread was interrupted!");
 					//e.printStackTrace();
@@ -154,7 +154,7 @@ public class Client extends Thread {
 			}
 		}
 	}
-	
+
 	private void print_debug(String msg) {
 		System.out.println("  [Client " + id + "] " + msg);
 		System.out.flush();
