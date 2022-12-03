@@ -51,9 +51,9 @@ abstract class Player {
 				if (entry.split(":")[0].equals("e1")) {
 					toLoc = "g1";
 				} else if (entry.split(":")[0].equals("e8")) {
-					toLoc = "g7";
+					toLoc = "g8";
 				} else {
-					System.out.println("huh?");
+					System.out.println("Player.getMoves: huh?");
 					System.exit(600);
 				}
 			}

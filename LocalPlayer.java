@@ -6,7 +6,7 @@ public class LocalPlayer extends Player {
 	private GameModel model;
 
 	AI ai;
-	final static boolean HAS_AI = true;
+	final static boolean HAS_AI = false;
 	
 	public LocalPlayer(String type) {
 		super(type);
