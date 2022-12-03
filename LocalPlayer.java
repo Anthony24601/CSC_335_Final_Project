@@ -41,32 +41,17 @@ public class LocalPlayer extends Player {
 				if (result) {
 					turn = (turn + 1) % 2;
 				}
-				/*
-				boolean capture = false;
-				int rank_prev = selected1.charAt(1)-'0';
-				int file_prev = selected1.charAt(0)-'a'+1;
-				if (board.get(rank, file).getColor() != Piece.BLANK) {
-					capture = true;
-				}
-				String temp = MoveParser.constructMove(board.get(rank_prev, file_prev), rank, file, capture);
-				boolean temp2 = model.makeMove(temp);
-				if (temp2) {
-					// probs need to do some stuff here
-					board.move(selected1, selected2);
+				if (HAS_AI) {
+					model.makeMove(ai.decideOnMove());
 					turn = (turn + 1) % 2;
+					board = model.getCurrentBoard();
 				}
-				*/
 			}
 			selected1 = null;
 			selected2 = null;
 			possible_moves.clear();
 			ui.updatePossibles(possible_moves);
 
-			if (HAS_AI) {
-				model.makeMove(ai.decideOnMove());
-				turn = (turn + 1) % 2;
-				board = model.getCurrentBoard();
-			}
 		}
 
 	}

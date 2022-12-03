@@ -11,10 +11,19 @@ public class AI {
 
     private boolean isWhite;
     private Board board;
+    private boolean openingMove = true;
 
     private static final String AI_TYPE = "minimax";
     private static final int MINIMAX_LEVELS = 1;
     private static final int CAPTURE_MULTIPLIER = 3;
+
+    private final String[] BLACK_OPENERS = {
+        "c5",   // Sicilian Defense
+        "e6",   // French Defense
+        "e5",   // Part of Italian
+        "Nc6",  // Part of Italian
+        "d5",   // Scandinavian Defense
+    };
     
     public AI(boolean isWhite) {
         this.isWhite = isWhite;
@@ -72,8 +81,8 @@ public class AI {
 
     private String pickMinimaxMove(boolean isSelf, int levels) {
         ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
-        Random rand = new Random();
         Board currentBoard = gameModel.getCurrentBoard();
+        Random rand = new Random();
         
         ArrayList<String> bestMoves = new ArrayList<>();
         int bestPoints = Integer.MIN_VALUE;
@@ -106,7 +115,11 @@ public class AI {
             if (levels <= 0) {
                 score = getMoveVal(nextEntry, isSelf, futureBoard);
             } else {
-                score = getMinimaxVal(nextEntry, futureBoard, !isSelf, levels-1);
+                score = getMinimaxVal(nextEntry, futureBoard, !isSelf, levels-1) + getMoveVal(nextEntry, isSelf, futureBoard);
+            }
+
+            if (!isSelf) {
+                score = -score;
             }
 
             if (isSelf) {
@@ -134,6 +147,11 @@ public class AI {
             scoreVals.put("captureBishop", 3*CAPTURE_MULTIPLIER);
             scoreVals.put("captureRook", 5*CAPTURE_MULTIPLIER);
             scoreVals.put("captureQueen", 9*CAPTURE_MULTIPLIER);
+            scoreVals.put("losePawn", -1*CAPTURE_MULTIPLIER);
+            scoreVals.put("loseKnight", -3*CAPTURE_MULTIPLIER);
+            scoreVals.put("loseBishop", -3*CAPTURE_MULTIPLIER);
+            scoreVals.put("loseRook", -5*CAPTURE_MULTIPLIER);
+            scoreVals.put("loseQueen", -9*CAPTURE_MULTIPLIER);
             scoreVals.put("forwardPawnPos", 1);
             scoreVals.put("forwardPawnPos2", 2);
             scoreVals.put("pieceDevelopment", 3);
