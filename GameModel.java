@@ -91,8 +91,8 @@ public class GameModel implements Serializable {
         return false;
     }
 
-    public Piece getPieceCaptured(String loc, String move) {
-        Board futureBoard = currentBoard.copy();
+    public Piece getPieceCaptured(String loc, String move, Board b) {
+        Board futureBoard = b.copy();
         return futureBoard.move(loc, move);
     }
 

@@ -31,7 +31,7 @@ public class Queen extends Piece {
             }
             f++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -51,7 +51,7 @@ public class Queen extends Piece {
             f++;
             r++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -70,7 +70,7 @@ public class Queen extends Piece {
             }
             r++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -90,7 +90,7 @@ public class Queen extends Piece {
             r++;
             f--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -109,7 +109,7 @@ public class Queen extends Piece {
             }
             f--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -129,7 +129,7 @@ public class Queen extends Piece {
             r--;
             f--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -148,7 +148,7 @@ public class Queen extends Piece {
             }
             r--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);
@@ -168,7 +168,7 @@ public class Queen extends Piece {
             r--;
             f++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
             move = gameModel.constructMove(this, r, f, true);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
                 move = gameModel.addCheck(getLoc(), move, board);

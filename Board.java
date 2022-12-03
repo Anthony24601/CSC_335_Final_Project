@@ -424,7 +424,7 @@ public class Board implements Serializable {
 
 		}
 		
-		if (capturedPiece != null) {
+		if (capturedPiece != null && !capturedPiece.isBlank()) {
 			removePiece(capturedPiece);
 		}
 		
@@ -461,7 +461,7 @@ public class Board implements Serializable {
 				move(rook, 8, 6, false);
 				move(king, 8, 7, false);
 			} else {
-				System.out.println("lol wat?");
+				System.out.println("KingsideCastleMove: lol wat?");
 				System.exit(300);
 			}
 			return null;
@@ -481,7 +481,7 @@ public class Board implements Serializable {
 				move(rook, 8, 4, false);
 				move(king, 8, 3, false);
 			} else {
-				System.out.println("lol wat?");
+				System.out.println("Queenside Castle Move: lol wat?");
 				System.exit(300);
 			}
 			return null;
@@ -541,7 +541,7 @@ public class Board implements Serializable {
 				queens.remove(piece);
 				break;
 			case 'K':
-				System.out.println("lol wat?");
+				System.out.println("Remove Piece: lol wat?");
 				System.exit(200);
 		}
 	}

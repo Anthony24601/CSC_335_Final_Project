@@ -24,7 +24,7 @@ public class King extends Piece {
         // right
         r = rank;
         f = file+1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -36,7 +36,7 @@ public class King extends Piece {
         // up-right
         r = rank+1;
         f = file+1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -48,7 +48,7 @@ public class King extends Piece {
         // up
         r = rank+1;
         f = file;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -60,7 +60,7 @@ public class King extends Piece {
         // up-left
         r = rank+1;
         f = file-1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -72,7 +72,7 @@ public class King extends Piece {
         // left
         r = rank;
         f = file-1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -84,7 +84,7 @@ public class King extends Piece {
         // down-left
         r = rank-1;
         f = file-1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -96,7 +96,7 @@ public class King extends Piece {
         // down
         r = rank-1;
         f = file;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
@@ -108,7 +108,7 @@ public class King extends Piece {
         // down-right
         r = rank-1;
         f = file+1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
             move = gameModel.constructMove(this, r, f, isCapture);
             if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {

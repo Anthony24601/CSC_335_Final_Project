@@ -13,7 +13,7 @@ public class AI {
     private Board board;
 
     private static final String AI_TYPE = "minimax";
-    private static final int MINIMAX_LEVELS = 3;
+    private static final int MINIMAX_LEVELS = 1;
     private static final int CAPTURE_MULTIPLIER = 3;
     
     public AI(boolean isWhite) {
@@ -57,7 +57,7 @@ public class AI {
         int bestPoints = Integer.MIN_VALUE;
         int score;
         for (String entry : allMoves) {
-            score = getMoveVal(entry, isSelf);
+            score = getMoveVal(entry, isSelf, gameModel.getCurrentBoard());
             if (score > bestPoints) {
                 bestMoves.clear();
                 bestMoves.add(entry);
@@ -104,11 +104,11 @@ public class AI {
         int score;
         for (String nextEntry : nextMoves) {
             if (levels <= 0) {
-                score = getMoveVal(nextEntry, isSelf);
+                score = getMoveVal(nextEntry, isSelf, futureBoard);
             } else {
                 score = getMinimaxVal(nextEntry, futureBoard, !isSelf, levels-1);
             }
-            
+
             if (isSelf) {
                 if (score > bestPoints) {
                     bestPoints = score;
@@ -173,7 +173,7 @@ public class AI {
         }
     }
 
-    private int getMoveVal(String entry, boolean isSelf) {
+    private int getMoveVal(String entry, boolean isSelf, Board board) {
         int score = 0;
         String loc = entry.split(":")[0];
         String move = entry.split(":")[1];
@@ -194,7 +194,7 @@ public class AI {
         // Capture piece
         if (move.contains("x")) {
             recordHasMoved(loc, isSelf);
-            switch (gameModel.getPieceCaptured(loc, move).getKind()) {
+            switch (gameModel.getPieceCaptured(loc, move, board).getKind()) {
                 case 0: score += scoreVals.get("capturePawn"); break;
                 case 'R': score += scoreVals.get("captureRook"); break;
                 case 'N': score += scoreVals.get("captureKnight"); break;
@@ -204,7 +204,7 @@ public class AI {
         }
 
         // Forward position of pawn
-        boolean isPawn = move.charAt(0) >= 'a' && move.charAt(0) <= 'h' && move.charAt(1) >= '1' && move.charAt(1) <= '8';
+        boolean isPawn = move.charAt(0) >= 'a' && move.charAt(0) <= 'h';
         if (isPawn) {
             recordHasMoved(loc, isSelf);
             boolean isTwo = Math.abs((int) (loc.charAt(1) - move.charAt(1))) == 2;            
