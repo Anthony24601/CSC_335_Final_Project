@@ -77,7 +77,7 @@ public class GameModel implements Serializable {
                 String m = entry.split(":")[1];
                 if (m.equals(move)) {
                     addHasMoved(loc, m);
-                    b.move(loc, m);
+                    b.moveAndSave(loc, m);
                     if (move.charAt(move.length()-1) == '#') {
                         hasCheckmate = true;
                     } else {

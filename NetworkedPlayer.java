@@ -67,4 +67,10 @@ public class NetworkedPlayer extends Player {
 			System.out.println("no");
 		}
 	}
+
+	
+	public void saveGame(String fileName) {
+		GameModel model = client.getModel();
+		model.saveGame(fileName);
+	}
 }

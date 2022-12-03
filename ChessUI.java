@@ -18,11 +18,14 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -62,8 +65,9 @@ public class ChessUI extends Thread
         shell = new Shell(display);
         shell.setText("Chess");
         shell.setLayout(new FillLayout());
-        shell.setSize(800, 820);
+        shell.setSize(1600, 820);
         canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
+        drawSaveButton();
 
         canvas.addPaintListener(event -> {
             paint_canvas = event;
@@ -161,5 +165,20 @@ public class ChessUI extends Thread
 			paint_canvas.gc.setAlpha(100);
 			paint_canvas.gc.fillRectangle(col,row,100,100);
 		}
+    }
+
+    private void drawSaveButton() {
+        Button saveButton = new Button(shell, SWT.PUSH);
+        saveButton.setText("SAVE GAME");
+        saveButton.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+               player.saveGame("game.txt");
+            }
+        });
     }
 }

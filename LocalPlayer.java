@@ -58,4 +58,9 @@ public class LocalPlayer extends Player {
 		}
 
 	}
+
+	@Override
+	void saveGame(String fileName) {
+		model.saveGame(fileName);
+	}
 }
