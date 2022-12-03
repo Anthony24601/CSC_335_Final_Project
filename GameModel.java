@@ -127,6 +127,18 @@ public class GameModel implements Serializable {
         return moves;
     }
 
+    public ArrayList<String> getAllPossibleOpMoves() {
+        return getAllPossibleOpMoves(currentBoard); 
+    }
+
+    public ArrayList<String> getAllPossibleOpMoves(Board b) {
+        flipTurn();
+        ArrayList<String> moves = getAllPossibleMoves(b);
+        flipTurn();
+        return moves;
+    }
+
+    /*
     public ArrayList<String> getAllPossibleOpMoves(String loc, String move) {
         Board futureBoard = currentBoard.copy();
         return getAllPossibleOpMoves(loc, move, futureBoard);
@@ -145,6 +157,7 @@ public class GameModel implements Serializable {
         flipTurn();
         return moves;
     }
+    */
 
     /*
     public String addCheck(String loc, String move) {

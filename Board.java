@@ -394,7 +394,7 @@ public class Board implements Serializable {
 
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
 
-		if(piece.getKind()==Piece.PAWN){
+		if(piece.getKind()==Piece.PAWN && capturedPiece == null){
 			// Pawn promotion check
 			if(toRank==1||toRank==8){
 				pawnPromotionMove(piece, toRank, toFile);

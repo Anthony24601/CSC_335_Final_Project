@@ -17,14 +17,6 @@ public class AI {
     private static final int MINIMAX_LEVELS = 1;
     private static final int CAPTURE_MULTIPLIER = 3;
 
-    private final String[] BLACK_OPENERS = {
-        "c5",   // Sicilian Defense
-        "e6",   // French Defense
-        "e5",   // Part of Italian
-        "Nc6",  // Part of Italian
-        "d5",   // Scandinavian Defense
-    };
-    
     public AI(boolean isWhite) {
         this.isWhite = isWhite;
         initializeScoreVals();
@@ -80,15 +72,15 @@ public class AI {
     }
 
     private String pickMinimaxMove(boolean isSelf, int levels) {
+        Random rand = new Random();
         ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
         Board currentBoard = gameModel.getCurrentBoard();
-        Random rand = new Random();
         
         ArrayList<String> bestMoves = new ArrayList<>();
         int bestPoints = Integer.MIN_VALUE;
         int score;
         for (String entry : allMoves) {
-            score = getMinimaxVal(entry, currentBoard, isSelf, levels);
+            score = getMinimaxVal(entry, currentBoard, !isSelf, levels);
             if (score > bestPoints) {
                 bestMoves.clear();
                 bestMoves.add(entry);
@@ -107,7 +99,12 @@ public class AI {
 
         Board futureBoard = board.copy();
         futureBoard.move(loc, move);
-        ArrayList<String> nextMoves = gameModel.getAllPossibleMoves(futureBoard);
+        ArrayList<String> nextMoves;
+        if (!isSelf) {
+            nextMoves = gameModel.getAllPossibleOpMoves(futureBoard);
+        } else {
+            nextMoves = gameModel.getAllPossibleMoves(futureBoard);
+        }
 
         int bestPoints = isSelf ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         int score;
@@ -116,10 +113,6 @@ public class AI {
                 score = getMoveVal(nextEntry, isSelf, futureBoard);
             } else {
                 score = getMinimaxVal(nextEntry, futureBoard, !isSelf, levels-1) + getMoveVal(nextEntry, isSelf, futureBoard);
-            }
-
-            if (!isSelf) {
-                score = -score;
             }
 
             if (isSelf) {
@@ -246,6 +239,9 @@ public class AI {
         // Lose piece
         // Put into check
 
+        if (!isSelf) {
+            score = -score;
+        }
         return score;
     }
 
