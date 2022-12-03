@@ -62,11 +62,13 @@ public class GameModel implements Serializable {
         if (move.equals("0-0")) {
             if (canCastleKingside(b)) {
                 castleKingside(b);
+                flipTurn();
                 return true;
             }
         } else if (move.equals("0-0-0")) {
             if (canCastleQueenside(b)) {
                 castleQueenside(b);
+                flipTurn();
                 return true;
             }
         } else {
