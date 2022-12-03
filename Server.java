@@ -73,8 +73,7 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		//loadGame();
-		print_debug("ready to except clients :)");
+		loadGame();
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
@@ -112,6 +111,12 @@ public class Server extends Thread {
 			while(!(success || fileName.equals("s")));
 		}
 		s.close();
+		if(model.isWhitesTurn()){
+			turn = 0;
+		}
+		else{
+			turn = 1;
+		}
 	}
 
 	/**

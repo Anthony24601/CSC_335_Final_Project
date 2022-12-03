@@ -59,7 +59,6 @@ public class GameModel implements Serializable {
     }
 
     public boolean makeMove(String move, Board b) {
-        System.out.println("in make move :)");
         if (move.equals("0-0")) {
             if (canCastleKingside(b)) {
                 castleKingside(b);
@@ -164,7 +163,6 @@ public class GameModel implements Serializable {
     }
 
     public boolean wouldPutInCheck(String loc, String move, Board b) {
-        System.out.println("would put in check");
         Board futureBoard = b.copy();
         futureBoard.move(loc, move);
         return futureBoard.hasCheck(!whitesTurn);
@@ -326,7 +324,7 @@ public class GameModel implements Serializable {
         }
 
         if (fromLoc.isEmpty() || toLoc.isEmpty()) {
-            System.out.println("malformation of loc happened!");
+            "malformation of loc happened!");
             System.out.println("Move: " + move);
             System.out.println("FromLoc: " + fromLoc);
             System.out.println("ToLoc: " + toLoc);
@@ -434,7 +432,6 @@ public class GameModel implements Serializable {
         }
 
         while(scanner.hasNext()){
-            System.out.println("load move");
             String move = scanner.nextLine();
             if(move.startsWith("turn:")){
                 String currentTurn = move.substring(5);

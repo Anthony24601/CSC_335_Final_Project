@@ -59,7 +59,6 @@ public class LocalPlayer extends Player {
 			possible_moves.clear();
 			ui.updatePossibles(possible_moves);
 		}
-
 	}
 
 	/**
@@ -86,7 +85,10 @@ public class LocalPlayer extends Player {
 		if(!model.isWhitesTurn()){
 			turn = 1;
 		}
-
-		System.out.println(model.getCurrentBoard());
+	}
+	
+	@Override
+	public void saveGame(String fileName) {
+		model.saveGame(fileName);
 	}
 }

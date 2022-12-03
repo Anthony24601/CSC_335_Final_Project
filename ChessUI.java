@@ -72,8 +72,7 @@ public class ChessUI extends Thread
 
         canvas.addPaintListener(event -> {
             paint_canvas = event;
-            //board = player.getBoard();
-            board = GameModel.getInstance().getCurrentBoard();
+            board = player.getBoard();
             event.gc.fillRectangle(canvas.getBounds());
             if (board != null) {
             	for (int row = 1; row <= 8; row++) {
@@ -179,10 +178,8 @@ public class ChessUI extends Thread
 
             @Override
             public void widgetSelected(SelectionEvent arg0) {
-               GameModel model = GameModel.getInstance();
-               model.saveGame("game.txt");
+               player.saveGame("game.txt");
             }
-            
         });
     }
 }

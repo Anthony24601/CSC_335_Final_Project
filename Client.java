@@ -111,6 +111,8 @@ public class Client extends Thread {
 	    	color = in.readInt();
 
 	    	model = (GameModel) in.readObject();
+			player.setBoard(model.getCurrentBoard());
+			player.updateBoard(model.getCurrentBoard());
 	    	print_debug("Received model!");
 		}
 		catch (IOException | ClassNotFoundException e) {
