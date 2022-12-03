@@ -324,7 +324,7 @@ public class GameModel implements Serializable {
         }
 
         if (fromLoc.isEmpty() || toLoc.isEmpty()) {
-            "malformation of loc happened!");
+            System.out.println("malformation of loc happened!");
             System.out.println("Move: " + move);
             System.out.println("FromLoc: " + fromLoc);
             System.out.println("ToLoc: " + toLoc);

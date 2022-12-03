@@ -392,9 +392,6 @@ public class Board implements Serializable {
 		int fromFile = piece.getFile();
 
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
-		board[toRank-1][toFile-1] = piece;
-		piece.setRank(toRank);
-		piece.setFile(toFile);
 
 		if(piece.getKind()==Piece.PAWN){
 			// Pawn promotion check
@@ -429,6 +426,10 @@ public class Board implements Serializable {
 		if (capturedPiece != null) {
 			removePiece(capturedPiece);
 		}
+		
+		board[toRank-1][toFile-1] = piece;
+		piece.setRank(toRank);
+		piece.setFile(toFile);
 
 		return capturedPiece;
 	}
