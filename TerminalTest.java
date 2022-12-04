@@ -91,11 +91,21 @@ public class TerminalTest {
             if (gameModel.isWhitesTurn()) {
                 move = ChrisIR4.getString(MOVE_PROMPT);
                 while (isInvalidMove(move)) {
+                    System.out.println("Invalid format.");
+                    gameModel.printBoard();
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
-                result = gameModel.makeMove(move);
-                if (!result && !move.equals("q")) {
-                    System.out.println("Invalid move. Please try again.");
+            }
+            else {
+                if (PLAY_AGAINST_AI) {
+                    move = ai.decideOnMove();
+                } else {
+                    move = ChrisIR4.getString(MOVE_PROMPT);
+                    while (isInvalidMove(move)) {
+                        System.out.println("Invalid format.");
+                        gameModel.printBoard();
+                        move = ChrisIR4.getString(MOVE_PROMPT);
+                    }
                 }
             }
             result = gameModel.makeMove(move);

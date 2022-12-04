@@ -347,7 +347,6 @@ public class Board implements Serializable {
 	}
 
 	public Piece move(String loc, String move) {
-        System.out.println("move is  " + move);
 
 		// Castling
 		if (move.equals("0-0")) {

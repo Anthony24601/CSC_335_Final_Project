@@ -59,6 +59,7 @@ public class Client extends Thread {
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);
+			print_debug("made the socket");
 			running = true;
 			this.start();
 		}
@@ -97,6 +98,7 @@ public class Client extends Thread {
 	@Override
 	public void run() {
 		try {
+			print_debug("trying to make streams");
 			out = new ObjectOutputStream(socket.getOutputStream());
 	    	out.flush();
 	    	in = new ObjectInputStream(socket.getInputStream());
@@ -109,6 +111,8 @@ public class Client extends Thread {
 	    	color = in.readInt();
 
 	    	model = (GameModel) in.readObject();
+			player.setBoard(model.getCurrentBoard());
+			player.updateBoard(model.getCurrentBoard());
 	    	print_debug("Received model!");
 		}
 		catch (IOException | ClassNotFoundException e) {

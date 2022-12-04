@@ -73,4 +73,6 @@ abstract class Player {
 		}
 		return arrayList;
 	}
+
+	abstract void saveGame(String fileName);
 }

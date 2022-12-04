@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 public class LocalPlayer extends Player {
 	private static final int COLORS[] = new int[] {Piece.WHITE, Piece.BLACK};
@@ -12,6 +13,8 @@ public class LocalPlayer extends Player {
 		super(type);
 		model = GameModel.getInstance();
 		this.model.setCurrentBoard(new Board(false));
+		board = GameModel.getInstance().getCurrentBoard();
+		loadGame();
 		if (HAS_AI) {
 			ai = new AI(false);
 		}
@@ -53,6 +56,36 @@ public class LocalPlayer extends Player {
 			ui.updatePossibles(possible_moves);
 
 		}
+	}
 
+	/**
+	 * Prompts user whether they want to load an existing game. 
+	 * If yes, asks for a file to load from and then loads the
+	 * info into the GameModel
+	 */
+	private void loadGame() {
+		Scanner s = new Scanner(System.in);
+		System.out.println("Load game from a file? y/n");
+		String loadGame = s.nextLine();
+		if(loadGame.equals("y")){;
+			boolean success;
+			String fileName;
+			do{
+				System.out.println("Enter file name or s to stop: ");
+				fileName = s.nextLine();
+				success = model.loadGame(fileName);
+			}
+			while(!(success || fileName.equals("s")));
+		}
+		s.close();
+
+		if(!model.isWhitesTurn()){
+			turn = 1;
+		}
+	}
+	
+	@Override
+	public void saveGame(String fileName) {
+		model.saveGame(fileName);
 	}
 }
