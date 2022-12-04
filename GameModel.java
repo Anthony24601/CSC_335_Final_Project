@@ -22,6 +22,7 @@ public class GameModel implements Serializable {
     private boolean whiteKingHasMoved = false;
     private boolean blackKingHasMoved = false;
     private boolean hasCheckmate = false;
+    private boolean isOver = false;
 
     private GameModel(){
         whitesTurn = true;
@@ -54,6 +55,10 @@ public class GameModel implements Serializable {
         return hasCheckmate;
     }
     
+    public boolean getIsOver() {
+        return isOver;
+    }
+    
     public boolean makeMove(String move) {
         return makeMove(move, currentBoard);
     }
@@ -82,6 +87,7 @@ public class GameModel implements Serializable {
                     b.moveAndSave(loc, m);
                     if (move.charAt(move.length()-1) == '#') {
                         hasCheckmate = true;
+                        isOver = true;
                     } else {
                         flipTurn();
                     }      

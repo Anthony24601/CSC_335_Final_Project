@@ -85,7 +85,7 @@ public class ChessUI extends Thread
             
             //Win Condition
             if (player.getModel() != null) {
-            	if (player.getModel().getHasCheckmate()) {
+            	if (player.getModel().getIsOver()) {
                 	if (player.getType().equals("Local")) {
             			printWin();
             		} else {
@@ -104,7 +104,7 @@ public class ChessUI extends Thread
             public void mouseDown(MouseEvent e) {
             	int col = e.x/100;
     			int row = e.y/100;
-    			if (!player.getModel().getHasCheckmate()) {
+    			if (!player.getModel().getIsOver()) {
     				player.move((char)('a' + col) + "" + (row+1));
         			canvas.redraw();
     			}
@@ -169,10 +169,8 @@ public class ChessUI extends Thread
   	    	}
   	    });
         
-  	  shell.setMenuBar(menuBar);
-        
-        
-
+  		shell.setMenuBar(menuBar);
+  		
         shell.open();
         while (!shell.isDisposed()) {
         	if (update) {
