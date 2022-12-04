@@ -117,10 +117,10 @@ public class King extends Piece {
             }
         }
         
-        if (gameModel.canCastleKingside()) {
+        if (gameModel.canCastleKingside(board)) {
             moves.add("0-0");
         }
-        if (gameModel.canCastleQueenside()) {
+        if (gameModel.canCastleQueenside(board)) {
             moves.add("0-0-0");
         }
         

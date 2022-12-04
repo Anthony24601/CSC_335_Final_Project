@@ -431,10 +431,6 @@ public class Board implements Serializable {
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
 
 		if(piece.getKind()==Piece.PAWN && capturedPiece == null){
-			// Pawn promotion check
-			if(toRank==1||toRank==8){
-				pawnPromotionMove(piece, toRank, toFile);
-			}
 			// 2 square move -> set up passantSquare
 			if(Math.abs(fromRank-toRank)==2){
 				if(piece.getColor()==Piece.WHITE){
@@ -468,6 +464,15 @@ public class Board implements Serializable {
 		board[toRank-1][toFile-1] = piece;
 		piece.setRank(toRank);
 		piece.setFile(toFile);
+
+		if (piece.getKind() == Piece.PAWN) {
+			if (piece.getColor() == Piece.WHITE && piece.getRank() == 8) {
+				pawnPromotionMove(piece);
+			}
+			else if (piece.getColor() == Piece.BLACK && piece.getRank() == 1) {
+				pawnPromotionMove(piece);
+			}
+		}
 
 		return capturedPiece;
 	}
@@ -582,11 +587,11 @@ public class Board implements Serializable {
 	 * Places a newly constructed Queen of the same color at the indicated
 	 * location on this Board, and removes the old piece
 	 */
-	private Piece pawnPromotionMove(Piece piece, int toRank, int toFile){
-		Queen newQueen = new Queen(piece.getColor(), toRank, toFile);
+	private void pawnPromotionMove(Piece piece) {
+		pawns.remove(piece);
+		Queen newQueen = new Queen(piece.getColor(), piece.getRank(), piece.getFile());
 		placePiece(newQueen);
 		removePiece(piece);
-		return null;
 	}
 
 	public void placePiece(Piece piece) {
