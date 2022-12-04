@@ -1,4 +1,8 @@
-public abstract class Piece {
+import java.io.Serializable;
+
+public abstract class Piece implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	// colors
 	public final static int BLANK = 0;
 	public final static int WHITE = 10;
@@ -18,19 +22,21 @@ public abstract class Piece {
 	
 	public Piece(int color, int rank, int file, String name) {
 		this.color = color;
-    if (color == BLANK){
-      color_string = "blank";
-    } else if (color == WHITE){
-      color_string = "white";
-    } else {
-      color_string = "black";
-    }
-    this.name = name;
+	    if (color == BLANK){
+	      color_string = "blank";
+	    } else if (color == WHITE){
+	      color_string = "white";
+	    } else {
+	      color_string = "black";
+	    }
+	    this.name = name;
 		this.rank = rank;
 		this.file = file;
 	}
 	
-	abstract public String[] getValidMoves(Board board);
+	abstract public String[] getValidMoves(Board board, GameModel gameModel);
+	abstract public boolean canCheck(Board board);
+	abstract public Piece copy();
 
 	protected int getRank() {
 		return rank;
@@ -81,13 +87,30 @@ public abstract class Piece {
 	 * @return
 	 */
 	public String getPicture(int row, int col) {
+		//System.out.println("getting pic " + name);
 		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
 			return "images/light/" + color_string + "/" + name + ".png";
 		} else {
 			return "images/dark/" + color_string + "/" + name + ".png";
 		}
 	}
-		
+
+	/**
+	 * returns true if the square this Piece is on is "en passantable",
+	 * meaning if a pawn moves to this square, it would result in a 
+	 * En Passant capture. Should only be true for Blanks.
+	 */
+	public boolean isPassant(){
+		return false;
+	}
+
+	/**
+	 * Only implemented for Blank, marks this Piece as one where an
+	 * En Passant capture could happen
+	 * @param b 
+	 */
+	public void setPassant(boolean isPassant) {
+    }
   
 	abstract public char getKind();
 

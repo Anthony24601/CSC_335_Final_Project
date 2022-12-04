@@ -17,44 +17,78 @@ public class Pawn extends Piece {
         return KIND;
     }
 
-    public String[] getValidMoves(Board board) {
-        ArrayList<String> moves = new ArrayList<>();
+    public String[] getValidMoves(Board board, GameModel gameModel) {
+    	ArrayList<String> moves = new ArrayList<>();
+        String move;
+
         if (this.color == Piece.WHITE) {
             // One space
             if (board.isInBounds(rank+1, file) && board.isEmpty(rank+1, file)) {
-                moves.add(MoveParser.constructMove(this, rank+1, file, false));
+                move = gameModel.constructMove(this, rank+1, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             }
 
             // Two space
             if (rank == 2 && board.isInBounds(rank+2, file) && board.isEmpty(rank+1, file) && board.isEmpty(rank+2, file)) {
-                moves.add(MoveParser.constructMove(this, rank+2, file, false));
+                move = gameModel.constructMove(this, rank+2, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             }
 
             // Capture
-            if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK) {
-                moves.add(MoveParser.constructMove(this, rank+1, file-1, true));
+            if (board.isInBounds(rank+1, file-1) && (board.get(rank+1, file-1).getColor() == Piece.BLACK || board.get(rank+1, file-1).isPassant()) && board.get(rank+1, file-1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank+1, file-1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             }
-            if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK) {
-                moves.add(MoveParser.constructMove(this, rank+1, file+1, true));
+            if (board.isInBounds(rank+1, file+1) && (board.get(rank+1, file+1).getColor() == Piece.BLACK|| board.get(rank+1, file+1).isPassant()) && board.get(rank+1, file+1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank+1, file+1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             } 
         } else {
             // One space
             if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
-                moves.add(MoveParser.constructMove(this, rank-1, file, false));
+                move = gameModel.constructMove(this, rank-1, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             }
 
             // Two space
             if (rank == 7 && board.isInBounds(rank-2, file) && board.isEmpty(rank-1, file) && board.isEmpty(rank-2, file)) {
-                moves.add(MoveParser.constructMove(this, rank-2, file, false));
+                move = gameModel.constructMove(this, rank-2, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             }
 
             // Capture
-            if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE) {
-                moves.add(MoveParser.constructMove(this, rank-1, file-1, true));
+            if (board.isInBounds(rank-1, file-1) && (board.get(rank-1, file-1).getColor() == Piece.WHITE || board.get(rank-1, file-1).isPassant()) && board.get(rank-1, file-1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank-1, file-1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
             }
-            if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE) {
-                moves.add(MoveParser.constructMove(this, rank-1, file+1, true));
-            } 
+            if (board.isInBounds(rank-1, file+1) && (board.get(rank-1, file+1).getColor() == Piece.WHITE || board.get(rank-1, file+1).isPassant()) && board.get(rank-1, file+1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank-1, file+1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
+                    moves.add(move);
+                }
+            }
         }
 
         String[] ret = new String[moves.size()];
@@ -62,30 +96,24 @@ public class Pawn extends Piece {
         return ret;
     }
 
-    /*
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol){
-        boolean whitesMove = color==Piece.WHITE;
-        int f = whitesMove? 1 : -1;
-        boolean canMoveOne = isInBounds(fromRow + f, fromCol) && board.get(fromRow + f, fromCol).isBlank();
-        boolean canMoveTwo = whitesMove ? fromRow == 2 && board.get(fromRow+f*2, fromCol).isBlank()
-                                        : fromRow == 7 && board.get(fromRow+f*2, fromCol).isBlank();
-        boolean canCaptureLeft = isInBounds(fromRow+f, fromCol-1)
-                && board.get(fromRow+f, fromCol-1).getColor()!=this.color;
-        boolean canCaptureRight = isInBounds(fromRow+f, fromCol+1)
-                && board.get(fromRow+f, fromCol+1).getColor()!=this.color;
-
-        if (canMoveOne && toRow == fromRow+f && toCol == fromCol) {
-            return true;
-        } else if (canMoveTwo && toRow == fromRow+f*2 && toCol == fromCol) {
-            return true;
-        } else if (canCaptureLeft && toRow == fromRow+f && toCol == fromCol-1) {
-            return true;
-        } else if (canCaptureRight && toRow == fromRow+f && toCol == fromCol+1) {
-            return true;
+    public boolean canCheck(Board board) {
+        if (this.color == Piece.WHITE) {
+            if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK && board.get(rank+1, file-1).getKind() == 'K') {
+                return true;
+            }
+            if (board.isInBounds(rank+1, file+1) && board.get(rank+1, file+1).getColor() == Piece.BLACK && board.get(rank+1, file+1).getKind() == 'K') {
+                return true;
+            }
+        } else {
+            if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE && board.get(rank-1, file-1).getKind() == 'K') {
+                return true;
+            }
+            if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE && board.get(rank-1, file+1).getKind() == 'K') {
+                return true;
+            } 
         }
-        return false; 
+        return false;
     }
-    */
 
     @Override
     public int getColor() {
@@ -104,5 +132,10 @@ public class Pawn extends Piece {
         } else {
             return "bp";
         }
+    }
+
+    @Override
+    public Pawn copy() {
+        return new Pawn(color, rank, file);
     }
 }
