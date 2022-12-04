@@ -66,7 +66,7 @@ abstract class Player {
 					toLoc = "c8";
 				}
 			}
-			else if (entry.charAt(entry.length()-1) == '+') {
+			else if (entry.charAt(entry.length()-1) == '+' || entry.charAt(entry.length()-1) == '#') {
 				toLoc = entry.substring(entry.length()-3, entry.length()-1);
 			} else {
 				toLoc = entry.substring(entry.length()-2);
