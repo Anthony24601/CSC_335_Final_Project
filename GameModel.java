@@ -59,6 +59,14 @@ public class GameModel implements Serializable {
         return isOver;
     }
     
+    public void setIsOver() {
+    	isOver = true;
+    }
+    
+    public void setHasCheckmate() {
+    	hasCheckmate = true;
+    }
+    
     public boolean makeMove(String move) {
         return makeMove(move, currentBoard);
     }

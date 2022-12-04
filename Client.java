@@ -121,7 +121,7 @@ public class Client extends Thread {
 
 		while (running) {
 			// continual communication
-			if (!turn_active) {
+			if (!turn_active && !model.getIsOver()) {
 				try {
 					print_debug("Waiting for my turn...");
 					turn_active = in.readBoolean();

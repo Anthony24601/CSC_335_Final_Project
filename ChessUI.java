@@ -86,7 +86,10 @@ public class ChessUI extends Thread
             //Win Condition
             if (player.getModel() != null) {
             	if (player.getModel().getIsOver()) {
-                	if (player.getType().equals("Local")) {
+            		if (!player.getModel().getHasCheckmate()) {
+            			printDraw();
+            		}
+            		else if (player.getType().equals("Local")) {
             			printWin();
             		} else {
             			if ((player.getModel().isWhitesTurn() && player.getColor() == Piece.WHITE) ||
@@ -104,7 +107,7 @@ public class ChessUI extends Thread
             public void mouseDown(MouseEvent e) {
             	int col = e.x/100;
     			int row = e.y/100;
-    			if (!player.getModel().getIsOver()) {
+    			if (player.getModel() != null && !player.getModel().getIsOver()) {
     				player.move((char)('a' + col) + "" + (row+1));
         			canvas.redraw();
     			}
@@ -201,8 +204,9 @@ public class ChessUI extends Thread
      */
     private void printDied() {
     	paint_canvas.gc.setFont(font);
-    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_RED));
-    	paint_canvas.gc.drawText("You Died!", 250, 250);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	paint_canvas.gc.drawText("You Died!", 275, 300);
     }
     
     /**
@@ -211,8 +215,20 @@ public class ChessUI extends Thread
      */
     private void printLived() {
     	paint_canvas.gc.setFont(font);
-    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_RED));
-    	paint_canvas.gc.drawText("You Lived!", 250, 250);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	paint_canvas.gc.drawText("You Lived!", 275, 300);
+    }
+    
+    /**
+     * prints You died on the screen
+     * @return None
+     */
+    private void printDraw() {
+    	paint_canvas.gc.setFont(font);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	paint_canvas.gc.drawText("DRAW!!!", 275, 300);
     }
 
     /**
