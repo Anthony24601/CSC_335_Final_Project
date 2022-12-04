@@ -26,6 +26,8 @@ abstract class Player {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	
+	abstract GameModel getModel();
 
 	public void run() {
 		ui.run();
@@ -75,4 +77,8 @@ abstract class Player {
 	}
 
 	abstract void saveGame(String fileName);
+	
+	abstract String getType();
+	
+	abstract int getColor();
 }

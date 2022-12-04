@@ -11,6 +11,10 @@ public class NetworkedPlayer extends Player {
 		client.openConnection();
 	}
 	
+	public GameModel getModel() {
+		return client.getModel();
+	}
+	
 	@Override
 	public void move(String select) {
 		//System.out.println(select);
@@ -68,9 +72,16 @@ public class NetworkedPlayer extends Player {
 		}
 	}
 
-	
 	public void saveGame(String fileName) {
 		GameModel model = client.getModel();
 		model.saveGame(fileName);
+	}
+	
+	public String getType() {
+		return "Network";
+	}
+	
+	public int getColor() {
+		return client.getColor();
 	}
 }

@@ -10,6 +10,5 @@ public class Main {
 			LocalPlayer player = new LocalPlayer("normal");
 			player.run();
 		}	
-		
 	}
 }

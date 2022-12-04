@@ -20,6 +20,10 @@ public class LocalPlayer extends Player {
 		}
 	}
 	
+	public GameModel getModel() {
+		return model;
+	}
+	
 	@Override
 	public void move(String select) {
 		int rank = select.charAt(1)-'0';
@@ -87,5 +91,13 @@ public class LocalPlayer extends Player {
 	@Override
 	public void saveGame(String fileName) {
 		model.saveGame(fileName);
+	}
+	
+	public String getType() {
+		return "Local";
+	}
+	
+	public int getColor() {
+		return Piece.BLANK;
 	}
 }
