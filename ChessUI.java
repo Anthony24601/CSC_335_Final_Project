@@ -73,6 +73,7 @@ public class ChessUI extends Thread
         canvas.addPaintListener(event -> {
             paint_canvas = event;
             board = player.getBoard();
+            player.getModel().checkDraws();
             event.gc.fillRectangle(canvas.getBounds());
             if (board != null) {
             	for (int row = 1; row <= 8; row++) {

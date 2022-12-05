@@ -24,12 +24,14 @@ public class GameModel implements Serializable {
     private boolean whiteKingHasMoved = false;
     private boolean blackKingHasMoved = false;
     */
-
     private boolean hasCheckmate = false;
     private boolean isOver = false;
+    
+    private int count;
 
     private GameModel(){
         whitesTurn = true;
+        count = 0;
     }
 
     public static GameModel getInstance() {
@@ -37,6 +39,52 @@ public class GameModel implements Serializable {
             instance = new GameModel();
         }
         return instance;
+    }
+    
+    public void checkDraws() {
+    	checkStalemate();
+    	checkCombo();
+    	check50MoveRule();
+    }
+    
+    private void checkStalemate() {
+    	int[] numColors = currentBoard.getNumColors();
+    	//System.out.println("White: " + numColors[0]);
+    	//System.out.println("Black: " + numColors[1]);
+    	if (numColors[0] == 1) {
+    		if (currentBoard.getMoves(Piece.KING, true, this).size() == 0) {
+    			isOver = true;
+    		}
+    	} else if (numColors[1] == 1) {
+    		if (currentBoard.getMoves(Piece.KING, false, this).size() == 0) {
+    			isOver = true;
+    		}
+    	}
+    }
+    
+    private void checkCombo() {
+    	int[] numColors = currentBoard.getNumColors();
+    	if (numColors[0] == 1 && numColors[1] == 1) { //Only two kings left
+    		isOver = true;
+    	} 
+    	//King and bishop vs king OR king and knight vs king
+    	else if ((numColors[0] == 2 && numColors[1] == 1) || (numColors[0] == 1 && numColors[1] == 2)) {
+    		if (currentBoard.checkOneBishop() || currentBoard.checkOneKnight()) {
+    			isOver = true;
+    		}
+    	}
+    	//King and bishop vs. king and bishop of the same color as the opponent's bishop
+    	else if (numColors[0] == 2 && numColors[1] == 2) {
+    		if (currentBoard.checkBishops()) {
+    			isOver = true;
+    		}
+    	}
+    }
+    
+    private void check50MoveRule() {
+    	if (count >= 50) {
+    		isOver = true;
+    	}
     }
 
     public Board getCurrentBoard() {
@@ -80,16 +128,23 @@ public class GameModel implements Serializable {
             if (canCastleKingside(b)) {
                 castleKingside(b);
                 flipTurn();
+                count++;
                 return true;
             }
         } else if (move.equals("0-0-0")) {
             if (canCastleQueenside(b)) {
                 castleQueenside(b);
                 flipTurn();
+                count++;
                 return true;
             }
         } else {
             char kind = getKindFromMove(move);
+            if (move.contains("x") || kind == Piece.PAWN) {
+            	count = 0;
+            } else {
+            	count++;
+            }
             ArrayList<String> moveMap = b.getMoves(kind, whitesTurn, this);
             for (String entry : moveMap) {
                 String loc = entry.split(":")[0];
@@ -155,7 +210,6 @@ public class GameModel implements Serializable {
         flipTurn();
         return moves;
     }
-
 
     public String addCheck(String loc, String move, Board b) {
         Board futureBoard = b.copy();
@@ -261,7 +315,6 @@ public class GameModel implements Serializable {
             if (b.getBlackKingHasMoved() || b.getBlackQueenRookHasMoved()) {
                 return false;
             }
-
             String d8 = "Kd8";
             String c8 = "Kc8";
             result = d8.equals(addCheck("e8", d8, b)) && c8.equals(addCheck("e8", c8, b))

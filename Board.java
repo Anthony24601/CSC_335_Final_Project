@@ -88,6 +88,7 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
+
 	public boolean getWhiteKingHasMoved() {
 		return whiteKingHasMoved;
 	}
@@ -453,7 +454,6 @@ public class Board implements Serializable {
 					board[3][toFile-1] = new Blank(Piece.BLANK, 4, toFile-1);
 				}
 			}
-
 		}
 		
 		if (capturedPiece != null && !capturedPiece.isBlank()) {
@@ -473,6 +473,14 @@ public class Board implements Serializable {
 				pawnPromotionMove(piece);
 			}
 		}
+		
+		if (capturedPiece != null && !capturedPiece.isBlank()) {
+			removePiece(capturedPiece);
+		}
+		
+		board[toRank-1][toFile-1] = piece;
+		piece.setRank(toRank);
+		piece.setFile(toFile);
 
 		return capturedPiece;
 	}
@@ -641,6 +649,58 @@ public class Board implements Serializable {
 				System.exit(200);
 		}
 	}
+	
+	public int[] getNumColors() {
+		int[] count = new int[] {0,0};
+		for (int rank = 1; rank <= 8; rank++) {
+			for (int file = 1; file <= 8; file++) {
+				if (get(rank,file).getColor() == Piece.WHITE) {
+					count[0] += 1;
+				} else if (get(rank,file).getColor() == Piece.BLACK){
+					count[1] += 1;
+				}
+			}
+		}
+		return count;
+	}
+	
+	public Piece getKing(int color) {
+		if (color == Piece.WHITE) {
+			return whiteKing;
+		}
+		return blackKing;
+	}
+	
+	public boolean checkOneBishop() {
+		if (bishops.size() == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkOneKnight() {
+		if (knights.size() == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkBishops() {
+		if (bishops.size() != 2) {
+			return false;
+		}
+		//Assumed to be different color bishops
+		Piece b1 = bishops.get(0);
+		Piece b2 = bishops.get(1);
+		String color1 = b1.getPicture(b1.getRank(), b1.getFile()).split("/")[1];
+		String color2 = b2.getPicture(b2.getRank(), b2.getFile()).split("/")[1];
+		if (color1.equals(color2)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 
 	@Override
 	public String toString() {
