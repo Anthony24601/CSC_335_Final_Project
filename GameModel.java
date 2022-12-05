@@ -10,12 +10,10 @@ import java.util.Scanner;
 
 public class GameModel implements Serializable {
 	private static final long serialVersionUID = 1L;
-    private static final String MOVE_SOUND_FILE = "sounds/move.wav";
 
 	private static GameModel instance;
 
     private Board currentBoard;
-    private SoundEffect moveSound;
     private boolean whitesTurn;
 
     /*
@@ -33,7 +31,6 @@ public class GameModel implements Serializable {
 
     private GameModel(){
         whitesTurn = true;
-        moveSound = new SoundEffect(MOVE_SOUND_FILE);
         count = 0;
     }
 
@@ -438,7 +435,6 @@ public class GameModel implements Serializable {
                 String move = entry.split(":")[1];
                 String moveLoc = getLocFromMove(move);
                 if (moveLoc.equals(toLoc)) {
-                    moveSound.play();
                     return makeMove(entry.split(":")[1]);
                 }
             }
