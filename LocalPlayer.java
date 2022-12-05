@@ -14,7 +14,6 @@ public class LocalPlayer extends Player {
 		model = GameModel.getInstance();
 		this.model.setCurrentBoard(new Board(false));
 		board = GameModel.getInstance().getCurrentBoard();
-		loadGame();
 		if (HAS_AI) {
 			ai = new AI(false);
 		}
@@ -93,6 +92,11 @@ public class LocalPlayer extends Player {
 		if(!model.isWhitesTurn()){
 			turn = 1;
 		}
+	}
+	
+	// new loadGame - called from main
+	public boolean loadGame(String game_file) {
+		return model.loadGame(game_file);
 	}
 	
 	@Override

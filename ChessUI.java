@@ -161,7 +161,8 @@ public class ChessUI extends Thread
   		
   		saveItem.addSelectionListener(new SelectionListener() {
   	    	public void widgetSelected(SelectionEvent event) {
-  	    		player.saveGame("game.txt");
+  	    		player.saveGame("game");
+  	    		System.out.println("game saved!");
   	    	}
   	    	public void widgetDefaultSelected(SelectionEvent event) {
   	    		;

@@ -1,13 +1,11 @@
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -153,8 +151,8 @@ public class MainMenu {
         file_label.setText("Select game to load:");
         file_label.setEnabled(false);
         
-	    Combo file_select = new Combo(shell, SWT.DROP_DOWN);
-	    file_select.setItems(new String[] {"game1", "game2"}); // read saved games from folder
+	    Combo file_select = new Combo(shell, SWT.DROP_DOWN);	    		
+	    file_select.setItems(getGameFileNames()); // read saved games from folder
 	    file_select.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 	    file_select.setEnabled(false);
 	    
@@ -217,4 +215,16 @@ public class MainMenu {
 		menu.run();
 	}
 	*/
+	
+	private String[] getGameFileNames() {
+		File game_file_dir = new File("games");
+		File[] list_of_files = game_file_dir.listFiles();
+		
+		String[] file_names = new String[list_of_files.length];
+		for (int i = 0; i < list_of_files.length; i++) {
+			file_names[i] = list_of_files[i].getName();
+		}
+		
+		return file_names;
+	}
 }

@@ -28,22 +28,24 @@ public class Main {
 		Main.mode = mode;
 	} 
 	
-	public static void localGame() {
-		if (game_file != null) { 
-			// TODO load game
-		}
-		
+	public static void localGame() {		
 		// TODO add ai stuff here
 		LocalPlayer player = new LocalPlayer("normal");
+		if (game_file != null) { 
+			boolean success = player.loadGame(game_file);
+			if (!success) { System.out.println("Failed to load file"); }
+		}
+		
 		player.run();
 	}
 	
 	public static void networkedGameCreate() {
+		Server server = new Server(59896);
 		if (game_file != null) { 
-			// TODO load game
+			boolean success = server.loadGame(game_file);
+			if (!success) { System.out.println("Failed to load file"); }
 		}
 		
-		Server server = new Server(59896);
 		server.openServer();
 		
 		NetworkedPlayer player = new NetworkedPlayer("normal");
