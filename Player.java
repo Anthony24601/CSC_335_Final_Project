@@ -26,6 +26,8 @@ abstract class Player {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	
+	abstract GameModel getModel();
 
 	public void run() {
 		ui.run();
@@ -64,7 +66,7 @@ abstract class Player {
 					toLoc = "c8";
 				}
 			}
-			else if (entry.charAt(entry.length()-1) == '+') {
+			else if (entry.charAt(entry.length()-1) == '+' || entry.charAt(entry.length()-1) == '#') {
 				toLoc = entry.substring(entry.length()-3, entry.length()-1);
 			} else {
 				toLoc = entry.substring(entry.length()-2);
@@ -75,4 +77,8 @@ abstract class Player {
 	}
 
 	abstract void saveGame(String fileName);
+	
+	abstract String getType();
+	
+	abstract int getColor();
 }

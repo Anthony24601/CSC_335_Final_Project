@@ -20,41 +20,50 @@ public class LocalPlayer extends Player {
 		}
 	}
 	
+	public GameModel getModel() {
+		return model;
+	}
+	
 	@Override
 	public void move(String select) {
-		int rank = select.charAt(1)-'0';
-		int file = select.charAt(0)-'a'+1;
-		System.out.println("==============");
-		System.out.println(rank + " " + file);
-		for (String x: possible_moves) {
-			System.out.println(x);
-		}
-
-		if (selected1 == null || possible_moves.size() == 0) {
-			if (board.get(rank, file).getColor() == COLORS[turn]) {
-				selected1 = select;
-				possible_moves = getMoves(model.getPossibleMoves(selected1));
+		if (select.equals("Forfeit")) {
+			model.flipTurn();
+			model.setIsOver();
+			model.setHasCheckmate();
+		} else {
+			int rank = select.charAt(1)-'0';
+			int file = select.charAt(0)-'a'+1;
+			System.out.println("==============");
+			System.out.println(rank + " " + file);
+			for (String x: possible_moves) {
+				System.out.println(x);
+			}
+	
+			if (selected1 == null || possible_moves.size() == 0) {
+				if (board.get(rank, file).getColor() == COLORS[turn]) {
+					selected1 = select;
+					possible_moves = getMoves(model.getPossibleMoves(selected1));
+					ui.updatePossibles(possible_moves);
+				}
+			} else {
+				if (possible_moves.contains(select)) {
+					selected2 = select;
+					boolean result = model.movePieceFromLocs(selected1, selected2);
+					board = model.getCurrentBoard();
+					if (result) {
+						turn = (turn + 1) % 2;
+					}
+					if (HAS_AI) {
+						model.makeMove(ai.decideOnMove());
+						turn = (turn + 1) % 2;
+						board = model.getCurrentBoard();
+					}
+				}
+				selected1 = null;
+				selected2 = null;
+				possible_moves.clear();
 				ui.updatePossibles(possible_moves);
 			}
-		} else {
-			if (possible_moves.contains(select)) {
-				selected2 = select;
-				boolean result = model.movePieceFromLocs(selected1, selected2);
-				board = model.getCurrentBoard();
-				if (result) {
-					turn = (turn + 1) % 2;
-				}
-				if (HAS_AI) {
-					model.makeMove(ai.decideOnMove());
-					turn = (turn + 1) % 2;
-					board = model.getCurrentBoard();
-				}
-			}
-			selected1 = null;
-			selected2 = null;
-			possible_moves.clear();
-			ui.updatePossibles(possible_moves);
-
 		}
 	}
 
@@ -87,5 +96,13 @@ public class LocalPlayer extends Player {
 	@Override
 	public void saveGame(String fileName) {
 		model.saveGame(fileName);
+	}
+	
+	public String getType() {
+		return "Local";
+	}
+	
+	public int getColor() {
+		return Piece.BLANK;
 	}
 }

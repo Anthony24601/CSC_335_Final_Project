@@ -195,6 +195,13 @@ public class Server extends Thread {
 						print_debug("client " + id + " disconnecting");
 						sendModel();
 						break;
+					} else if (loc.equals("Forfeit")) {
+						turn = (turn + 1) % clients.length;
+						model.flipTurn();
+						model.setIsOver();
+						model.setHasCheckmate();
+						sendModel();
+						break;
 					}
 
 					move = (String) in.readObject();
