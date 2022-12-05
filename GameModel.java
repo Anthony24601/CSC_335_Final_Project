@@ -270,10 +270,10 @@ public class GameModel implements Serializable {
 
     public boolean castleKingside(Board b) {
         if (whitesTurn) {
-            b.move("e1", "0-0");    
+            b.moveAndSave("e1", "0-0");    
             return true;
         } else {
-            b.move("e8", "0-0");     
+            b.moveAndSave("e8", "0-0");     
             return true;
         }
     }
