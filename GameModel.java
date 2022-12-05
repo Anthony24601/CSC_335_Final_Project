@@ -253,7 +253,7 @@ public class GameModel implements Serializable {
             // Check if King would be in check moving across
             String f1 = "Kf1";
             String g1 = "Kg1";
-            result = f1.equals(addCheck("e1", f1, b)) && g1.equals(addCheck("e1", g1, b)) 
+            result = !wouldPutInCheck("e1", f1, b) && !wouldPutInCheck("e1", g1, b)
                 && b.isEmpty(1, 6) && b.isEmpty(1, 7);
         } else {
             if (b.getBlackKingHasMoved() || b.getBlackKingRookHasMoved())
@@ -261,7 +261,7 @@ public class GameModel implements Serializable {
             
             String f8 = "Kf8";
             String g8 = "Kg8";
-            result = f8.equals(addCheck("e8", f8, b)) && g8.equals(addCheck("e8", g8, b))
+            result = !wouldPutInCheck("e8", f8, b) && !wouldPutInCheck("e8", g8, b)
                 && b.isEmpty(8, 6) && b.isEmpty(8, 7);
         }
 
@@ -291,7 +291,7 @@ public class GameModel implements Serializable {
 
             String d1 = "Kd1";
             String c1 = "Kc1";
-            result = d1.equals(addCheck("e1", d1, b)) && c1.equals(addCheck("e1", c1, b))
+            result = !wouldPutInCheck("e1", d1, b) && !wouldPutInCheck("e1", c1, b)
                 && b.isEmpty(1, 2) && b.isEmpty(1, 3) && b.isEmpty(1, 4);
         } else {
             if (b.getBlackKingHasMoved() || b.getBlackQueenRookHasMoved()) {
@@ -299,7 +299,7 @@ public class GameModel implements Serializable {
             }
             String d8 = "Kd8";
             String c8 = "Kc8";
-            result = d8.equals(addCheck("e8", d8, b)) && c8.equals(addCheck("e8", c8, b))
+            result = !wouldPutInCheck("e8", d8, b) && !wouldPutInCheck("e8", c8, b)
                 && b.isEmpty(8, 2) && b.isEmpty(8, 3) && b.isEmpty(8, 4);
         }
 
