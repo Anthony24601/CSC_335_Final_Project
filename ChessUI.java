@@ -34,12 +34,15 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ChessUI extends Thread
 {
+    private static final String MOVE_SOUND_FILE = "sounds/move.wav";
+
     private Player player;
     private PaintEvent paint_canvas;
     private Canvas canvas;
     private Display display;
     private Shell shell;
     private Board board;
+    private SoundEffect moveSound;
     public static Font font;
     boolean update;
 
@@ -56,6 +59,7 @@ public class ChessUI extends Thread
         font = new Font(display, "Comic Sans", 56, SWT.BOLD);
         update = false;
         possible_moves = new ArrayList<>();
+        moveSound = new SoundEffect(MOVE_SOUND_FILE);
     }
 
     /**
@@ -73,6 +77,8 @@ public class ChessUI extends Thread
         canvas.addPaintListener(event -> {
             paint_canvas = event;
             board = player.getBoard();
+            if(player.getModel()!=null)
+                player.getModel().checkDraws();
             event.gc.fillRectangle(canvas.getBounds());
             if (board != null) {
             	for (int row = 1; row <= 8; row++) {
@@ -188,12 +194,17 @@ public class ChessUI extends Thread
     }
 
     public void update() {
-    	update = true;
+        update = true;
     	display.wake();
+        moveSound();
     }
 
     public void updatePossibles(ArrayList<String> possible) {
     	possible_moves = possible;
+    }
+
+    public void moveSound() {
+        moveSound.play();
     }
 
     // Private Methods ----------------------------
