@@ -10,12 +10,11 @@ public class AI {
     private static Map<String, Boolean> opHasMoved;
 
     private boolean isWhite;
-    private Board board;
-    private boolean openingMove = true;
 
     private static final String AI_TYPE = "minimax";
     private static final int MINIMAX_LEVELS = 1;
     private static final int CAPTURE_MULTIPLIER = 3;
+    private static final int PIECE_DEVELOPMENT_DIVISOR = 2;
 
     public AI(boolean isWhite) {
         this.isWhite = isWhite;
@@ -24,7 +23,6 @@ public class AI {
     }
 
     public String decideOnMove() {
-        board = gameModel.getCurrentBoard();
         String move = "";
         switch (AI_TYPE) {
             case "random": 
@@ -188,6 +186,7 @@ public class AI {
         int score = 0;
         String loc = entry.split(":")[0];
         String move = entry.split(":")[1];
+        Piece p = board.get(loc);
 
         // Positives --------
         // Checkmate
@@ -215,8 +214,7 @@ public class AI {
         }
 
         // Forward position of pawn
-        boolean isPawn = move.charAt(0) >= 'a' && move.charAt(0) <= 'h';
-        if (isPawn) {
+        if (p.getKind() == Piece.PAWN) {
             recordHasMoved(loc, isSelf);
             boolean isTwo = Math.abs((int) (loc.charAt(1) - move.charAt(1))) == 2;            
             if (isTwo) {
@@ -227,17 +225,10 @@ public class AI {
         }
 
         // Piece development
-        if (getHasMoved(loc, isSelf)) {
+        if (!getHasMoved(loc, isSelf)) {
             recordHasMoved(loc, isSelf);
             score += scoreVals.get("pieceDevelopment");            
         }
-
-        // TODO: Openings
-
-        // Negatives ---------
-        // Lose game
-        // Lose piece
-        // Put into check
 
         if (!isSelf) {
             score = -score;
