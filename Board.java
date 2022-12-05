@@ -473,14 +473,6 @@ public class Board implements Serializable {
 				pawnPromotionMove(piece);
 			}
 		}
-		
-		if (capturedPiece != null && !capturedPiece.isBlank()) {
-			removePiece(capturedPiece);
-		}
-		
-		board[toRank-1][toFile-1] = piece;
-		piece.setRank(toRank);
-		piece.setFile(toFile);
 
 		return capturedPiece;
 	}
@@ -598,8 +590,8 @@ public class Board implements Serializable {
 	private void pawnPromotionMove(Piece piece) {
 		pawns.remove(piece);
 		Queen newQueen = new Queen(piece.getColor(), piece.getRank(), piece.getFile());
-		placePiece(newQueen);
 		removePiece(piece);
+		placePiece(newQueen);
 	}
 
 	public void placePiece(Piece piece) {
