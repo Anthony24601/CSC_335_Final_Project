@@ -194,13 +194,17 @@ public class ChessUI extends Thread
     }
 
     public void update() {
-        moveSound.play();
         update = true;
     	display.wake();
+        moveSound();
     }
 
     public void updatePossibles(ArrayList<String> possible) {
     	possible_moves = possible;
+    }
+
+    public void moveSound() {
+        moveSound.play();
     }
 
     // Private Methods ----------------------------

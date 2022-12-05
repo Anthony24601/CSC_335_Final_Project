@@ -51,10 +51,12 @@ public class LocalPlayer extends Player {
 					boolean result = model.movePieceFromLocs(selected1, selected2);
 					board = model.getCurrentBoard();
 					if (result) {
+						ui.moveSound();
 						turn = (turn + 1) % 2;
 					}
 					if (HAS_AI) {
 						model.makeMove(ai.decideOnMove());
+						ui.moveSound();
 						turn = (turn + 1) % 2;
 						board = model.getCurrentBoard();
 					}
