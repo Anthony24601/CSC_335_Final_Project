@@ -7,7 +7,7 @@ public class LocalPlayer extends Player {
 	private GameModel model;
 
 	AI ai;
-	final static boolean HAS_AI = false;
+	final static boolean HAS_AI = true;
 	
 	public LocalPlayer(String type) {
 		super(type);
@@ -53,7 +53,7 @@ public class LocalPlayer extends Player {
 					if (result) {
 						turn = (turn + 1) % 2;
 					}
-					if (HAS_AI) {
+					if (HAS_AI && !model.getHasCheckmate()) {
 						model.makeMove(ai.decideOnMove());
 						turn = (turn + 1) % 2;
 						board = model.getCurrentBoard();

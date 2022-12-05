@@ -181,24 +181,6 @@ public class GameModel implements Serializable {
         return futureBoard.hasCheck(!whitesTurn);
     }
 
-    /*
-    private void addHasMoved(String loc, String move) {
-        int rank = loc.charAt(1)-'0';
-        int file = loc.charAt(0) - 'a'+1;
-        Piece piece = currentBoard.get(rank, file);
-        if (piece.getKind() == 'R') {
-            whiteKingRookHasMoved = rank == 1 && file == 1 || whiteKingRookHasMoved;
-            whiteQueenRookHasMoved = rank == 1 && file == 8 || whiteQueenRookHasMoved;
-            blackKingRookHasMoved = rank == 8 && file == 1 || blackKingRookHasMoved;
-            blackQueenRookHasMoved = rank == 8 && file == 8 || blackQueenRookHasMoved; 
-        }
-        else if (piece.getKind() == 'K') {
-            whiteKingHasMoved = rank == 1 && file == 4 || whiteKingHasMoved;
-            blackKingHasMoved = rank == 8 && file == 4 || blackKingHasMoved;
-        }
-    }
-    */
-
     public void printBoard() {
         System.out.println(currentBoard.toString());
     }
