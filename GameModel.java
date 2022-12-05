@@ -424,6 +424,8 @@ public class GameModel implements Serializable {
         return false;
     }
 
+    // SAVE AND LOAD GAME
+    
     /**
      * Saves the current game state to a file that 
      * can be loaded into a different GameModel in order
@@ -433,9 +435,16 @@ public class GameModel implements Serializable {
      * 
      */
     public boolean saveGame(String fileName){
+  		String filestr = "games/" + fileName + ".txt";
+  		int i = 1;
+  		while (new File(filestr).exists()) {
+  			filestr = "games/" + fileName + "(" + i + ")" + ".txt";
+  			i++;
+  		}
+    	
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter(fileName);
+            fileWriter = new FileWriter(filestr);
         } catch (IOException e) {
             System.out.println("Exception while opening file");
             return false;
@@ -454,9 +463,7 @@ public class GameModel implements Serializable {
         printWriter.close();
         return true;
     }
-
-    // SAVE AND LOAD GAME
-
+    
     /**
      * Reads information from a file and populates this
      * GameModel with it
@@ -465,9 +472,10 @@ public class GameModel implements Serializable {
      *          otherwise
      */
     public boolean loadGame(String fileName){
+    	String filestr = "games/" + fileName;
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File(fileName));
+            scanner = new Scanner(new File(filestr));
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
             return false;

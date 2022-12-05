@@ -7,7 +7,7 @@ abstract class Player {
 	protected Board board;
 	protected String selected1;
 	protected String selected2;
-	
+		
 	protected ArrayList<String> possible_moves;
 
 	public Player(String type) {

@@ -73,7 +73,6 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		loadGame();
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
@@ -117,6 +116,11 @@ public class Server extends Thread {
 		else{
 			turn = 1;
 		}
+	}
+	
+	// new loadGame function, called in main
+	public boolean loadGame(String game_file) {
+		return model.loadGame(game_file);
 	}
 
 	/**
