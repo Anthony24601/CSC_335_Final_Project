@@ -13,6 +13,10 @@ public class TerminalTest {
     final static String MISSING_DASH_ERROR = "Move string is missing a '-'.";
 
     final static boolean AUTO = false;
+    final static boolean USE_NEW_MOVE_FORMAT = false;
+    final static boolean PLAY_AGAINST_AI = false;
+    final static boolean LOAD_GAME = true;
+    final static boolean SAVE_GAME = true;
 
     public static void main(String[] args) {
         gameModel = GameModel.getInstance();
@@ -53,31 +57,84 @@ public class TerminalTest {
             for (String move : sampleGame) {
                 gameModel.printBoard();
                 isInvalidMove(move);
-                result = interpretMove(move);
+                result = gameModel.makeMove(move);
                 while (!result) {
                     System.out.println("Invalid move. Please try again.");
                     System.exit(100);
                 }
+                if (gameModel.getHasCheckmate()) {
+                    if (gameModel.isWhitesTurn()) {
+                        System.out.println("Checkmate! WHITE WINS!");
+                    } else {
+                        System.out.println("Checkmate! BLACK WINS!");
+                    }
+                }
             }
         } else {
-            String move;
-            do {
-                gameModel.printBoard();
-                if (gameModel.isWhitesTurn()) {
-                    System.out.println("White's turn");
-                } else {
-                    System.out.println("Black's turn");
-                }
+            playGame();
+        }
+    }
+
+    public static void playGame() {
+        String move = "";
+        boolean result;
+        AI ai = new AI(false);
+        loadGame();
+
+        do {
+            gameModel.printBoard();
+            if (gameModel.isWhitesTurn()) {
+                System.out.println("White's turn");
+            } else {
+                System.out.println("Black's turn");
+            }
+            if (gameModel.isWhitesTurn()) {
                 move = ChrisIR4.getString(MOVE_PROMPT);
                 while (isInvalidMove(move)) {
+                    System.out.println("Invalid format.");
+                    gameModel.printBoard();
                     move = ChrisIR4.getString(MOVE_PROMPT);
                 }
-                result = interpretMove(move);
-                if (!result && !move.equals("q")) {
-                    System.out.println("Invalid move. Please try again.");
+            }
+            else {
+                if (PLAY_AGAINST_AI) {
+                    move = ai.decideOnMove();
+                } else {
+                    move = ChrisIR4.getString(MOVE_PROMPT);
+                    while (isInvalidMove(move)) {
+                        System.out.println("Invalid format.");
+                        gameModel.printBoard();
+                        move = ChrisIR4.getString(MOVE_PROMPT);
+                    }
                 }
-            } while (!move.equals(SENTINEL));
+            }
+            result = gameModel.makeMove(move);
+            if (!result && !move.equals("q")) {
+                System.out.println("Invalid move. Please try again.");
+            }
+            if (gameModel.getHasCheckmate()) {
+                if (gameModel.isWhitesTurn()) {
+                    System.out.println("WHITE WINS!");
+                } else {
+                    System.out.println("BLACK WINS!");
+                }
+                break;
+            }
+        } while (!move.equals(SENTINEL));
+        if(SAVE_GAME){
+            String fileName = ChrisIR4.getString("Enter file to save to: ");
+            gameModel.saveGame(fileName);
         }
+    }
+
+    private static void loadGame() {
+        if(LOAD_GAME){
+            String input = ChrisIR4.getString("Load from file? y/n");
+            if(input.equals("y")){
+                String fileName = ChrisIR4.getString("Enter file name: ");
+                gameModel.loadGame(fileName);
+            }
+        }       
     }
 
     public static String getMove(String prompt) {
@@ -89,17 +146,6 @@ public class TerminalTest {
         return move;
     }
     
-    private static boolean interpretMove(String move) {
-        if (move.equals("0-0")) {
-            return gameModel.castleKingside();
-        }
-        else if (move.equals("0-0-0")) {
-            return gameModel.castleQueenside();
-        } else {
-            return gameModel.makeMove(move);
-        }
-    }
-
     static boolean isInvalidMove(String move) {
         if (move.toLowerCase().equals(SENTINEL)) {
             return false;
@@ -139,8 +185,6 @@ public class TerminalTest {
         }
 
         return false;
-
-
     }
     
 }

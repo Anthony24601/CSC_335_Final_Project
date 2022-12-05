@@ -3,8 +3,6 @@ import java.util.ArrayList;
 public class Bishop extends Piece {
     private static final char KIND = Piece.BISHOP;
 
-    GameModel gameModel = GameModel.getInstance();
-
     public Bishop(int color, int rank, int file) {
         super(color, rank, file, "bishop");
     }
@@ -18,18 +16,18 @@ public class Bishop extends Piece {
         int r = rank+1;
         int f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             r++;
             f--;            
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -38,18 +36,18 @@ public class Bishop extends Piece {
         r = rank+1;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             r++;
             f++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -58,18 +56,18 @@ public class Bishop extends Piece {
         r = rank-1;
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             r--;
             f--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -78,18 +76,18 @@ public class Bishop extends Piece {
         r = rank-1;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             r--;
             f++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }

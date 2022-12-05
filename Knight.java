@@ -4,8 +4,6 @@ public class Knight extends Piece {
     private static final String FILE_NAME = "knight.png";
     final static char KIND = Piece.KNIGHT;
 
-    GameModel gameModel = GameModel.getInstance();
-
      /**
      * Constructs a new king of the specified color on the
      * passed Board
@@ -26,11 +24,11 @@ public class Knight extends Piece {
         // right-up
         r = rank+1;
         f = file+2;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -38,11 +36,11 @@ public class Knight extends Piece {
         // up-right
         r = rank+2;
         f = file+1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -50,11 +48,11 @@ public class Knight extends Piece {
         // up-left
         r = rank+2;
         f = file-1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -62,11 +60,11 @@ public class Knight extends Piece {
         // left-up
         r = rank+1;
         f = file-2;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -74,11 +72,11 @@ public class Knight extends Piece {
         // left-down
         r = rank-1;
         f = file-2;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -86,11 +84,11 @@ public class Knight extends Piece {
         // down-left
         r = rank-2;
         f = file-1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -98,11 +96,11 @@ public class Knight extends Piece {
         // down-right
         r = rank-2;
         f = file+1;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -110,11 +108,11 @@ public class Knight extends Piece {
         // right-down
         r = rank-1;
         f = file+2;
-        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor)) {
+        if (board.isInBounds(r, f) && (board.isEmpty(r, f) || board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K')) {
             isCapture = board.get(r, f).getColor() == opColor;
-            move = MoveParser.constructMove(this, r, f, isCapture);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, isCapture);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }

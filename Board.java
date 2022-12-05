@@ -1,8 +1,5 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +26,8 @@ public class Board implements Serializable {
 
 	private Piece[][] board;
 
+	private ArrayList<String> moveHistory;
+
 	public Board(boolean isBlank) {
 		board = new Piece[8][8];
 		queens = new ArrayList<>();
@@ -36,6 +35,8 @@ public class Board implements Serializable {
 		knights = new ArrayList<>();
 		rooks = new ArrayList<>();
 		pawns = new ArrayList<>();
+		moveHistory = new ArrayList<>();
+
 		if (isBlank) {
 			for (int r = 0; r < RANKS; r++) {
 				for (int f = 0; f < FILES; f++) {
@@ -53,13 +54,13 @@ public class Board implements Serializable {
 
 	public Board copy() {
 		Board newBoard = new Board(true);
-		
+
 		newBoard.blackKing = blackKing.copy();
 		newBoard.whiteKing = whiteKing.copy();
 
 		newBoard.placePiece(newBoard.blackKing);
 		newBoard.placePiece(newBoard.whiteKing);
-		for (Piece q : queens) 
+		for (Piece q : queens)
 			newBoard.placePiece(q.copy());
 		for (Piece b : bishops)
 			newBoard.placePiece(b.copy());
@@ -73,7 +74,7 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
-	public ArrayList<String> getMoves(boolean isWhite, GameModel gamemodel) {
+	public ArrayList<String> getMoves(boolean isWhite, GameModel gameModel) {
 		ArrayList<String> moveMap = new ArrayList<>();
 		String loc;
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -82,7 +83,7 @@ public class Board implements Serializable {
 			for (int f = 0; f < 8; f++) {
 				if (board[r][f] != null && board[r][f].getColor() == color) {
 					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gamemodel));
+					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gameModel));
 				}
 			}
 		}
@@ -90,14 +91,14 @@ public class Board implements Serializable {
 		return moveMap;
 	}
 
-	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gamemodel) {
+	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gameModel) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
 
 		switch (kind) {
 			case 0: pieces = pawns; break;
 			case 'K': pieces.add(blackKing); pieces.add(whiteKing); break;
-			case 'Q': 
+			case 'Q':
 				pieces = queens;
 				break;
 			case 'B': pieces = bishops; break;
@@ -108,7 +109,7 @@ public class Board implements Serializable {
 		ArrayList<String> moveMap = new ArrayList<>();
 		for (Piece p : pieces) {
 			if (p.getColor() == color) {
-				String[] validMoves = p.getValidMoves(this, gamemodel);
+				String[] validMoves = p.getValidMoves(this, gameModel);
 				for (String vm : validMoves) {
 					moveMap.add(p.getLoc() + ":" + vm);
 				}
@@ -131,13 +132,13 @@ public class Board implements Serializable {
 					loc1 = entry1.split(":")[0];
 					loc2 = entry2.split(":")[0];
 					if (loc1.charAt(0) == loc2.charAt(0)) {
-						moveMap.set(i, loc1 + ":" + String.format("%c%d%s", move1.charAt(0), loc1.charAt(1), move1.substring(1)));
-						moveMap.set(j, loc2 + ":" + String.format("%c%d%s", move2.charAt(0), loc2.charAt(1), move2.substring(1)));
+						moveMap.set(i, loc1 + ":" + String.format("%c%c%s", move1.charAt(0), loc1.charAt(1), move1.substring(1)));
+						moveMap.set(j, loc2 + ":" + String.format("%c%c%s", move2.charAt(0), loc2.charAt(1), move2.substring(1)));
 					} else {
 						moveMap.set(i, loc1 + ":" + String.format("%c%c%s", move1.charAt(0), loc1.charAt(0), move1.substring(1)));
 						moveMap.set(j, loc2 + ":" + String.format("%c%c%s", move2.charAt(0), loc2.charAt(0), move2.substring(1)));
 					}
-				} 
+				}
 			}
 		}
 	}
@@ -147,18 +148,20 @@ public class Board implements Serializable {
 	 * Fills up board with new Pieces in the starting positions
 	 */
 	public void reset(){
+		moveHistory.clear();
+
 		for (int r = 0; r < 8; r++) {
 			for (int f = 0; f < 8; f++) {
 				board[r][f] = new Blank(Piece.BLANK, r+1, f+1);
 			}
 		}
-		
+
 		// rooks
 		Rook leftBlackR = new Rook(Piece.BLACK, 8, 1);
 		Rook rightBlackR = new Rook(Piece.BLACK, 8, 8);
 		Rook leftWhiteR = new Rook(Piece.WHITE, 1, 1);
 		Rook rightWhiteR = new Rook(Piece.WHITE, 1, 8);
-		
+
 		placePiece(leftBlackR);
 		placePiece(rightBlackR);
 		placePiece(leftWhiteR);
@@ -169,37 +172,37 @@ public class Board implements Serializable {
 		Knight rightBlackN = new Knight(Piece.BLACK, 8, 7);
 		Knight leftWhiteN = new Knight(Piece.WHITE, 1, 2);
 		Knight rightWhiteN = new Knight(Piece.WHITE, 1, 7);
-		
+
 		placePiece(leftBlackN);
 		placePiece(rightBlackN);
 		placePiece(leftWhiteN);
 		placePiece(rightWhiteN);
-		
+
 		// bishops
 		Bishop leftBlackB = new Bishop(Piece.BLACK, 8, 3);
 		Bishop rightBlackB = new Bishop(Piece.BLACK, 8, 6);
 		Bishop leftWhiteB = new Bishop(Piece.WHITE, 1, 3);
 		Bishop rightWhiteB = new Bishop(Piece.WHITE, 1, 6);
-		
+
 		placePiece(leftBlackB);
 		placePiece(rightBlackB);
 		placePiece(leftWhiteB);
 		placePiece(rightWhiteB);
-		
+
 		//queens
 		Queen blackQueen = new Queen(Piece.BLACK, 8, 4);
 		Queen whiteQueen = new Queen(Piece.WHITE, 1, 4);
-		
+
 		placePiece(blackQueen);
 		placePiece(whiteQueen);
-		
+
 		// kings
 		blackKing = new King(Piece.BLACK, 8, 5);
 		whiteKing = new King(Piece.WHITE, 1, 5);
-		
+
 		placePiece(blackKing);
 		placePiece(whiteKing);
-		
+
 		// pawns
 		for (int f = 1; f <= 8; f++) {
 			Pawn blackPawn = new Pawn(Piece.BLACK, 7, f);
@@ -219,17 +222,15 @@ public class Board implements Serializable {
 		}
 		// USED FOR DEBUGGING MOVES
 		whiteKing = new King(Piece.WHITE, 1, 5);
-		blackKing = new King(Piece.BLACK, 5, 3);
-		Queen wq = new Queen(Piece.WHITE, 2, 8);
-		Queen bq = new Queen(Piece.BLACK, 7, 3);
+		blackKing = new King(Piece.BLACK, 8, 5);
+		Rook wr1 = new Rook(Piece.WHITE, 1, 1);
+		Rook wr2 = new Rook(Piece.WHITE, 1, 8);
+
 		
 		placePiece(whiteKing);
 		placePiece(blackKing);
-		placePiece(wq);
-		placePiece(bq);
-
-		Pawn testPawn = new Pawn(Piece.WHITE, 7, 7);
-		placePiece(testPawn);
+		placePiece(wr1);
+		placePiece(wr2);
 	}
 
 	public Piece get(int rank, int file) {
@@ -247,23 +248,23 @@ public class Board implements Serializable {
 		for (Piece p : pawns) {
 			if (p.getColor() == ownColor && p.canCheck(this)) {
 				return true;
-			} 
+			}
 		}
 		for (Piece r : rooks) {
 			if (r.getColor() == ownColor && r.canCheck(this))
-				return true; 
+				return true;
 		}
 		for (Piece n : knights) {
 			if (n.getColor() == ownColor && n.canCheck(this))
-				return true; 
+				return true;
 		}
 		for (Piece b : bishops) {
 			if (b.getColor() == ownColor && b.canCheck(this))
-				return true; 
+				return true;
 		}
 		for (Piece q : queens) {
 			if (q.getColor() == ownColor && q.canCheck(this))
-				return true; 
+				return true;
 		}
 
 		if (isWhite && whiteKing.canCheck(this))
@@ -273,10 +274,63 @@ public class Board implements Serializable {
 
 		return false;
 	}
-	
-	public boolean hasCheckmate(boolean isWhite) {
-		// TODO
-        return false;
+
+	public boolean hasCheckmate(boolean isWhite, GameModel gameModel) {
+		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
+		String[] moves;
+		for (Piece p : pawns) {
+			if (p.getColor() == ownColor) {
+				moves = p.getValidMoves(this, gameModel);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece r : rooks) {
+			if (r.getColor() == ownColor) {
+				moves = r.getValidMoves(this, gameModel);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece n : knights) {
+			if (n.getColor() == ownColor) {
+				moves = n.getValidMoves(this, gameModel);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece b : bishops) {
+			if (b.getColor() == ownColor) {
+				moves = b.getValidMoves(this, gameModel);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		for (Piece q : queens) {
+			if (q.getColor() == ownColor) {
+				moves = q.getValidMoves(this, gameModel);
+				if (moves.length > 0) {
+					return false;
+				}
+			}
+		}
+		if (ownColor == Piece.WHITE) {
+			moves = whiteKing.getValidMoves(this, gameModel);
+			if (moves.length > 0) {
+				return false;
+			}
+		} else {
+			moves = blackKing.getValidMoves(this, gameModel);
+			if (moves.length > 0) {
+				return false;
+			}
+		}
+
+        return true;
     }
 
 	public boolean isInBounds(int rank, int file) {
@@ -287,11 +341,16 @@ public class Board implements Serializable {
 		return isInBounds(rank, file) && board[rank-1][file-1].getClass() == Blank.class;
 	}
 
+	public Piece moveAndSave(String loc, String move) {
+		moveHistory.add(move);
+		return move(loc, move);
+	}
+
 	public Piece move(String loc, String move) {
 
 		// Castling
 		if (move.equals("0-0")) {
-			return kingsideCastleMove(loc); 	
+			return kingsideCastleMove(loc);
 		} else if (move.equals("0-0-0")) {
 			return queensideCastleMove(loc);
 		}
@@ -327,18 +386,14 @@ public class Board implements Serializable {
 
 	private Piece move(Piece piece, int toRank, int toFile, boolean isCapture) {
 		Piece capturedPiece = isCapture ? board[toRank-1][toFile-1] : null;
-		
 		resetPassantSquare();
 
 		int fromRank = piece.getRank();
 		int fromFile = piece.getFile();
 
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
-		board[toRank-1][toFile-1] = piece;
-		piece.setRank(toRank);
-		piece.setFile(toFile);	
 
-		if(piece.getKind()==Piece.PAWN){
+		if(piece.getKind()==Piece.PAWN && capturedPiece == null){
 			// Pawn promotion check
 			if(toRank==1||toRank==8){
 				pawnPromotionMove(piece, toRank, toFile);
@@ -355,7 +410,7 @@ public class Board implements Serializable {
 				}
 			}
 			// check if the pawn is doing an En Passant capture
-			if(isCapture && capturedPiece.isBlank()){
+			if((isCapture && capturedPiece.isBlank()) || (toFile!=fromFile && board[fromRank-1][fromFile-1].isBlank())){
 				if(piece.getColor()==Piece.WHITE){
 					capturedPiece = board[4][toFile-1];
 					board[4][toFile-1] = new Blank(Piece.BLANK, 2, toFile-1);
@@ -365,7 +420,16 @@ public class Board implements Serializable {
 					board[3][toFile-1] = new Blank(Piece.BLANK, 4, toFile-1);
 				}
 			}
+
 		}
+		
+		if (capturedPiece != null && !capturedPiece.isBlank()) {
+			removePiece(capturedPiece);
+		}
+		
+		board[toRank-1][toFile-1] = piece;
+		piece.setRank(toRank);
+		piece.setFile(toFile);
 
 		return capturedPiece;
 	}
@@ -385,38 +449,38 @@ public class Board implements Serializable {
 	private Piece kingsideCastleMove(String loc){
 		Piece rook, king;
 			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 1);
-				king = get(1, 4);
-				move(rook, 1, 3, false);
-				move(king, 1, 2, false);
-			} else if (loc.equals("d8")) {
-				rook = get(8, 1);
-				king = get(8, 4);
-				move(rook, 8, 3, false);
-				move(king, 8, 2, false);
+			if (loc.equals("e1")) {
+				rook = get(1, 8);
+				king = get(1, 5);
+				move(rook, 1, 6, false);
+				move(king, 1, 7, false);
+			} else if (loc.equals("e8")) {
+				rook = get(8, 8);
+				king = get(8, 5);
+				move(rook, 8, 6, false);
+				move(king, 8, 7, false);
 			} else {
-				System.out.println("lol wat?");
+				System.out.println("KingsideCastleMove: lol wat?");
 				System.exit(300);
 			}
-			return null; 	
+			return null;
 	}
 
 	private Piece queensideCastleMove(String loc){
 		Piece rook, king;
 			// White King
-			if (loc.equals("d1")) {
-				rook = get(1, 8);
-				king = get(1, 4);
-				move(rook, 1, 5, false);
-				move(king, 1, 6, false);
-			} else if (loc.equals("d8")) {
-				rook = get(8, 8);
-				king = get(8, 4);
-				move(rook, 8, 5, false);
-				move(king, 8, 6, false);
+			if (loc.equals("e1")) {
+				rook = get(1, 1);
+				king = get(1, 5);
+				move(rook, 1, 4, false);
+				move(king, 1, 3, false);
+			} else if (loc.equals("e8")) {
+				rook = get(8, 1);
+				king = get(8, 5);
+				move(rook, 8, 4, false);
+				move(king, 8, 3, false);
 			} else {
-				System.out.println("lol wat?");
+				System.out.println("Queenside Castle Move: lol wat?");
 				System.exit(300);
 			}
 			return null;
@@ -452,7 +516,7 @@ public class Board implements Serializable {
 				queens.add(piece);
 				break;
 		}
-		
+
 		rank = piece.getRank();
 		file = piece.getFile();
 		board[rank-1][file-1] = piece;
@@ -476,21 +540,73 @@ public class Board implements Serializable {
 				queens.remove(piece);
 				break;
 			case 'K':
-				System.out.println("lol wat?");
+				System.out.println("Remove Piece: lol wat?");
 				System.exit(200);
 		}
 	}
+	
+	public int[] getNumColors() {
+		int[] count = new int[] {0,0};
+		for (int rank = 1; rank <= 8; rank++) {
+			for (int file = 1; file <= 8; file++) {
+				if (get(rank,file).getColor() == Piece.WHITE) {
+					count[0] += 1;
+				} else if (get(rank,file).getColor() == Piece.BLACK){
+					count[1] += 1;
+				}
+			}
+		}
+		return count;
+	}
+	
+	public Piece getKing(int color) {
+		if (color == Piece.WHITE) {
+			return whiteKing;
+		}
+		return blackKing;
+	}
+	
+	public boolean checkOneBishop() {
+		if (bishops.size() == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkOneKnight() {
+		if (knights.size() == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkBishops() {
+		if (bishops.size() != 2) {
+			return false;
+		}
+		//Assumed to be different color bishops
+		Piece b1 = bishops.get(0);
+		Piece b2 = bishops.get(1);
+		String color1 = b1.getPicture(b1.getRank(), b1.getFile()).split("/")[1];
+		String color2 = b2.getPicture(b2.getRank(), b2.getFile()).split("/")[1];
+		if (color1.equals(color2)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 
 	@Override
 	public String toString() {
 		final String HEADER = "     a    b    c    d    e    f    g    h\n";
 		final String FOOTER = HEADER;
 		final String BORDER = "   +----+----+----+----+----+----+----+----+\n";
-		
+
 		StringBuilder out = new StringBuilder();
 
 		out.append(HEADER);
-		
+
 		for (int r = 7; r >= 0; r--) {
 			out.append(BORDER);
 
@@ -512,4 +628,8 @@ public class Board implements Serializable {
 		out.append(FOOTER);
 		return out.toString();
 	}
+
+    public ArrayList<String> getMoveHistory() {
+        return moveHistory;
+    }
 }

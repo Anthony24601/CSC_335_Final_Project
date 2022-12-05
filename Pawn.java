@@ -4,8 +4,6 @@ public class Pawn extends Piece {
     private static final String FILE_NAME = "pawn.png";
     private static final char KIND = Piece.PAWN;
 
-    //GameModel gameModel = GameModel.getInstance();
-
     /**
      * Constructs a new pawn of the specified color on the
      * passed Board
@@ -26,80 +24,70 @@ public class Pawn extends Piece {
         if (this.color == Piece.WHITE) {
             // One space
             if (board.isInBounds(rank+1, file) && board.isEmpty(rank+1, file)) {
-                move = MoveParser.constructMove(this, rank+1, file, false);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+                move = gameModel.constructMove(this, rank+1, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             }
 
             // Two space
             if (rank == 2 && board.isInBounds(rank+2, file) && board.isEmpty(rank+1, file) && board.isEmpty(rank+2, file)) {
-                move = MoveParser.constructMove(this, rank+2, file, false);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+                move = gameModel.constructMove(this, rank+2, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             }
 
             // Capture
-            if (board.isInBounds(rank+1, file-1) && (board.get(rank+1, file-1).getColor() == Piece.BLACK || board.get(rank+1, file-1).isPassant())) {
-                move = MoveParser.constructMove(this, rank+1, file-1, true);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+            if (board.isInBounds(rank+1, file-1) && (board.get(rank+1, file-1).getColor() == Piece.BLACK || board.get(rank+1, file-1).isPassant()) && board.get(rank+1, file-1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank+1, file-1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             }
-            if (board.isInBounds(rank+1, file+1) && (board.get(rank+1, file+1).getColor() == Piece.BLACK|| board.get(rank+1, file+1).isPassant())) {
-                move = MoveParser.constructMove(this, rank+1, file+1, true);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+            if (board.isInBounds(rank+1, file+1) && (board.get(rank+1, file+1).getColor() == Piece.BLACK|| board.get(rank+1, file+1).isPassant()) && board.get(rank+1, file+1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank+1, file+1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             } 
-
-            // Promotion
-            if(rank==7){
-                moves.add(MoveParser.constructPromotionMove(rank+1, file, Piece.QUEEN));
-            }
         } else {
             // One space
             if (board.isInBounds(rank-1, file) && board.isEmpty(rank-1, file)) {
-                move = MoveParser.constructMove(this, rank-1, file, false);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+                move = gameModel.constructMove(this, rank-1, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             }
 
             // Two space
             if (rank == 7 && board.isInBounds(rank-2, file) && board.isEmpty(rank-1, file) && board.isEmpty(rank-2, file)) {
-                move = MoveParser.constructMove(this, rank-2, file, false);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+                move = gameModel.constructMove(this, rank-2, file, false);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             }
 
             // Capture
-            if (board.isInBounds(rank-1, file-1) && board.get(rank-1, file-1).getColor() == Piece.WHITE) {
-                move = MoveParser.constructMove(this, rank-1, file-1, true);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+            if (board.isInBounds(rank-1, file-1) && (board.get(rank-1, file-1).getColor() == Piece.WHITE || board.get(rank-1, file-1).isPassant()) && board.get(rank-1, file-1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank-1, file-1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
             }
-            if (board.isInBounds(rank-1, file+1) && board.get(rank-1, file+1).getColor() == Piece.WHITE) {
-                move = MoveParser.constructMove(this, rank-1, file+1, true);
-                if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                    move = gameModel.addCheck(getLoc(), move);
+            if (board.isInBounds(rank-1, file+1) && (board.get(rank-1, file+1).getColor() == Piece.WHITE || board.get(rank-1, file+1).isPassant()) && board.get(rank-1, file+1).getKind() != 'K') {
+                move = gameModel.constructMove(this, rank-1, file+1, true);
+                if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                    move = gameModel.addCheck(getLoc(), move, board);
                     moves.add(move);
                 }
-            } 
-
-            // Promotion
-             if(rank==2){
-                moves.add(MoveParser.constructPromotionMove(rank-1, file, Piece.QUEEN));
             }
         }
 

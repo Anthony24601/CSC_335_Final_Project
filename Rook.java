@@ -4,8 +4,6 @@ public class Rook extends Piece {
     private static final String FILE_NAME = "rook.png";
     final static char KIND = 'R';
 
-    GameModel gameModel = GameModel.getInstance();
-
      /**
      * Constructs a new rook of the specified color on the
      * passed Board
@@ -26,17 +24,17 @@ public class Rook extends Piece {
         r = rank;
         f = file+1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             f++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -45,17 +43,17 @@ public class Rook extends Piece {
         r = rank+1;
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             r++;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -64,17 +62,17 @@ public class Rook extends Piece {
         r = rank;
         f = file-1;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             f--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }
@@ -83,17 +81,17 @@ public class Rook extends Piece {
         r = rank-1;
         f = file;
         while (board.isInBounds(r, f) && board.isEmpty(r, f)) {
-            move = MoveParser.constructMove(this, r, f, false);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+            move = gameModel.constructMove(this, r, f, false);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
             r--;
         }
-        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor) {
-            move = MoveParser.constructMove(this, r, f, true);
-            if (!gameModel.wouldPutInCheck(getLoc(), move)) {
-                move = gameModel.addCheck(getLoc(), move);
+        if (board.isInBounds(r, f) && board.get(r, f).getColor() == opColor && board.get(r, f).getKind() != 'K') {
+            move = gameModel.constructMove(this, r, f, true);
+            if (!gameModel.wouldPutInCheck(getLoc(), move, board)) {
+                move = gameModel.addCheck(getLoc(), move, board);
                 moves.add(move);
             }
         }

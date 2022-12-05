@@ -1,81 +1,84 @@
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class Player {
+abstract class Player {
+
+	protected final String type;
+	protected ChessUI ui;
+	protected Board board;
+	protected String selected1;
+	protected String selected2;
 	
-	Board board;
-	static ChessUI ui;
-	Client client;
-	String selected1;
-	String selected2;
-	
-	String[] possible_moves;
-	
-	public Player() {
-		board = new Board(false);
-		client = new Client("127.0.0.1", 59896, this);
-		possible_moves = new String[0];
-	}
-	
-	public void makeUI() {
+	protected ArrayList<String> possible_moves;
+
+	public Player(String type) {
+		this.type = type;
 		ui = new ChessUI(this);
+		board = new Board(false);
+		possible_moves = new ArrayList<>();
 	}
+	
+	abstract void move(String select);
 	
 	public Board getBoard() {
 		return board;
 	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+	}
 	
+	abstract GameModel getModel();
+
 	public void run() {
 		ui.run();
 	}
-	
-	public void open() {
-		client.openConnection();
+
+	public void moveAI() {
+		// TODO - implement
 	}
-	
-	public void move(String select) {
-		//System.out.println(select);
-		int rank = select.charAt(1)-'0';
-		int file = select.charAt(0)-'a'+1;
-		if (client.getTurn()) {
-			if (selected1 == null || possible_moves.length == 0) {
-				if (board.get(rank, file).getColor() == client.getColor()) {
-					selected1 = select;
-					possible_moves = getMoves(board.get(rank, file).getValidMoves(board, client.getModel()));
-					ui.updatePossibles(possible_moves);
-				}
-			} else {
-				if (Arrays.asList(possible_moves).contains(select)) {
-					selected2 = select;
-					board.move(selected1, selected2);
-					client.sendMove(selected1, selected2);
-				}
-				selected1 = null;
-				selected2 = null;
-				possible_moves = new String[0];
-				ui.updatePossibles(possible_moves);
-			}
-		} else {
-			System.out.println("no");
-		}
-	}
-	
+
 	public void updateBoard(Board board) {
 		this.board = board;
 		ui.update();
-	}
-	
-	private String[] getMoves(String[] possible) {
-		for (int i = 0; i < possible.length; i++) {
-			String temp = possible[i];
-			if (temp.charAt(temp.length()-1) == '+') {
-				temp = temp.substring(temp.length()-3, temp.length()-1);
-			} else {
-				temp = temp.substring(temp.length()-2);
-			}
-			possible[i] = temp;
+		if (type == "ai") {
+			moveAI();
 		}
-		return possible;
 	}
+
+	protected ArrayList<String> getMoves(ArrayList<String> arrayList) {
+		for (int i = 0; i < arrayList.size(); i++) {
+			String entry = arrayList.get(i);
+			String toLoc = "";
+			if (entry.split(":")[1].equals("0-0")) {
+				if (entry.split(":")[0].equals("e1")) {
+					toLoc = "g1";
+				} else if (entry.split(":")[0].equals("e8")) {
+					toLoc = "g8";
+				} else {
+					System.out.println("Player.getMoves: huh?");
+					System.exit(600);
+				}
+			}
+			else if (entry.split(":")[1].equals("0-0-0")) {
+				if (entry.split(":")[0].equals("e1")) {
+					toLoc = "c1";
+				} else if (entry.split(":")[0].equals("e8")) {
+					toLoc = "c8";
+				}
+			}
+			else if (entry.charAt(entry.length()-1) == '+') {
+				toLoc = entry.substring(entry.length()-3, entry.length()-1);
+			} else {
+				toLoc = entry.substring(entry.length()-2);
+			}
+			arrayList.set(i, toLoc);
+		}
+		return arrayList;
+	}
+
+	abstract void saveGame(String fileName);
+	
+	abstract String getType();
+	
+	abstract int getColor();
 }
