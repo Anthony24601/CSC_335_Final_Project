@@ -431,7 +431,7 @@ public class Board implements Serializable {
 
 		board[fromRank-1][fromFile-1] = new Blank(Piece.BLANK, fromRank, fromFile);
 
-		if(piece.getKind()==Piece.PAWN && capturedPiece == null){
+		if(piece.getKind()==Piece.PAWN){
 			// 2 square move -> set up passantSquare
 			if(Math.abs(fromRank-toRank)==2){
 				if(piece.getColor()==Piece.WHITE){
