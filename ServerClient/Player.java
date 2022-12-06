@@ -1,23 +1,26 @@
+package ServerClient;
 import java.util.ArrayList;
 
-abstract class Player {
+import Game.Board;
+import Game.GameModel;
+import UI.ChessUI;
 
-	protected final String type;
+public abstract class Player {
+
 	protected ChessUI ui;
 	protected Board board;
 	protected String selected1;
 	protected String selected2;
-	
+		
 	protected ArrayList<String> possible_moves;
 
-	public Player(String type) {
-		this.type = type;
+	public Player() {
 		ui = new ChessUI(this);
 		board = new Board(false);
 		possible_moves = new ArrayList<>();
 	}
 	
-	abstract void move(String select);
+	public abstract void move(String select);
 	
 	public Board getBoard() {
 		return board;
@@ -26,6 +29,8 @@ abstract class Player {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	
+	public abstract GameModel getModel();
 
 	public void run() {
 		ui.run();
@@ -38,12 +43,9 @@ abstract class Player {
 	public void updateBoard(Board board) {
 		this.board = board;
 		ui.update();
-		if (type == "ai") {
-			moveAI();
-		}
 	}
 
-	protected ArrayList<String> getMoves(ArrayList<String> arrayList) {
+	public ArrayList<String> getMoves(ArrayList<String> arrayList) {
 		for (int i = 0; i < arrayList.size(); i++) {
 			String entry = arrayList.get(i);
 			String toLoc = "";
@@ -64,7 +66,7 @@ abstract class Player {
 					toLoc = "c8";
 				}
 			}
-			else if (entry.charAt(entry.length()-1) == '+') {
+			else if (entry.charAt(entry.length()-1) == '+' || entry.charAt(entry.length()-1) == '#') {
 				toLoc = entry.substring(entry.length()-3, entry.length()-1);
 			} else {
 				toLoc = entry.substring(entry.length()-2);
@@ -73,4 +75,10 @@ abstract class Player {
 		}
 		return arrayList;
 	}
+
+	public abstract void saveGame(String fileName);
+	
+	public abstract String getType();
+	
+	public abstract int getColor();
 }

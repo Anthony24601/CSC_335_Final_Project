@@ -1,4 +1,8 @@
+package PiecePackage;
 import java.util.ArrayList;
+
+import Game.Board;
+import Game.GameModel;
 
 public class Knight extends Piece {
     private static final String FILE_NAME = "knight.png";
@@ -171,6 +175,13 @@ public class Knight extends Piece {
         // down-right
         r = rank-2;
         f = file+1;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
+        // right-down
+        r = rank-1;
+        f = file+2;
         if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
             return true;
         }

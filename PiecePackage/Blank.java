@@ -1,3 +1,6 @@
+package PiecePackage;
+import Game.Board;
+import Game.GameModel;
 
 public class Blank extends Piece{
 	private boolean passantState;

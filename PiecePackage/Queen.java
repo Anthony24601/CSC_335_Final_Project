@@ -1,4 +1,8 @@
+package PiecePackage;
 import java.util.ArrayList;
+
+import Game.Board;
+import Game.GameModel;
 
 public class Queen extends Piece {
     private static final String FILE_NAME = "queen.png";

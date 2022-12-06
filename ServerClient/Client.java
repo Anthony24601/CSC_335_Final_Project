@@ -1,3 +1,4 @@
+package ServerClient;
 /*
  * File: Client.java
  * Author: Miles Gendreau
@@ -10,6 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+
+import Game.GameModel;
+import PiecePackage.Piece;
 
 public class Client extends Thread {
 	private boolean running = false;
@@ -59,6 +63,7 @@ public class Client extends Thread {
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);
+			print_debug("made the socket");
 			running = true;
 			this.start();
 		}
@@ -97,6 +102,7 @@ public class Client extends Thread {
 	@Override
 	public void run() {
 		try {
+			print_debug("trying to make streams");
 			out = new ObjectOutputStream(socket.getOutputStream());
 	    	out.flush();
 	    	in = new ObjectInputStream(socket.getInputStream());
@@ -109,6 +115,8 @@ public class Client extends Thread {
 	    	color = in.readInt();
 
 	    	model = (GameModel) in.readObject();
+			player.setBoard(model.getCurrentBoard());
+			player.updateBoard(model.getCurrentBoard());
 	    	print_debug("Received model!");
 		}
 		catch (IOException | ClassNotFoundException e) {
@@ -117,7 +125,7 @@ public class Client extends Thread {
 
 		while (running) {
 			// continual communication
-			if (!turn_active) {
+			if (!turn_active && !model.getIsOver()) {
 				try {
 					print_debug("Waiting for my turn...");
 					turn_active = in.readBoolean();

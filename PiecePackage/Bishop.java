@@ -1,4 +1,8 @@
+package PiecePackage;
 import java.util.ArrayList;
+
+import Game.Board;
+import Game.GameModel;
 
 public class Bishop extends Piece {
     private static final char KIND = Piece.BISHOP;

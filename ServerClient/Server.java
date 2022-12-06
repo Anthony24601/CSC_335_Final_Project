@@ -1,3 +1,4 @@
+package ServerClient;
 /*
  * File: Server.java
  * Author: Miles Gendreau
@@ -16,7 +17,9 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import ChrisIR4.ChrisIR4;
+import Game.Board;
+import Game.GameModel;
+import PiecePackage.Piece;
 
 public class Server extends Thread {
 	private boolean running;
@@ -75,7 +78,6 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			try {
@@ -102,7 +104,7 @@ public class Server extends Thread {
 		Scanner s = new Scanner(System.in);
 		System.out.println("Load game from a file? y/n");
 		String loadGame = s.nextLine();
-		if(loadGame.equals("y")){;
+		if(loadGame.equals("y")){
 			boolean success;
 			String fileName;
 			do{
@@ -113,6 +115,21 @@ public class Server extends Thread {
 			while(!(success || fileName.equals("s")));
 		}
 		s.close();
+		if(model.isWhitesTurn()){
+			turn = 0;
+		}
+		else{
+			turn = 1;
+		}
+	}
+	
+	// new loadGame function, called in main
+	public boolean loadGame(String game_file) {
+		boolean success = model.loadGame(game_file);
+		if(!model.isWhitesTurn()){
+			turn = 1;
+		}
+		return success;
 	}
 
 	/**
@@ -123,8 +140,8 @@ public class Server extends Thread {
 	private void saveGame(){
 		Scanner s = new Scanner(System.in);
 		System.out.println("Save game to a file? y/n");
-		String loadGame = s.nextLine();
-		if(loadGame.equals("y")){;
+		String saveGame = s.nextLine();
+		if(saveGame.equals("y")){;
 			boolean success;
 			String fileName;
 			do{
@@ -189,6 +206,13 @@ public class Server extends Thread {
 					loc = (String) in.readObject();
 					if (loc.equals("bye!")) {
 						print_debug("client " + id + " disconnecting");
+						sendModel();
+						break;
+					} else if (loc.equals("Forfeit")) {
+						turn = (turn + 1) % clients.length;
+						model.flipTurn();
+						model.setIsOver();
+						model.setHasCheckmate();
 						sendModel();
 						break;
 					}

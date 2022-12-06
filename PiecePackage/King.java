@@ -1,4 +1,8 @@
+package PiecePackage;
 import java.util.ArrayList;
+
+import Game.Board;
+import Game.GameModel;
 
 public class King extends Piece {
     private static final String FILE_NAME = "king.png";
@@ -117,10 +121,10 @@ public class King extends Piece {
             }
         }
         
-        if (gameModel.canCastleKingside()) {
+        if (gameModel.canCastleKingside(board)) {
             moves.add("0-0");
         }
-        if (gameModel.canCastleQueenside()) {
+        if (gameModel.canCastleQueenside(board)) {
             moves.add("0-0-0");
         }
         
