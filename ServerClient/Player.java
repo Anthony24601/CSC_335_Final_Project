@@ -1,6 +1,11 @@
+package ServerClient;
 import java.util.ArrayList;
 
-abstract class Player {
+import Game.Board;
+import Game.GameModel;
+import UI.ChessUI;
+
+public abstract class Player {
 
 	protected ChessUI ui;
 	protected Board board;
@@ -15,7 +20,7 @@ abstract class Player {
 		possible_moves = new ArrayList<>();
 	}
 	
-	abstract void move(String select);
+	public abstract void move(String select);
 	
 	public Board getBoard() {
 		return board;
@@ -25,7 +30,7 @@ abstract class Player {
 		this.board = board;
 	}
 	
-	abstract GameModel getModel();
+	public abstract GameModel getModel();
 
 	public void run() {
 		ui.run();
@@ -40,7 +45,7 @@ abstract class Player {
 		ui.update();
 	}
 
-	protected ArrayList<String> getMoves(ArrayList<String> arrayList) {
+	public ArrayList<String> getMoves(ArrayList<String> arrayList) {
 		for (int i = 0; i < arrayList.size(); i++) {
 			String entry = arrayList.get(i);
 			String toLoc = "";
@@ -71,9 +76,9 @@ abstract class Player {
 		return arrayList;
 	}
 
-	abstract void saveGame(String fileName);
+	public abstract void saveGame(String fileName);
 	
-	abstract String getType();
+	public abstract String getType();
 	
-	abstract int getColor();
+	public abstract int getColor();
 }

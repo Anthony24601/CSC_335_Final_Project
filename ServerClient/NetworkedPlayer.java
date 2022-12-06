@@ -1,3 +1,6 @@
+package ServerClient;
+import Game.GameModel;
+import PiecePackage.Piece;
 
 public class NetworkedPlayer extends Player {
 	private Client client;

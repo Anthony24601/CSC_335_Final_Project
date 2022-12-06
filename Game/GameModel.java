@@ -1,3 +1,4 @@
+package Game;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +8,8 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Scanner;
+
+import PiecePackage.Piece;
 
 public class GameModel implements Serializable {
 	private static final long serialVersionUID = 1L;

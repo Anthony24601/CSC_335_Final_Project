@@ -1,4 +1,10 @@
+package ServerClient;
 import java.util.Scanner;
+
+import Game.AI;
+import Game.Board;
+import Game.GameModel;
+import PiecePackage.Piece;
 
 public class LocalPlayer extends Player {
 	private static final int COLORS[] = new int[] {Piece.WHITE, Piece.BLACK};

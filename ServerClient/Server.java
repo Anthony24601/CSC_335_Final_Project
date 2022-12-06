@@ -1,3 +1,4 @@
+package ServerClient;
 /*
  * File: Server.java
  * Author: Miles Gendreau
@@ -15,6 +16,10 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import Game.Board;
+import Game.GameModel;
+import PiecePackage.Piece;
 
 public class Server extends Thread {
 	private boolean running;

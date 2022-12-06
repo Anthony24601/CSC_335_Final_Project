@@ -1,4 +1,15 @@
+package Game;
 import java.util.ArrayList;
+
+import PiecePackage.Bishop;
+import PiecePackage.Blank;
+import PiecePackage.King;
+import PiecePackage.Knight;
+import PiecePackage.Pawn;
+import PiecePackage.Piece;
+import PiecePackage.Queen;
+import PiecePackage.Rook;
+
 import java.io.Serializable;
 
 public class Board implements Serializable {

@@ -1,4 +1,8 @@
+package PiecePackage;
 import java.io.Serializable;
+
+import Game.Board;
+import Game.GameModel;
 
 public abstract class Piece implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -38,32 +42,32 @@ public abstract class Piece implements Serializable {
 	abstract public boolean canCheck(Board board);
 	abstract public Piece copy();
 
-	protected int getRank() {
+	public int getRank() {
 		return rank;
 	}
 
-	protected int getFile() {
+	public int getFile() {
 		return file;
 	}
 
-	protected void setRank(int rank) {
+	public void setRank(int rank) {
 		this.rank = rank;
 	}
 
-	protected void setFile(int file) {
+	public void setFile(int file) {
 		this.file = file;
 	}
 
-	protected String getLoc() {
+	public String getLoc() {
 		return String.format("%c%d", file + 'a' - 1, rank);
 	}
 
-	protected void setLoc(String loc) {
+	public void setLoc(String loc) {
 		rank = loc.charAt(0) - 'a';
 		file = Integer.parseInt(loc.substring(1, 2));
 	}
 
-	protected boolean equals(Piece other) {
+	public boolean equals(Piece other) {
 		return color == other.color && rank == other.rank && file == other.file;
 	}
 

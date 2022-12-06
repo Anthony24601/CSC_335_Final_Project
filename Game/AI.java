@@ -1,4 +1,8 @@
+package Game;
 import java.util.Random;
+
+import PiecePackage.Piece;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;

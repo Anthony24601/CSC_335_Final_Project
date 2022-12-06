@@ -1,11 +1,9 @@
+package UI;
 /**
 File: XTankUI.java
 Author: Anthony Hsu and Miles Gendreau
 Course: CSC 335
 Purpose: A class that creates a UI window and draws the GameModel
-
-Public Methods:
-.run() runs the UI and draws the GameModel
 XTankUI objects are instantiated with a player object
 */
 
@@ -31,6 +29,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+
+import Game.Board;
+import PiecePackage.Piece;
+import ServerClient.Player;
 
 public class ChessUI extends Thread
 {

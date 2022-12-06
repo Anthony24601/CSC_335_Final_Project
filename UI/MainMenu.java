@@ -1,5 +1,5 @@
+package UI;
 import java.io.File;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+
+import ServerClient.Main;
 
 public class MainMenu {
 	
@@ -48,7 +50,7 @@ public class MainMenu {
 		shell = new Shell(display);
         shell.setSize(width, height);
         shell.setLayout(comp_layout);
-        shell.setText("Chess");      
+        shell.setText("Chess");
        
         // title
         Label title = new Label(shell, SWT.NONE);

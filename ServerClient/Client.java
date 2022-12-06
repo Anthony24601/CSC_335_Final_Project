@@ -1,3 +1,4 @@
+package ServerClient;
 /*
  * File: Client.java
  * Author: Miles Gendreau
@@ -10,6 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+
+import Game.GameModel;
+import PiecePackage.Piece;
 
 public class Client extends Thread {
 	private boolean running = false;

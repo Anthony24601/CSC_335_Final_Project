@@ -1,3 +1,5 @@
+package ServerClient;
+import UI.MainMenu;
 
 public class Main {
 
