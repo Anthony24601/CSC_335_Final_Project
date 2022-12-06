@@ -1,3 +1,12 @@
+/**
+ * File: Piece.java
+ * Author: Grace Driskill
+ * Course: CSC 335
+ * Purpose: Abstract class that represents a single piece 
+ * on a chess board.
+ * Constructor
+ * Piece(int color, int rank, int file, String name)
+ */
 package PiecePackage;
 import java.io.Serializable;
 
@@ -11,6 +20,7 @@ public abstract class Piece implements Serializable {
 	public final static int BLANK = 0;
 	public final static int WHITE = 10;
     public final static int BLACK = 20;
+	// piece types
 	public final static char PAWN = 0;
 	public final static char BISHOP = 'B';
 	public final static char KNIGHT = 'N';
@@ -24,6 +34,14 @@ public abstract class Piece implements Serializable {
 	protected int file;
 	protected String name;
 	
+	/**
+	 * Creates a new Piece
+	 * @param color which color to make this Piece (Piece.WHITE or
+	 * 	Piece.BLACK)
+	 * @param rank rank of this Piece
+	 * @param file file of this Piece
+	 * @param name name of this Piece
+	 */
 	public Piece(int color, int rank, int file, String name) {
 		this.color = color;
 	    if (color == BLANK){
@@ -38,39 +56,94 @@ public abstract class Piece implements Serializable {
 		this.file = file;
 	}
 	
+	/**
+	 * Returns all the possible valid moves this Piece can current 
+	 * make
+	 * @param board Board this Piece is on
+	 * @param gameModel GameModel this Piece is apart of
+	 * @return String[]
+	 */
 	abstract public String[] getValidMoves(Board board, GameModel gameModel);
+
+	/**
+	 * Returns if this Piece can make a check from its current 
+	 * position
+	 * @param board Board this Piece is on
+	 * @return true if this Piece can check, false otherwise
+	 */
 	abstract public boolean canCheck(Board board);
+
+	/**
+	 * Creates a copy of itself
+	 * @return new Piece with same info as this Piece
+	 */
 	abstract public Piece copy();
 
+	/**
+	 * Returns the rank of this Piece
+	 */
 	public int getRank() {
 		return rank;
 	}
 
+	/**
+	 * Returns the file of this Piece
+	 */
 	public int getFile() {
 		return file;
 	}
 
+	/**
+	 * Set the rank of this Piece to the specified
+	 * value
+	 * @param rank int
+	 */
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
 
+	/**
+	 * Set the file of this Piece to the specified
+	 * value
+	 * @param file int
+	 */
 	public void setFile(int file) {
 		this.file = file;
 	}
 
+	/**
+	 * Returns a String representation of this Piece's 
+	 * position
+	 * @return String in format <file><rank>
+	 */
 	public String getLoc() {
 		return String.format("%c%d", file + 'a' - 1, rank);
 	}
 
+	/**
+	 * Sets this Piece's location (changes rank and file)
+	 * @param loc String in format <file><rank>
+	 */
 	public void setLoc(String loc) {
 		rank = loc.charAt(0) - 'a';
 		file = Integer.parseInt(loc.substring(1, 2));
 	}
 
+	/**
+	 * Checks this Piece is equal to other by comparing
+	 * color, rank and file
+	 * @param other Piece 
+	 * @return true if this Piece is equal
+	 */
 	public boolean equals(Piece other) {
 		return color == other.color && rank == other.rank && file == other.file;
 	}
 
+	/**
+	 * Returns a String represention of this Piece. 
+	 * Includes the Piece's color and kind
+	 * Ex. white queen would return "wq"
+	 */
 	public String toString() {
 		if (color == WHITE) {
 			return "w" + getKind();
@@ -91,7 +164,6 @@ public abstract class Piece implements Serializable {
 	 * @return
 	 */
 	public String getPicture(int row, int col) {
-		//System.out.println("getting pic " + name);
 		if ((col%2 == 0 && row%2 == 0) || (col%2 == 1 && row%2 == 1)) {
 			return "images/light/" + color_string + "/" + name + ".png";
 		} else {
@@ -113,9 +185,11 @@ public abstract class Piece implements Serializable {
 	 * En Passant capture could happen
 	 * @param b 
 	 */
-	public void setPassant(boolean isPassant) {
-    }
+	public void setPassant(boolean isPassant) {}
   
+	/**
+	 * @return char, the kind of this Piece
+	 */
 	abstract public char getKind();
 
 	/**
