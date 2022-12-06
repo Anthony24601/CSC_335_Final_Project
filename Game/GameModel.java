@@ -352,7 +352,7 @@ public class GameModel implements Serializable {
         boolean result;
         if (whitesTurn) {
             // If either piece has moved, abandon
-            if (b.getWhiteKingHasMoved() || b.getWhiteKingRookHasMoved())
+            if (b.getWhiteKingHasMoved() || b.getWhiteKingRookHasMoved() || b.hasCheck(!whitesTurn))
                 return false;
 
             // Check if King would be in check moving across
@@ -361,7 +361,7 @@ public class GameModel implements Serializable {
             result = !wouldPutInCheck("e1", f1, b) && !wouldPutInCheck("e1", g1, b)
                 && b.isEmpty(1, 6) && b.isEmpty(1, 7);
         } else {
-            if (b.getBlackKingHasMoved() || b.getBlackKingRookHasMoved())
+            if (b.getBlackKingHasMoved() || b.getBlackKingRookHasMoved() || b.hasCheck(!whitesTurn))
                 return false;
             
             String f8 = "Kf8";
@@ -403,7 +403,7 @@ public class GameModel implements Serializable {
     public boolean canCastleQueenside(Board b) {
         boolean result;
         if (whitesTurn) {
-            if (b.getWhiteKingHasMoved() || b.getWhiteQueenRookHasMoved()) {
+            if (b.getWhiteKingHasMoved() || b.getWhiteQueenRookHasMoved() || b.hasCheck(!whitesTurn)) {
                 return false;
             }
 
@@ -412,7 +412,7 @@ public class GameModel implements Serializable {
             result = !wouldPutInCheck("e1", d1, b) && !wouldPutInCheck("e1", c1, b)
                 && b.isEmpty(1, 2) && b.isEmpty(1, 3) && b.isEmpty(1, 4);
         } else {
-            if (b.getBlackKingHasMoved() || b.getBlackQueenRookHasMoved()) {
+            if (b.getBlackKingHasMoved() || b.getBlackQueenRookHasMoved() || b.hasCheck(!whitesTurn)) {
                 return false;
             }
             String d8 = "Kd8";

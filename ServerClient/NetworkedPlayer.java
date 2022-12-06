@@ -1,3 +1,12 @@
+/*
+ * File: NetworkedPlayer.java
+ * Author: Miles Gendreau
+ * Course: CSC 335, Fall 2022
+ * Description: NetworkedPlayer extends the Player class and represents a Player in a networked
+ * 				Game
+ * NetworkedPlayer objects are created with a the default constructor
+ */
+
 package ServerClient;
 import Game.GameModel;
 import PiecePackage.Piece;
@@ -5,18 +14,34 @@ import PiecePackage.Piece;
 public class NetworkedPlayer extends Player {
 	private Client client;
 	
+	/**
+	 * Default constructor for a networked player
+	 */
 	public NetworkedPlayer() {
 		client = new Client("127.0.0.1", 59896, this);
 	}
 	
+	/**
+	 * Opens the connection of the server
+	 * @return None
+	 */
 	public void open() {
 		client.openConnection();
 	}
 	
+	/**
+	 * Returns the GameModel of the game
+	 * @return the GameModel of the game
+	 */
 	public GameModel getModel() {
 		return client.getModel();
 	}
 	
+	/**
+	 * Overrides the move method in Player class
+	 * @param select is a String representing a square a player selected
+	 * @return None
+	 */
 	@Override
 	public void move(String select) {
 		if (select.equals("Forfeit")) {
@@ -33,7 +58,6 @@ public class NetworkedPlayer extends Player {
 				client.sendMove("Forfeit", "");
 			}
 		} else {
-			//System.out.println(select);
 			board = client.getModel().getCurrentBoard();
 
 			int rank = select.charAt(1)-'0';
@@ -55,28 +79,10 @@ public class NetworkedPlayer extends Player {
 					if (possible_moves.contains(select)) {
 						selected2 = select;
 						boolean result = client.getModel().movePieceFromLocs(selected1, selected2);
-						/*
-						boolean capture = false;
-						int rank_prev = selected1.charAt(1)-'0';
-						int file_prev = selected1.charAt(0)-'a'+1;
-						if (board.get(rank, file).getColor() != Piece.BLANK) {
-							capture = true;
-						}
-						String temp = MoveParser.constructMove(board.get(rank_prev, file_prev), rank, file, capture);
-						boolean temp2 = client.getModel().makeMove(temp);
-						if (temp2) {
-							client.sendMove(selected1, selected2);
-						}
-						*/
 						if (result) {
 							client.sendMove(selected1, selected2);
 						}
 						updateBoard(client.getModel().getCurrentBoard());
-						//board.move(selected1, selected2);
-
-						//client.getModel().makeMove(selected2);
-						//updateBoard(board);
-
 					}
 					selected1 = null;
 					selected2 = null;
@@ -89,15 +95,28 @@ public class NetworkedPlayer extends Player {
 		}
 	}
 
+	/**
+	 * Saves the game to a txt file
+	 * @param fileName is the name of the saved file
+	 * @return None
+	 */
 	public void saveGame(String fileName) {
 		GameModel model = client.getModel();
 		model.saveGame(fileName);
 	}
 	
+	/**
+	 * gets the Type of Player
+	 * @return "Local"
+	 */
 	public String getType() {
 		return "Network";
 	}
 	
+	/**
+	 * Gets the color of the Player
+	 * @return the color of the Player
+	 */
 	public int getColor() {
 		return client.getColor();
 	}

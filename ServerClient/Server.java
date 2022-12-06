@@ -1,22 +1,20 @@
-package ServerClient;
 /*
  * File: Server.java
  * Author: Miles Gendreau
  * Course: CSC 335, Fall 2022
  * Description: This file contains the Server class, which is used for
- * multiplayer networking.
+ * 				multiplayer networking as well as the ClientManager class.
+ * Server Objects are created with an int representing the port number
  */
-
+package ServerClient;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import Game.Board;
 import Game.GameModel;
 import PiecePackage.Piece;
@@ -36,6 +34,10 @@ public class Server extends Thread {
 
 	private GameModel model;
 
+	/**
+	 * Constructor for Server
+	 * @param port is an integer representing the port number
+	 */
 	public Server(int port) {
 		this.running = false;
 		this.port = port;
@@ -52,6 +54,10 @@ public class Server extends Thread {
 		this.model.setCurrentBoard(new Board(false));
 	}
 
+	/**
+	 * Opens the Server
+	 * @return None
+	 */
 	public void openServer() {
 		print_debug("Server listening on port " + port);
 		try {
@@ -64,6 +70,10 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Closes the Server
+	 * @return None
+	 */
 	public void closeServer() {
 		try {
 			listener.close();
@@ -76,6 +86,11 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Overrides the run method of the Thread class. Facilitate communication between
+	 * 		Server and Client
+	 * @return None
+	 */
 	@Override
 	public void run() {
 		ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
@@ -96,34 +111,10 @@ public class Server extends Thread {
 	}
 	
 	/**
-	 * Prompts user whether they want to load an existing game. 
-	 * If yes, asks for a file to load from and then loads the
-	 * info into the GameModel
+	 * Loads a pre-created game in
+	 * @param game_file is a String representing the game file's name
+	 * @return true if loadGame worked, false if otherwise
 	 */
-	private void loadGame() {
-		Scanner s = new Scanner(System.in);
-		System.out.println("Load game from a file? y/n");
-		String loadGame = s.nextLine();
-		if(loadGame.equals("y")){
-			boolean success;
-			String fileName;
-			do{
-			System.out.println("Enter file name or s to stop: ");
-			fileName = s.nextLine();
-			success = model.loadGame(fileName);
-			}
-			while(!(success || fileName.equals("s")));
-		}
-		s.close();
-		if(model.isWhitesTurn()){
-			turn = 0;
-		}
-		else{
-			turn = 1;
-		}
-	}
-	
-	// new loadGame function, called in main
 	public boolean loadGame(String game_file) {
 		boolean success = model.loadGame(game_file);
 		if(!model.isWhitesTurn()){
@@ -131,29 +122,14 @@ public class Server extends Thread {
 		}
 		return success;
 	}
+	
+	//-------------Private Methods and Classes----------------------
 
 	/**
-	 * Prompts user whether they want to save the game. 
-	 * If yes, asks for a file to save to and then saves
-	 * the GameModel to it
+	 * Prints out a debug message
+	 * @param msg is a String representing the debug message
+	 * @return None
 	 */
-	private void saveGame(){
-		Scanner s = new Scanner(System.in);
-		System.out.println("Save game to a file? y/n");
-		String saveGame = s.nextLine();
-		if(saveGame.equals("y")){;
-			boolean success;
-			String fileName;
-			do{
-			System.out.println("Enter file name or s to stop: ");
-			fileName = s.nextLine();
-			success = model.saveGame(fileName);
-			}
-			while(!(success || fileName.equals("s")));
-		}
-		s.close();
-	}
-
 	private void print_debug(String msg) {
 		System.out.println("[Server] " + msg);
 		System.out.flush();
@@ -166,11 +142,21 @@ public class Server extends Thread {
 		private ObjectInputStream in;
 		private ObjectOutputStream out;
 
+		/**
+		 * Constructor of Client Manager
+		 * @param socket is a Socket that Client connects through
+		 * @param id is an integer representing the id of the Client
+		 */
 		public ClientManager(Socket socket, int id) {
 			this.socket = socket;
 			this.id = id;
 		}
 
+		/**
+		 * Overrides the run method of the Thread class. Facilitate communication between
+		 * 		Server and Client
+		 * @return None
+		 */
 		@Override
 		public void run() {
 			print_debug("New connection: " + socket);
@@ -218,25 +204,10 @@ public class Server extends Thread {
 					}
 
 					move = (String) in.readObject();
-					//System.out.println("Player " + turn + "'s move: " + loc + ", " + move);
 					print_debug("Player " + turn + "'s move: " + loc + ", " + move);
 
 					// update piece in gameModel
-					//model.getCurrentBoard().move(loc, move);
 					boolean result = model.movePieceFromLocs(loc, move);
-
-					/*
-					boolean capture = false;
-					int rank_prev = loc.charAt(1)-'0';
-					int file_prev = loc.charAt(0)-'a'+1;
-					int rank = move.charAt(1)-'0';
-					int file = move.charAt(0)-'a'+1;
-					if (model.getCurrentBoard().get(rank, file).getColor() != Piece.BLANK) {
-						capture = true;
-					}
-					String temp = model.constructMove(model.getCurrentBoard().get(rank_prev, file_prev), rank, file, capture);
-					model.makeMove(temp);
-					*/
 
 					// set next player's turn and send them the model
 					if (result) {
@@ -249,7 +220,6 @@ public class Server extends Thread {
 					e.printStackTrace();
 				}
 			}
-
 			try {
 				socket.close();
 			} catch (IOException e) {
@@ -258,6 +228,10 @@ public class Server extends Thread {
 			}
 		}
 
+		/**
+		 * Sends the model to respective players
+		 * @return None
+		 */
 		private void sendModel() {
 			try {
 				print_debug("Sending model to next player " + turn);
