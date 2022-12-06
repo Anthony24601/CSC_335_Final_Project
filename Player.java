@@ -2,16 +2,14 @@ import java.util.ArrayList;
 
 abstract class Player {
 
-	protected final String type;
 	protected ChessUI ui;
 	protected Board board;
 	protected String selected1;
 	protected String selected2;
-	
+		
 	protected ArrayList<String> possible_moves;
 
-	public Player(String type) {
-		this.type = type;
+	public Player() {
 		ui = new ChessUI(this);
 		board = new Board(false);
 		possible_moves = new ArrayList<>();
@@ -40,9 +38,6 @@ abstract class Player {
 	public void updateBoard(Board board) {
 		this.board = board;
 		ui.update();
-		if (type == "ai") {
-			moveAI();
-		}
 	}
 
 	protected ArrayList<String> getMoves(ArrayList<String> arrayList) {
