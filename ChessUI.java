@@ -112,9 +112,9 @@ public class ChessUI extends Thread
         canvas.addMouseListener(new MouseListener() {
             public void mouseDown(MouseEvent e) {
             	int col = e.x/100;
-    			int row = e.y/100;
+    			int row = 8-e.y/100;
     			if (player.getModel() != null && !player.getModel().getIsOver()) {
-    				player.move((char)('a' + col) + "" + (row+1));
+    				player.move((char)('a' + col) + "" + row);
         			canvas.redraw();
     			}
             }
@@ -253,7 +253,7 @@ public class ChessUI extends Thread
         //if want left and right, use this
         //paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (row-1)*100, (col-1)*100, 100, 100);
         //if want up and down, use this
-        paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (col-1)*100, (row-1)*100, 100, 100);
+        paint_canvas.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, (col-1)*100, (8-row)*100, 100, 100);
 		img.dispose();
     }
 
@@ -261,7 +261,7 @@ public class ChessUI extends Thread
     	//Updown Orientation with white on top
     	for (String square: possible) {
     		//System.out.println(square);
-			int row = (square.charAt(1)-'0'-1)*100;
+			int row = (8-(square.charAt(1)-'0'))*100;
 			int col = (square.charAt(0)-'a')*100;
 			Color yellow = new Color(255,255,0);
 			paint_canvas.gc.setBackground(yellow);
