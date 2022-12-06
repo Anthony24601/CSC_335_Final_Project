@@ -8,10 +8,17 @@ public class Main {
 	private static int mode;
 	
 	public static void main(String[] args) {
+		start();
+	}
+	
+	public static void start() {
+		setConfig(null, null, 0);
 		MainMenu menu = new MainMenu();
 		menu.run();
 		
 		switch (mode) {
+		case 0:
+			return;
 		case 1:
 			Main.localGame();
 			break;
@@ -23,7 +30,7 @@ public class Main {
 			break;
 		}
 	}
-	
+ 	
 	public static void setConfig(String game_file, String ai, int mode) {
 		Main.game_file = game_file;
 		Main.ai = ai;
@@ -38,6 +45,7 @@ public class Main {
 		}
 		
 		player.run();
+		if (player.finished) { start(); }
 	}
 	
 	public static void networkedGameCreate() {
@@ -52,11 +60,13 @@ public class Main {
 		NetworkedPlayer player = new NetworkedPlayer();
 		player.open();
 		player.run();
+		if (player.finished) { start(); }
 	}
 	
 	public static void networkedGameJoin() {
 		NetworkedPlayer player = new NetworkedPlayer();
 		player.open();
 		player.run();
+		if (player.finished) { start(); }
 	}
 }
