@@ -455,7 +455,7 @@ public class Board implements Serializable {
 				}
 			}
 			// check if the pawn is doing an En Passant capture
-			if((isCapture && capturedPiece.isBlank()) || (toFile!=fromFile && board[fromRank-1][fromFile-1].isBlank())){
+			if((isCapture && capturedPiece.isBlank()) || (toFile!=fromFile && board[toRank-1][toFile-1].isBlank())){
 				if(piece.getColor()==Piece.WHITE){
 					capturedPiece = board[4][toFile-1];
 					board[4][toFile-1] = new Blank(Piece.BLANK, 2, toFile-1);
