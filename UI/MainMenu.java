@@ -2,6 +2,7 @@ package UI;
 import java.io.File;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -48,7 +49,8 @@ public class MainMenu {
 		
 		// shell setup
 		shell = new Shell(display);
-        shell.setSize(width, height);
+		Rectangle screen_size = display.getClientArea();
+        shell.setBounds(screen_size.width/2 - width/2, screen_size.height/2 - height/2, width, height);
         shell.setLayout(comp_layout);
         shell.setText("Chess");
        

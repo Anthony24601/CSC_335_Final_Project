@@ -12,10 +12,7 @@ public class Main {
 	}
 	
 	public static void start() {
-		game_file = null;
-		ai = null;
-		mode = 0;
-		
+		setConfig(null, null, 0);
 		MainMenu menu = new MainMenu();
 		menu.run();
 		

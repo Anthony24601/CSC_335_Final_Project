@@ -20,6 +20,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
@@ -30,11 +31,11 @@ import org.eclipse.swt.widgets.Shell;
 import Game.Board;
 import PiecePackage.Piece;
 import ServerClient.Player;
-import ServerClient.Main;
 
 public class ChessUI extends Thread
 {
     private static final String MOVE_SOUND_FILE = "sounds/move.wav";
+    private static final int WIDTH = 800, HEIGHT = 800;
 
     private Player player;
     private PaintEvent paint_canvas;
@@ -71,15 +72,18 @@ public class ChessUI extends Thread
         shell = new Shell(display);
         shell.setText("Chess");
         shell.setLayout(new FillLayout());
-        shell.setSize(800, 820);
+        menuBar();
+        Rectangle screen_size = display.getClientArea();
+        shell.setBounds(shell.computeTrim(screen_size.width/2 - WIDTH/2, screen_size.height/2 - HEIGHT/2, WIDTH, HEIGHT));
         canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
+        //canvas.setSize(WIDTH, HEIGHT);
 
         canvas.addPaintListener(event -> {
             paint_canvas = event;
             board = player.getBoard();
             if(player.getModel()!=null)
                 player.getModel().checkDraws();
-            event.gc.fillRectangle(canvas.getBounds());
+            event.gc.fillRectangle(canvas.getClientArea());
             if (board != null) {
             	for (int row = 1; row <= 8; row++) {
             		for (int col = 1; col <= 8; col++) {
@@ -130,7 +134,43 @@ public class ChessUI extends Thread
         
         
         //---- main menu
-  		Menu menuBar, logMenu;
+        /*
+  		
+  		*/
+  		
+  		//shell.pack();
+        shell.open();
+        while (!shell.isDisposed()) {
+        	if (update) {
+        		canvas.redraw();
+        		update = false;
+        	}
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+        player.finished = true;
+        display.dispose();
+    }
+
+    public void update() {
+        update = true;
+    	display.wake();
+        moveSound();
+    }
+
+    public void updatePossibles(ArrayList<String> possible) {
+    	possible_moves = possible;
+    }
+
+    public void moveSound() {
+        moveSound.play();
+    }
+
+    // Private Methods ----------------------------
+
+    private void menuBar() {
+    	Menu menuBar, logMenu;
   		MenuItem logMenuHeader;
   		MenuItem exitItem, saveItem, forfeitItem;
 
@@ -180,37 +220,8 @@ public class ChessUI extends Thread
   	    });
         
   		shell.setMenuBar(menuBar);
-  		
-        shell.open();
-        while (!shell.isDisposed()) {
-        	if (update) {
-        		canvas.redraw();
-        		update = false;
-        	}
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-        player.finished = true;
-        display.dispose();
     }
-
-    public void update() {
-        update = true;
-    	display.wake();
-        moveSound();
-    }
-
-    public void updatePossibles(ArrayList<String> possible) {
-    	possible_moves = possible;
-    }
-
-    public void moveSound() {
-        moveSound.play();
-    }
-
-    // Private Methods ----------------------------
-
+    
     /**
      * prints You died on the screen
      * @return None
@@ -262,12 +273,12 @@ public class ChessUI extends Thread
     	//Updown Orientation with white on top
     	for (String square: possible) {
     		//System.out.println(square);
-			int row = (8-(square.charAt(1)-'0'))*100;
-			int col = (square.charAt(0)-'a')*100;
+			int row = (8-(square.charAt(1)-'0'))*100 - 1;
+			int col = (square.charAt(0)-'a')*100 - 1;
 			Color yellow = new Color(255,255,0);
 			paint_canvas.gc.setBackground(yellow);
 			paint_canvas.gc.setAlpha(100);
-			paint_canvas.gc.fillRectangle(col,row,100,100);
+			paint_canvas.gc.fillRectangle(col,row,101,101);
 		}
     }
     
