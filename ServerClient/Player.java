@@ -13,11 +13,14 @@ public abstract class Player {
 	protected String selected2;
 		
 	protected ArrayList<String> possible_moves;
+	
+	public boolean finished;
 
 	public Player() {
 		ui = new ChessUI(this);
 		board = new Board(false);
 		possible_moves = new ArrayList<>();
+		finished = false;
 	}
 	
 	public abstract void move(String select);

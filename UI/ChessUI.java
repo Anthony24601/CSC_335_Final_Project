@@ -7,9 +7,8 @@ Purpose: A class that creates a UI window and draws the GameModel
 XTankUI objects are instantiated with a player object
 */
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -21,9 +20,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -33,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import Game.Board;
 import PiecePackage.Piece;
 import ServerClient.Player;
+import ServerClient.Main;
 
 public class ChessUI extends Thread
 {
@@ -139,7 +137,7 @@ public class ChessUI extends Thread
   		menuBar = new Menu(shell, SWT.BAR);
 
   		logMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-  		logMenuHeader.setText("Logistics");
+  		logMenuHeader.setText("Options");
   		logMenu = new Menu(shell, SWT.DROP_DOWN);
   		logMenuHeader.setMenu(logMenu);
 
@@ -193,6 +191,7 @@ public class ChessUI extends Thread
                 display.sleep();
             }
         }
+        player.finished = true;
         display.dispose();
     }
 
