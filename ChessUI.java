@@ -28,16 +28,21 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 public class ChessUI extends Thread
 {
+    private static final String MOVE_SOUND_FILE = "sounds/move.wav";
+
     private Player player;
     private PaintEvent paint_canvas;
     private Canvas canvas;
     private Display display;
     private Shell shell;
     private Board board;
+    private SoundEffect moveSound;
     public static Font font;
     boolean update;
 
@@ -54,6 +59,7 @@ public class ChessUI extends Thread
         font = new Font(display, "Comic Sans", 56, SWT.BOLD);
         update = false;
         possible_moves = new ArrayList<>();
+        moveSound = new SoundEffect(MOVE_SOUND_FILE);
     }
 
     /**
@@ -65,14 +71,14 @@ public class ChessUI extends Thread
         shell = new Shell(display);
         shell.setText("Chess");
         shell.setLayout(new FillLayout());
-        shell.setSize(1600, 820);
-        //shell.setSize(800, 820);
+        shell.setSize(800, 820);
         canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
-        drawSaveButton();
 
         canvas.addPaintListener(event -> {
             paint_canvas = event;
             board = player.getBoard();
+            if(player.getModel()!=null)
+                player.getModel().checkDraws();
             event.gc.fillRectangle(canvas.getBounds());
             if (board != null) {
             	for (int row = 1; row <= 8; row++) {
@@ -82,20 +88,35 @@ public class ChessUI extends Thread
             	}
             }
             highlight(possible_moves);
-          /*
-          Color yellow = new Color(255,255,0);
-          event.gc.setBackground(yellow);
-          event.gc.setAlpha(100);
-          event.gc.fillRectangle(0,0,100,100);
-          */
+            
+            //Win Condition
+            if (player.getModel() != null) {
+            	if (player.getModel().getIsOver()) {
+            		if (!player.getModel().getHasCheckmate()) {
+            			printDraw();
+            		}
+            		else if (player.getType().equals("Local")) {
+            			printWin();
+            		} else {
+            			if ((player.getModel().isWhitesTurn() && player.getColor() == Piece.WHITE) ||
+            					(!player.getModel().isWhitesTurn() && player.getColor() == Piece.BLACK)) {
+                    		printLived();
+                    	} else {
+                    		printDied();
+                    	}
+            		}
+                }
+            }
         });
 
         canvas.addMouseListener(new MouseListener() {
             public void mouseDown(MouseEvent e) {
             	int col = e.x/100;
     			int row = e.y/100;
-    			player.move((char)('a' + col) + "" + (row+1));
-    			canvas.redraw();
+    			if (player.getModel() != null && !player.getModel().getIsOver()) {
+    				player.move((char)('a' + col) + "" + (row+1));
+        			canvas.redraw();
+    			}
             }
             public void mouseUp(MouseEvent e) {}
             public void mouseDoubleClick(MouseEvent e) {}
@@ -106,7 +127,60 @@ public class ChessUI extends Thread
             }
             public void keyReleased(KeyEvent e) {}
         });
+        
+        
+        //---- main menu
+  		Menu menuBar, logMenu;
+  		MenuItem logMenuHeader;
+  		MenuItem exitItem, saveItem, forfeitItem;
 
+  		menuBar = new Menu(shell, SWT.BAR);
+
+  		logMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+  		logMenuHeader.setText("Logistics");
+  		logMenu = new Menu(shell, SWT.DROP_DOWN);
+  		logMenuHeader.setMenu(logMenu);
+
+  		saveItem = new MenuItem(logMenu, SWT.PUSH);
+  		saveItem.setText("Save");
+  		exitItem = new MenuItem(logMenu, SWT.PUSH);
+  		exitItem.setText("Exit");
+  		forfeitItem = new MenuItem(logMenu, SWT.PUSH);
+  		forfeitItem.setText("Forfeit");
+
+  		exitItem.addSelectionListener(new SelectionListener() {
+  	    	public void widgetSelected(SelectionEvent event) {
+  	    		shell.close();
+  	    		display.dispose();
+  	    	}
+  	    	public void widgetDefaultSelected(SelectionEvent event) {
+  	    		shell.close();
+  	    		display.dispose();
+  	    	}
+  	    });
+  		
+  		saveItem.addSelectionListener(new SelectionListener() {
+  	    	public void widgetSelected(SelectionEvent event) {
+  	    		player.saveGame("game");
+  	    		System.out.println("game saved!");
+  	    	}
+  	    	public void widgetDefaultSelected(SelectionEvent event) {
+  	    		;
+  	    	}
+  	    });
+  		
+  		forfeitItem.addSelectionListener(new SelectionListener() {
+  	    	public void widgetSelected(SelectionEvent event) {
+  	    		player.move("Forfeit");
+    			canvas.redraw();
+  	    	}
+  	    	public void widgetDefaultSelected(SelectionEvent event) {
+  	    		;
+  	    	}
+  	    });
+        
+  		shell.setMenuBar(menuBar);
+  		
         shell.open();
         while (!shell.isDisposed()) {
         	if (update) {
@@ -121,12 +195,17 @@ public class ChessUI extends Thread
     }
 
     public void update() {
-    	update = true;
+        update = true;
     	display.wake();
+        moveSound();
     }
 
     public void updatePossibles(ArrayList<String> possible) {
     	possible_moves = possible;
+    }
+
+    public void moveSound() {
+        moveSound.play();
     }
 
     // Private Methods ----------------------------
@@ -135,10 +214,33 @@ public class ChessUI extends Thread
      * prints You died on the screen
      * @return None
      */
-    private void printGameOver() {
+    private void printDied() {
     	paint_canvas.gc.setFont(font);
-    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_RED));
-    	paint_canvas.gc.drawText("You Died!", 250, 250);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	paint_canvas.gc.drawText("You Died!", 275, 300);
+    }
+    
+    /**
+     * prints You died on the screen
+     * @return None
+     */
+    private void printLived() {
+    	paint_canvas.gc.setFont(font);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	paint_canvas.gc.drawText("You Lived!", 275, 300);
+    }
+    
+    /**
+     * prints You died on the screen
+     * @return None
+     */
+    private void printDraw() {
+    	paint_canvas.gc.setFont(font);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	paint_canvas.gc.drawText("DRAW!!!", 275, 300);
     }
 
     /**
@@ -167,19 +269,15 @@ public class ChessUI extends Thread
 			paint_canvas.gc.fillRectangle(col,row,100,100);
 		}
     }
-
-    private void drawSaveButton() {
-        Button saveButton = new Button(shell, SWT.PUSH);
-        saveButton.setText("SAVE GAME");
-        saveButton.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent arg0) {}
-
-            @Override
-            public void widgetSelected(SelectionEvent arg0) {
-               player.saveGame("game.txt");
-            }
-        });
+    
+    private void printWin() {
+    	paint_canvas.gc.setFont(font);
+    	paint_canvas.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+    	paint_canvas.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    	if (player.getModel().isWhitesTurn()) {
+    		paint_canvas.gc.drawText("White Won!", 275, 300);
+    	} else {
+    		paint_canvas.gc.drawText("Black Won!", 275, 300);
+    	}
     }
 }

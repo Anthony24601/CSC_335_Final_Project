@@ -78,7 +78,7 @@ public class TerminalTest {
     public static void playGame() {
         String move = "";
         boolean result;
-        AI ai = new AI(false);
+        AI ai = new AI(false, "random");
         loadGame();
 
         do {

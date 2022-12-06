@@ -175,6 +175,13 @@ public class Knight extends Piece {
             return true;
         }
 
+        // right-down
+        r = rank-1;
+        f = file+2;
+        if (board.isInBounds(r, f) && board.get(r, f).getKind() == 'K' && board.get(r, f).getColor() == opColor) {
+            return true;
+        }
+
         return false;
     }
 

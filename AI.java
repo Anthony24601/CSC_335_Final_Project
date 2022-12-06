@@ -4,40 +4,52 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class AI {
+	public static final String[] VALID_TYPES = new String[]{"random", "greedy", "minimax", "Noob", "Easy", "Hard"};
+	
     private static GameModel gameModel = GameModel.getInstance();
     private static Map<String, Integer> scoreVals;
     private static Map<String, Boolean> selfHasMoved;
     private static Map<String, Boolean> opHasMoved;
 
     private boolean isWhite;
-    private Board board;
-    private boolean openingMove = true;
 
-    private static final String AI_TYPE = "minimax";
+    private final String AI_TYPE;
     private static final int MINIMAX_LEVELS = 1;
     private static final int CAPTURE_MULTIPLIER = 3;
+    private static final int PIECE_DEVELOPMENT_DIVISOR = 2;
 
-    public AI(boolean isWhite) {
+    public AI(boolean isWhite, String type) {
         this.isWhite = isWhite;
+        this.AI_TYPE = type;
         initializeScoreVals();
         initializedHasMoved();
     }
 
     public String decideOnMove() {
-        board = gameModel.getCurrentBoard();
         String move = "";
         switch (AI_TYPE) {
+        	case "Noob":
             case "random": 
                 move = pickRandomMove().split(":")[1];
                 break;
+            case "Easy":
             case "greedy": 
                 move = pickGreedyMove(true).split(":")[1];
                 break;
+            case "Hard":
             case "minimax":
                 move = pickMinimaxMove(true, MINIMAX_LEVELS).split(":")[1];
                 break;
         }
         return move;
+    }
+    
+    // utility
+    public static boolean isValidType(String type) {
+    	for (String s : VALID_TYPES) {
+    		if (s.equals(type)) { return true; }
+    	}
+    	return false;
     }
 
     private static String pickRandomMove() {
@@ -188,6 +200,7 @@ public class AI {
         int score = 0;
         String loc = entry.split(":")[0];
         String move = entry.split(":")[1];
+        Piece p = board.get(loc);
 
         // Positives --------
         // Checkmate
@@ -215,8 +228,7 @@ public class AI {
         }
 
         // Forward position of pawn
-        boolean isPawn = move.charAt(0) >= 'a' && move.charAt(0) <= 'h';
-        if (isPawn) {
+        if (p.getKind() == Piece.PAWN) {
             recordHasMoved(loc, isSelf);
             boolean isTwo = Math.abs((int) (loc.charAt(1) - move.charAt(1))) == 2;            
             if (isTwo) {
@@ -227,17 +239,10 @@ public class AI {
         }
 
         // Piece development
-        if (getHasMoved(loc, isSelf)) {
+        if (!getHasMoved(loc, isSelf)) {
             recordHasMoved(loc, isSelf);
             score += scoreVals.get("pieceDevelopment");            
         }
-
-        // TODO: Openings
-
-        // Negatives ---------
-        // Lose game
-        // Lose piece
-        // Put into check
 
         if (!isSelf) {
             score = -score;
