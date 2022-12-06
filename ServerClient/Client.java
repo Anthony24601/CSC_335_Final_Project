@@ -1,17 +1,17 @@
-package ServerClient;
 /*
  * File: Client.java
  * Author: Miles Gendreau
  * Course: CSC 335, Fall 2022
- * Description: This file contains the Client class, which is used for
- * multiplayer networking.
+ * Description: Creates a Client for the multiplayer networking.
+ * Client objects are created using a host ip as a string, port number as an int,
+ * 		and a player object
  */
 
+package ServerClient;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.IOException;
 import java.net.Socket;
-
 import Game.GameModel;
 import PiecePackage.Piece;
 
@@ -30,36 +30,53 @@ public class Client extends Thread {
 	private int id;
 	private boolean turn_active;
 	private GameModel model;
-	Player player;
-	int color;
+	private Player player;
+	private int color;
 
+	/**
+	 * Client Constructor
+	 * @param host is a string the represents the ip of the server
+	 * @param port is an int representing the port number
+	 * @param p is a player object tied to the client
+	 * @return None
+	 */
 	public Client(String host, int port, Player p) {
 		this.host = host;
 		this.port = port;
 		player = p;
 		id = 0;
-		color = Piece.WHITE; //TODO Change
+		color = Piece.WHITE;
 	}
 
-	/*
-	public Client(String host, int port, int id, Player p) {
-		this(host, port, p);
-		this.id = id;
-	}
-	*/
-
+	/**
+	 * return the color of the player
+	 * @return color is an int. Specifications can be found in the Piece class
+	 */
 	public int getColor() {
 		return color;
 	}
 
+	/**
+	 * sets the color of the Client/Player
+	 * @param color is an int. Specifications can be found in the Piece class
+	 * @return None
+	 */
 	public void setColor(int color) {
 		this.color = color;
 	}
 
+	/**
+	 * Returns the GameModel
+	 * @return model represents the current GameModel of the game
+	 */
 	public GameModel getModel() {
 		return model;
 	}
 
+	/**
+	 * Creates a connection and tries to connect to the host or server
+	 * @return None
+	 */
 	public void openConnection() {
 		try {
 			socket = new Socket(host, port);
@@ -72,6 +89,10 @@ public class Client extends Thread {
 		}
 	}
 
+	/**
+	 * closes the Connection to the server
+	 * @return None
+	 */
 	public void closeConnection() {
 		if (socket == null) {
 	    	print_debug("No connection active!");
@@ -90,15 +111,30 @@ public class Client extends Thread {
 		catch (IOException e) { e.printStackTrace(); }
 	}
 
+	/**
+	 * Sets the current position and move to send to the server
+	 * @param pos is a String representing the position of the piece being moved
+	 * @param move is a String representing the move being made
+	 * @return None
+	 */
 	public void sendMove(String pos, String move) {
 		curr_pos = pos;
 		curr_move = move;
 	}
 
+	/**
+	 * gets whose turn it currently is
+	 * @return turn_active returns true if its Client's turn, false otherwise
+	 */
 	public boolean getTurn() {
 		return turn_active;
 	}
 
+	/**
+	 * Overrides the run method of the Thread class. Facilitate communication between
+	 * 		Client and Server
+	 * @return None
+	 */
 	@Override
 	public void run() {
 		try {
@@ -123,8 +159,8 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 
+		// continual communication
 		while (running) {
-			// continual communication
 			if (!turn_active && !model.getIsOver()) {
 				try {
 					print_debug("Waiting for my turn...");
@@ -157,12 +193,18 @@ public class Client extends Thread {
 				}
 				catch (InterruptedException e) {
 					print_debug("Thread was interrupted!");
-					//e.printStackTrace();
 				}
 			}
 		}
 	}
 
+	//----------Private Method-------------
+	
+	/**
+	 * Prints out a debug message
+	 * @param msg is a String representing the debug message
+	 * @return None
+	 */
 	private void print_debug(String msg) {
 		System.out.println("  [Client " + id + "] " + msg);
 		System.out.flush();
