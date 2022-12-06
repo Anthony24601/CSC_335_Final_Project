@@ -1,0 +1,4 @@
+c4
+d5
+cxd5
+turn:black

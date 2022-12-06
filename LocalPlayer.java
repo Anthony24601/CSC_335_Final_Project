@@ -106,7 +106,12 @@ public class LocalPlayer extends Player {
 	
 	// new loadGame - called from main
 	public boolean loadGame(String game_file) {
-		return model.loadGame(game_file);
+		boolean success = model.loadGame(game_file);
+		
+		if(!model.isWhitesTurn()){
+			turn = 1;
+		}
+		return success;
 	}
 	
 	@Override

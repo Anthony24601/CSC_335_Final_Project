@@ -120,7 +120,11 @@ public class Server extends Thread {
 	
 	// new loadGame function, called in main
 	public boolean loadGame(String game_file) {
-		return model.loadGame(game_file);
+		boolean success = model.loadGame(game_file);
+		if(!model.isWhitesTurn()){
+			turn = 1;
+		}
+		return success;
 	}
 
 	/**
