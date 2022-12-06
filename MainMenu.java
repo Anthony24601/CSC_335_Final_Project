@@ -75,7 +75,7 @@ public class MainMenu {
         ai_menu.setEnabled(false);
         
         Combo ai_select = new Combo(shell, SWT.DROP_DOWN);
-        ai_select.setItems(new String[] {"None", "Easy", "Hard"});
+        ai_select.setItems(new String[] {"None", "Noob", "Easy", "Hard"});
         ai_select.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
         ai_select.setEnabled(false);
         

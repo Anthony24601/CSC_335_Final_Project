@@ -28,9 +28,8 @@ public class Main {
 		Main.mode = mode;
 	} 
 	
-	public static void localGame() {		
-		// TODO add ai stuff here
-		LocalPlayer player = new LocalPlayer("normal");
+	public static void localGame() {
+		LocalPlayer player = new LocalPlayer(ai);
 		if (game_file != null) { 
 			boolean success = player.loadGame(game_file);
 			if (!success) { System.out.println("Failed to load file"); }
@@ -48,13 +47,13 @@ public class Main {
 		
 		server.openServer();
 		
-		NetworkedPlayer player = new NetworkedPlayer("normal");
+		NetworkedPlayer player = new NetworkedPlayer();
 		player.open();
 		player.run();
 	}
 	
 	public static void networkedGameJoin() {
-		NetworkedPlayer player = new NetworkedPlayer("normal");
+		NetworkedPlayer player = new NetworkedPlayer();
 		player.open();
 		player.run();
 	}

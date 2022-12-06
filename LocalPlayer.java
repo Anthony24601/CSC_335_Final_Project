@@ -7,16 +7,18 @@ public class LocalPlayer extends Player {
 	private GameModel model;
 
 	AI ai;
-	final static boolean HAS_AI = true;
+	final boolean HAS_AI;
 	
-	public LocalPlayer(String type) {
-		super(type);
-		model = GameModel.getInstance();
+	public LocalPlayer(String ai_type) {
+		super();
+		this.model = GameModel.getInstance();
 		this.model.setCurrentBoard(new Board(false));
-		board = GameModel.getInstance().getCurrentBoard();
-		if (HAS_AI) {
-			ai = new AI(false);
+		this.board = GameModel.getInstance().getCurrentBoard();
+		if (AI.isValidType(ai_type)) {
+			HAS_AI = true;
+			ai = new AI(false, ai_type);
 		}
+		else { HAS_AI = false; }
 	}
 	
 	public GameModel getModel() {
@@ -65,6 +67,14 @@ public class LocalPlayer extends Player {
 				possible_moves.clear();
 				ui.updatePossibles(possible_moves);
 			}
+		}
+	}
+	
+	@Override
+	public void updateBoard(Board board) {
+		super.updateBoard(board);
+		if (this.HAS_AI) {
+			moveAI();
 		}
 	}
 

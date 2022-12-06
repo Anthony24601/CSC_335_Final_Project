@@ -2,8 +2,7 @@
 public class NetworkedPlayer extends Player {
 	private Client client;
 	
-	public NetworkedPlayer(String type) {
-		super(type);
+	public NetworkedPlayer() {
 		client = new Client("127.0.0.1", 59896, this);
 	}
 	
