@@ -62,12 +62,14 @@ public class NetworkedPlayer extends Player {
 
 			int rank = select.charAt(1)-'0';
 			int file = select.charAt(0)-'a'+1;
+			/*
+			For Debug Purposes
 			System.out.println("==============");
 			System.out.println(rank + " " + file);
 			for (String x: possible_moves) {
 				System.out.println(x);
 			}
-
+			*/
 			if (client.getTurn()) {
 				if (selected1 == null || possible_moves.size() == 0) {
 					if (board.get(rank, file).getColor() == client.getColor()) {
@@ -89,8 +91,6 @@ public class NetworkedPlayer extends Player {
 					possible_moves.clear();
 					ui.updatePossibles(possible_moves);
 				}
-			} else {
-				System.out.println("no");
 			}
 		}
 	}

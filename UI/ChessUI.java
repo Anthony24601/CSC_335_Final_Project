@@ -224,8 +224,10 @@ public class ChessUI extends Thread
   		
   		forfeitItem.addSelectionListener(new SelectionListener() {
   	    	public void widgetSelected(SelectionEvent event) {
-  	    		player.move("Forfeit");
-    			canvas.redraw();
+  	    		if (!player.getModel().getIsOver()) {
+  	  	    		player.move("Forfeit");
+  	    			canvas.redraw();
+  	    		}
   	    	}
   	    	public void widgetDefaultSelected(SelectionEvent event) {
   	    		;
