@@ -1,8 +1,17 @@
 package Game;
-import java.util.Random;
+/**
+File: ChessUI.java
+Author: Chris Macholtz
+Course: CSC 335
+Purpose: Contains all AI logic for random, greedy, and minimax algorithms. 
+Primary interface is decideOnMove(), which outputs a single move String to use. 
+		 
+*/
+
 
 import PiecePackage.Piece;
 
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -18,10 +27,14 @@ public class AI {
     private boolean isWhite;
 
     private final String AI_TYPE;
-    private static final int MINIMAX_LEVELS = 1;
+    private static final int MINIMAX_LEVELS = 2;
     private static final int CAPTURE_MULTIPLIER = 3;
-    private static final int PIECE_DEVELOPMENT_DIVISOR = 2;
 
+    /**
+     * Constructor
+     * @param isWhite   Whether the AI is white
+     * @param type      The type of AI to be used, whether random, greedy, or minimax
+     */
     public AI(boolean isWhite, String type) {
         this.isWhite = isWhite;
         this.AI_TYPE = type;
@@ -29,6 +42,10 @@ public class AI {
         initializedHasMoved();
     }
 
+    /**
+     * Calls on the AI to go through its given algorithm to decide on a move
+     * @return  A move string
+     */
     public String decideOnMove() {
         String move = "";
         switch (AI_TYPE) {
@@ -38,7 +55,7 @@ public class AI {
                 break;
             case "Easy":
             case "greedy": 
-                move = pickGreedyMove(true).split(":")[1];
+                move = pickGreedyMove().split(":")[1];
                 break;
             case "Hard":
             case "minimax":
@@ -48,7 +65,11 @@ public class AI {
         return move;
     }
     
-    // utility
+    /**
+     * Checks if type is one of the written algorithms
+     * @param type  Type to check
+     * @return      True if present
+     */
     public static boolean isValidType(String type) {
     	for (String s : VALID_TYPES) {
     		if (s.equals(type)) { return true; }
@@ -56,25 +77,33 @@ public class AI {
     	return false;
     }
 
+    /**
+     * Picks a random move from all available moves
+     * @return  A random move string
+     */
     private static String pickRandomMove() {
         Random rand = new Random();
         ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
         return allMoves.get(rand.nextInt(allMoves.size()));
     }
 
-    private String pickGreedyMove(boolean isSelf) {
+    /**
+     * Picks the best move according to the heuristics based on the current board
+     * @return
+     */
+    private String pickGreedyMove() {
         ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
-        return pickGreedyMove(allMoves, isSelf);
+        return pickGreedyMove(allMoves);
     }
 
-    private String pickGreedyMove(ArrayList<String> allMoves, boolean isSelf) {
+    private String pickGreedyMove(ArrayList<String> allMoves) {
         Random rand = new Random();
         
         ArrayList<String> bestMoves = new ArrayList<>();
         int bestPoints = Integer.MIN_VALUE;
         int score;
         for (String entry : allMoves) {
-            score = getMoveVal(entry, isSelf, gameModel.getCurrentBoard());
+            score = getMoveVal(entry, true, gameModel.getCurrentBoard());
             if (score > bestPoints) {
                 bestMoves.clear();
                 bestMoves.add(entry);
@@ -87,6 +116,12 @@ public class AI {
         return bestMoves.get(rand.nextInt(bestMoves.size()));
     }
 
+    /**
+     * Picks the best move according to a minimax algorithm. Recursively called.
+     * @param isSelf    Whether the algorithm is analyzing the AI's own moves or its opponent's
+     * @param levels    Number of iterations to recurse
+     * @return          A move string
+     */
     private String pickMinimaxMove(boolean isSelf, int levels) {
         Random rand = new Random();
         ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
@@ -96,7 +131,7 @@ public class AI {
         int bestPoints = Integer.MIN_VALUE;
         int score;
         for (String entry : allMoves) {
-            score = getMinimaxVal(entry, currentBoard, !isSelf, levels);
+            score = getMinimaxVal(entry, currentBoard, !isSelf, levels-1);
             if (score > bestPoints) {
                 bestMoves.clear();
                 bestMoves.add(entry);
@@ -109,6 +144,14 @@ public class AI {
         return bestMoves.get(rand.nextInt(bestMoves.size()));
     }
 
+    /**
+     * Equates the "value" of each possible move, recursively, according to the given heuristics
+     * @param entry     A potential move in the format of <location>:<move>
+     * @param board     The hypothetical board
+     * @param isSelf    Whether analyzing for the AI or the opponent
+     * @param levels    Number of levels to recurse
+     * @return          A score for a given move
+     */
     private int getMinimaxVal(String entry, Board board, boolean isSelf, int levels) {
         String loc = entry.split(":")[0];
         String move = entry.split(":")[1];
@@ -145,12 +188,14 @@ public class AI {
         return bestPoints;
     }
 
+    /**
+     * Initializes a Map of all of the scoring heuristics
+     */
     private void initializeScoreVals() {
         if (scoreVals == null) {
             scoreVals = new HashMap<>();
             scoreVals.put("checkmate", 100);
             scoreVals.put("check", 5);
-            //scoreVals.put("captureGeneric", 5);
             scoreVals.put("capturePawn", 1*CAPTURE_MULTIPLIER);
             scoreVals.put("captureKnight", 3*CAPTURE_MULTIPLIER);
             scoreVals.put("captureBishop", 3*CAPTURE_MULTIPLIER);
@@ -169,6 +214,9 @@ public class AI {
         }
     }
 
+    /**
+     * Initializes a boolean hashmap of the pieces that have moved at least once
+     */
     private void initializedHasMoved() {
         if (selfHasMoved == null) {
             selfHasMoved = new HashMap<>();
@@ -200,6 +248,13 @@ public class AI {
         }
     }
 
+    /**
+     * Scores a given move according to the given heuristics
+     * @param entry     A move formatted as <location>:<move>
+     * @param isSelf    Whether it is the AI or the opponent
+     * @param board     The hypothetical board
+     * @return          A score based on the heuristics
+     */
     private int getMoveVal(String entry, boolean isSelf, Board board) {
         int score = 0;
         String loc = entry.split(":")[0];
@@ -254,6 +309,11 @@ public class AI {
         return score;
     }
 
+    /**
+     * Changes to true if a piece has moved
+     * @param loc       Location of the piece, used as a key
+     * @param isSelf    Whether it is the AI's or the opponent's
+     */
     private void recordHasMoved(String loc, boolean isSelf) {
         if (isSelf) {
             for (String key : selfHasMoved.keySet()) {
@@ -272,6 +332,12 @@ public class AI {
         }
     }
 
+    /**
+     * Gets whether a given piece has moved
+     * @param key       Location of the piece
+     * @param isSelf    Whether it is the AI's or the opponent's
+     * @return          Whether the piece has moved at least once
+     */
     private boolean getHasMoved(String key, boolean isSelf) {
         if (isSelf) {
             if (selfHasMoved.containsKey(key)) {
