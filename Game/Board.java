@@ -1,4 +1,13 @@
 package Game;
+/**
+File: ChessUI.java
+Author: Chris Macholtz
+Course: CSC 335
+Purpose: Contains all information regarding the board's state. 
+Can answer simple questions based on the piece layout, but does not make any game logic decisions 
+		 
+*/
+
 import java.util.ArrayList;
 
 import PiecePackage.Bishop;
@@ -14,8 +23,6 @@ import java.io.Serializable;
 
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	final static boolean USE_TEMP_BOARD = false;
 
 	final static int RANKS = 8;
     final static int FILES = 8;
@@ -46,6 +53,10 @@ public class Board implements Serializable {
 
 	private ArrayList<String> moveHistory;
 
+	/**
+	 * Constructor
+	 * @param isBlank	Whether the board is pre-filled with pieces or not
+	 */
 	public Board(boolean isBlank) {
 		board = new Piece[8][8];
 		queens = new ArrayList<>();
@@ -62,14 +73,14 @@ public class Board implements Serializable {
 				}
 			}
 		} else {
-			if (USE_TEMP_BOARD) {
-				temp_board();
-			} else {
-				reset();
-			}
+			reset();
 		}
 	}
 
+	/**
+	 * Returns a copy of a board, including its current state
+	 * @return	A copy of the Board object
+	 */
 	public Board copy() {
 		Board newBoard = new Board(true);
 
@@ -99,48 +110,68 @@ public class Board implements Serializable {
 		return newBoard;
 	}
 
-
+	/**
+	 * Getter for whether the white king has moved. 
+	 * Used for determining if castling is possible
+	 * @return	Whether the white king has moved
+	 */
 	public boolean getWhiteKingHasMoved() {
 		return whiteKingHasMoved;
 	}
 
+	/**
+	 * Getter for whether the white king's rook has moved
+	 * Used for determining if castling is possible
+	 * @return	Whether the white king's rook has moved
+	 */
 	public boolean getWhiteKingRookHasMoved() {
 		return whiteKingRookHasMoved;
 	}
 
+	/**
+	 * Getter for whether the white queens's rook has moved
+	 * Used for determining if castling is possible
+	 * @return	Whether the white queens's rook has moved
+	 */
 	public boolean getWhiteQueenRookHasMoved() {
 		return whiteQueenRookHasMoved;
 	}
 
+	/**
+	 * Getter for whether the black king has moved. 
+	 * Used for determining if castling is possible
+	 * @return	Whether the black king has moved
+	 */
 	public boolean getBlackKingHasMoved() {
 		return blackKingHasMoved;
 	}
 
+	/**
+	 * Getter for whether the black king's rook has moved
+	 * Used for determining if castling is possible
+	 * @return	Whether the black king's rook has moved
+	 */
 	public boolean getBlackKingRookHasMoved() {
 		return blackKingRookHasMoved;
 	}
 
+	/**
+	 * Getter for whether the black queens's rook has moved
+	 * Used for determining if castling is possible
+	 * @return	Whether the black queens's rook has moved
+	 */
 	public boolean getBlackQueenRookHasMoved() {
 		return blackQueenRookHasMoved;
 	}
 
-	public ArrayList<String> getMoves(boolean isWhite, GameModel gameModel) {
-		ArrayList<String> moveMap = new ArrayList<>();
-		String loc;
-		int color = isWhite ? Piece.WHITE : Piece.BLACK;
-
-		for (int r = 0; r < 8; r++) {
-			for (int f = 0; f < 8; f++) {
-				if (board[r][f] != null && board[r][f].getColor() == color) {
-					loc = String.format("%c%d", f + 'a', r+1);
-					moveMap.add(loc + ':' + board[r][f].getValidMoves(this, gameModel));
-				}
-			}
-		}
-
-		return moveMap;
-	}
-
+	/**
+	 * Polls all of a given color's piece's moves. Necessary since algebraic notation 
+	 * does not specific WHICH of each piece's kind is being used
+	 * @param kind			The kind / type of piece
+	 * @param isWhite		Whether the piece is white
+	 * @param gameModel		Handle for the GameModel (needed to ask questions on piece level)
+	 * @return				An ArrayList<String> of all moves, formatted as <location>:<move>
+	 */	
 	public ArrayList<String> getMoves(char kind, boolean isWhite, GameModel gameModel) {
 		ArrayList<Piece> pieces = new ArrayList<>();
 		int color = isWhite ? Piece.WHITE : Piece.BLACK;
@@ -170,6 +201,10 @@ public class Board implements Serializable {
 		return moveMap;
 	}
 
+	/**
+	 * Modifies the algebraic move notation in case the rank or file need to be included to disambiguate which piece is moving
+	 * @param moveMap	An updated version of the ArrayList of moves
+	 */
 	private void adjustSameSpace(ArrayList<String> moveMap) {
 		String entry1, entry2, loc1, loc2, move1, move2;
 		for (int i = 0; i < moveMap.size(); i++) {
@@ -264,35 +299,32 @@ public class Board implements Serializable {
 		}
 	}
 
-	public void temp_board() {
-		for (int r = 0; r < 8; r++) {
-			for (int f = 0; f < 8; f++) {
-				board[r][f] = new Blank(Piece.BLANK, r+1, f+1);
-			}
-		}
-		// USED FOR DEBUGGING MOVES
-		whiteKing = new King(Piece.WHITE, 1, 5);
-		blackKing = new King(Piece.BLACK, 8, 5);
-		Rook wr1 = new Rook(Piece.WHITE, 1, 1);
-		Rook wr2 = new Rook(Piece.WHITE, 1, 8);
-
-		
-		placePiece(whiteKing);
-		placePiece(blackKing);
-		placePiece(wr1);
-		placePiece(wr2);
-	}
-
+	/**
+	 * Getter for a piece on the board
+	 * @param rank	The piece's rank
+	 * @param file	The piece's file
+	 * @return		The piece
+	 */
 	public Piece get(int rank, int file) {
 		return this.board[rank-1][file-1];
 	}
 
+	/**
+	 * Getter for a piece on the board, accepting a location string such as "e5"
+	 * @param loc	A location string
+	 * @return		The piece
+	 */
 	public Piece get(String loc) {
 		int rank = loc.charAt(1)-'0';
 		int file = loc.charAt(0)-'a'+1;
 		return get(rank, file);
 	}
 
+	/**
+	 * Polls all of the pieces on the board to see if the opposing king is in check
+	 * @param isWhite	Whether checking for white's side
+	 * @return			Whether the opposing king is in check
+	 */
 	public boolean hasCheck(boolean isWhite) {
 		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
 		for (Piece p : pawns) {
@@ -325,6 +357,12 @@ public class Board implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Checks if the side has successfully obtained a checkmate
+	 * @param isWhite		Whether the side is white
+	 * @param gameModel		GameModel handle, used for making piece movement decisions
+	 * @return				Whether checkmate has been done
+	 */
 	public boolean hasCheckmate(boolean isWhite, GameModel gameModel) {
 		int ownColor = isWhite ? Piece.WHITE : Piece.BLACK;
 		String[] moves;
@@ -383,19 +421,43 @@ public class Board implements Serializable {
         return true;
     }
 
+	/**
+	 * Returns whether a given rank and file are inside the board
+	 * @param rank	Rank
+	 * @param file	File
+	 * @return		Whether it is inside the board
+	 */
 	public boolean isInBounds(int rank, int file) {
 		return rank >= 1 && rank <= 8 && file >= 1 && file <= 8;
 	}
 
+	/**
+	 * Returns whether a space is empty
+	 * @param rank	Rank
+	 * @param file	File
+	 * @return		Whether the space is empty
+	 */
 	public boolean isEmpty(int rank, int file) {
 		return isInBounds(rank, file) && board[rank-1][file-1].getClass() == Blank.class;
 	}
 
+	/**
+	 * Saves a given move before going through the move logic
+	 * @param loc	Location of the moving piece
+	 * @param move	Move for the piece
+	 * @return		The captured piece, if it is a capture. Otherwise, null
+	 */
 	public Piece moveAndSave(String loc, String move) {
 		moveHistory.add(move);
 		return move(loc, move);
 	}
 
+	/**
+	 * Converts a given algebraic move into something actionable for board
+	 * @param loc	Location of the moving piece
+	 * @param move	Move for the piece
+	 * @return		The captured piece, if it is a capture. Otherwise, null
+	 */
 	public Piece move(String loc, String move) {
 		// Castling
 		if (move.equals("0-0")) {
@@ -433,6 +495,14 @@ public class Board implements Serializable {
 		return move(piece, r2, f2, isCapture);
 	}
 
+	/**
+	 * Moves the piece
+	 * @param piece			The moving piece
+	 * @param toRank		Destination rank
+	 * @param toFile		Destination file
+	 * @param isCapture		Whether a piece is being captured
+	 * @return				The captured piece. Otherwise, null
+	 */
 	private Piece move(Piece piece, int toRank, int toFile, boolean isCapture) {
 		Piece capturedPiece = isCapture ? board[toRank-1][toFile-1] : null;
 		resetPassantSquare();
@@ -455,7 +525,7 @@ public class Board implements Serializable {
 				}
 			}
 			// check if the pawn is doing an En Passant capture
-			if((isCapture && capturedPiece.isBlank()) || (toFile!=fromFile && board[fromRank-1][fromFile-1].isBlank())){
+			if((isCapture && capturedPiece.isBlank()) || (toFile!=fromFile && board[toRank-1][toFile-1].isBlank())){
 				if(piece.getColor()==Piece.WHITE){
 					capturedPiece = board[4][toFile-1];
 					board[4][toFile-1] = new Blank(Piece.BLANK, 2, toFile-1);
@@ -488,6 +558,11 @@ public class Board implements Serializable {
 		return capturedPiece;
 	}
 
+	/**
+	 * Used for tracking if castling is still possible
+	 * @param movingPiece		The moving piece
+	 * @param capturedPiece		Used in case a rook has been captured
+	 */
 	private void addHasMoved(Piece movingPiece, Piece capturedPiece) {
 		if (movingPiece.getKind() == 'R') {
 			if (movingPiece.getColor() == Piece.WHITE) {
@@ -546,30 +621,40 @@ public class Board implements Serializable {
 		passantSquare = null;
 	}
 
+	/**
+	 * Invokes a castle kingside
+	 * @param loc	Location of the king
+	 * @return		null
+	 */
 	private Piece kingsideCastleMove(String loc){
 		Piece rook, king;
-			// White King
-			if (loc.equals("e1")) {
-				rook = get(1, 8);
-				king = get(1, 5);
-				move(rook, 1, 6, false);
-				move(king, 1, 7, false);
-				whiteKingHasMoved = true;
-				whiteKingRookHasMoved = true;
-			} else if (loc.equals("e8")) {
-				rook = get(8, 8);
-				king = get(8, 5);
-				move(rook, 8, 6, false);
-				move(king, 8, 7, false);
-				blackKingHasMoved = true;
-				blackKingRookHasMoved = true;
-			} else {
-				System.out.println("KingsideCastleMove: lol wat?");
-				System.exit(300);
-			}
-			return null;
+		// White King
+		if (loc.equals("e1")) {
+			rook = get(1, 8);
+			king = get(1, 5);
+			move(rook, 1, 6, false);
+			move(king, 1, 7, false);
+			whiteKingHasMoved = true;
+			whiteKingRookHasMoved = true;
+		} else if (loc.equals("e8")) {
+			rook = get(8, 8);
+			king = get(8, 5);
+			move(rook, 8, 6, false);
+			move(king, 8, 7, false);
+			blackKingHasMoved = true;
+			blackKingRookHasMoved = true;
+		} else {
+			System.out.println("KingsideCastleMove: lol wat?");
+			System.exit(300);
+		}
+		return null;
 	}
 
+	/**
+	 * Invokes a castle queenside
+	 * @param loc	Location of the king
+	 * @return		null
+	 */
 	private Piece queensideCastleMove(String loc){
 		Piece rook, king;
 			// White King
@@ -605,6 +690,10 @@ public class Board implements Serializable {
 		placePiece(newQueen);
 	}
 
+	/**
+	 * Places a given piece on the board and sets the piece's own rank and file info
+	 * @param piece		Piece to be placed
+	 */
 	public void placePiece(Piece piece) {
 		int rank, file;
 		switch (piece.getKind()) {
@@ -630,6 +719,10 @@ public class Board implements Serializable {
 		board[rank-1][file-1] = piece;
 	}
 
+	/**
+	 * Removes a piece from the board and from its ArrayList
+	 * @param piece		Piece to be removed
+	 */
 	public void removePiece(Piece piece) {
 		switch (piece.getKind()) {
 			case 0:
@@ -652,7 +745,11 @@ public class Board implements Serializable {
 				System.exit(200);
 		}
 	}
-	
+
+	/**
+	 * Returns the number of pieces a given side has. Used for determining a draw
+	 * @return	An array of the number of pieces a side has
+	 */
 	public int[] getNumColors() {
 		int[] count = new int[] {0,0};
 		for (int rank = 1; rank <= 8; rank++) {
@@ -667,6 +764,11 @@ public class Board implements Serializable {
 		return count;
 	}
 	
+	/**
+	 * Getter for the king
+	 * @param color		The color of the king
+	 * @return			The king
+	 */
 	public Piece getKing(int color) {
 		if (color == Piece.WHITE) {
 			return whiteKing;
@@ -674,6 +776,10 @@ public class Board implements Serializable {
 		return blackKing;
 	}
 	
+	/**
+	 * Checks if only one bishop remains. Used for determining a draw
+	 * @return	Whether one bishop remains
+	 */
 	public boolean checkOneBishop() {
 		if (bishops.size() == 1) {
 			return true;
@@ -681,6 +787,10 @@ public class Board implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Checks if only one knight remains. Used for determining a draw
+	 * @return	Whether one knight remains
+	 */
 	public boolean checkOneKnight() {
 		if (knights.size() == 1) {
 			return true;
@@ -688,6 +798,10 @@ public class Board implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Checks for count of bishops. Used for determining a draw
+	 * @return	
+	 */
 	public boolean checkBishops() {
 		if (bishops.size() != 2) {
 			return false;
@@ -703,8 +817,10 @@ public class Board implements Serializable {
 		return false;
 	}
 	
-	
-
+	/**
+	 * Used for using printing the board onto the terminal
+	 * @return 		String version of the board
+	 */
 	@Override
 	public String toString() {
 		final String HEADER = "     a    b    c    d    e    f    g    h\n";
@@ -737,6 +853,10 @@ public class Board implements Serializable {
 		return out.toString();
 	}
 
+	/**
+	 * Getter for the move history
+	 * @return	The move history
+	 */
     public ArrayList<String> getMoveHistory() {
         return moveHistory;
     }

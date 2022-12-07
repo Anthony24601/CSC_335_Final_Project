@@ -1,3 +1,11 @@
+/**
+ * File: Pawm.java
+ * Author: Grace Driskill
+ * Course: CSC 335
+ * Purpose: Represents a single piece on a chess board.
+ * Constructor
+ * Pawn(int color, int rank, int file)
+ */
 package PiecePackage;
 import java.util.ArrayList;
 
@@ -17,10 +25,7 @@ public class Pawn extends Piece {
         super(color, rank, file, "pawn");
     }
 
-    public char getKind() {
-        return KIND;
-    }
-
+    @Override
     public String[] getValidMoves(Board board, GameModel gameModel) {
     	ArrayList<String> moves = new ArrayList<>();
         String move;
@@ -100,6 +105,7 @@ public class Pawn extends Piece {
         return ret;
     }
 
+    @Override
     public boolean canCheck(Board board) {
         if (this.color == Piece.WHITE) {
             if (board.isInBounds(rank+1, file-1) && board.get(rank+1, file-1).getColor() == Piece.BLACK && board.get(rank+1, file-1).getKind() == 'K') {
@@ -123,10 +129,15 @@ public class Pawn extends Piece {
     public int getColor() {
         return color;
     }
+    
+    @Override
+    public char getKind() {
+        return KIND;
+    }
 
     @Override
-    public boolean isBlank() {
-        return false;
+    public Pawn copy() {
+        return new Pawn(color, rank, file);
     }
 
     @Override
@@ -139,7 +150,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public Pawn copy() {
-        return new Pawn(color, rank, file);
+    public boolean isBlank() {
+        return false;
     }
 }

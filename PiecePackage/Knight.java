@@ -1,4 +1,12 @@
 package PiecePackage;
+/**
+File: ChessUI.java
+Author: Chris Macholtz
+Course: CSC 335
+Purpose: Contains all the logic and relevant information regarding the Knight piece
+		 
+*/
+
 import java.util.ArrayList;
 
 import Game.Board;
@@ -18,6 +26,10 @@ public class Knight extends Piece {
         super(color, rank, file, "knight");
     }
 
+    /**
+     * All the valid moves the piece can make
+     * @return  A String array of all the valid moves the piece can make
+     */
     public String[] getValidMoves(Board board, GameModel gameModel) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
@@ -126,6 +138,10 @@ public class Knight extends Piece {
         return ret;
     }
    
+    /**
+     * Determines if the piece has the opposing king in check
+     * @return  True if the opposing king is in check by this piece
+     */
     public boolean canCheck(Board board) {
         int opColor = this.color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         int r, f;
@@ -189,21 +205,36 @@ public class Knight extends Piece {
         return false;
     }
 
+    /**
+     * Getter for color
+     * @return  Piece's color
+     */
     @Override
     public int getColor() {
         return color;
     }
 
+    /**
+     * Returns that this piece is not a blank space
+     */
     @Override
     public boolean isBlank() {
         return false;
     }
 
+    /**
+     * Getter for kind (the type of piece)
+     * @return  Char of the piece ('N')
+     */
     @Override
     public char getKind() {
         return KIND;
     }
 
+    /**
+     * Copier for piece
+     * @return  A copy of the piece
+     */
     @Override
     public Knight copy() {
         return new Knight(color, rank, file);

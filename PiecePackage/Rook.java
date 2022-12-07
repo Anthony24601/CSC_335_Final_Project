@@ -1,3 +1,11 @@
+/**
+ * File: Pawm.java
+ * Author: Grace Driskill
+ * Course: CSC 335
+ * Purpose: Represents a single rook on a chess board.
+ * Constructor
+ * Rook color, int rank, int file)
+ */
 package PiecePackage;
 import java.util.ArrayList;
 
@@ -18,6 +26,7 @@ public class Rook extends Piece {
         super(color, rank, file, "rook");
     }
 
+    @Override
     public String[] getValidMoves(Board board, GameModel gameModel) {
         ArrayList<String> moves = new ArrayList<>();
         int opColor = color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
@@ -105,6 +114,7 @@ public class Rook extends Piece {
         return ret;
     }
    
+    @Override
     public boolean canCheck(Board board) {
         int opColor = this.color == Piece.WHITE ? Piece.BLACK : Piece.WHITE;
         int r, f;

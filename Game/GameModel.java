@@ -1,3 +1,13 @@
+/**
+ * File: GameModel.java
+ * Author: Grace Driskill
+ * Course: CSC 335
+ * Purpose: Model for chess game. Holds the current game's 
+ *  Board, and is responsible for moving pieces on the Board.
+ *  Allows you to check for checks, draws, valid moves... in
+ *  the game.
+ *  Is a singleton. Use getInstance() to access the GameModel 
+ */
 package Game;
 import java.util.ArrayList;
 import java.io.File;
@@ -6,7 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Scanner;
 
 import PiecePackage.Piece;
@@ -18,25 +27,23 @@ public class GameModel implements Serializable {
 
     private Board currentBoard;
     private boolean whitesTurn;
-
-    /*
-    private boolean whiteKingRookHasMoved = false;
-    private boolean whiteQueenRookHasMoved = false;
-    private boolean blackKingRookHasMoved = false;
-    private boolean blackQueenRookHasMoved = false;
-    private boolean whiteKingHasMoved = false;
-    private boolean blackKingHasMoved = false;
-    */
     private boolean hasCheckmate = false;
     private boolean isOver = false;
-    
     private int count;
 
+    /**
+     * Private constructor. Creates a new GameModel
+     */
     private GameModel(){
         whitesTurn = true;
         count = 0;
     }
 
+    /**
+     * Returns the current GameModel instance. Creates
+     * a new instance if one doesn't already exist
+     * @return this GameModel
+     */
     public static GameModel getInstance() {
         if (instance == null) {
             instance = new GameModel();
@@ -44,12 +51,401 @@ public class GameModel implements Serializable {
         return instance;
     }
     
+    /**
+     * Checks for all types of draws and sets the isOver
+     * field accordingly. The tree types of draws are 
+     * stalemate, combo and 50 move rule
+     */
     public void checkDraws() {
     	checkStalemate();
     	checkCombo();
     	check50MoveRule();
     }
+
+    /**
+     * @return the current Board being used
+     */
+    public Board getCurrentBoard() {
+        return currentBoard;
+    }
+
+    /**
+     * Sets the Board being used
+     * @param board Board to be current board
+     */
+    public void setCurrentBoard(Board board) {
+        this.currentBoard = board;
+    }
+
+    /**
+     * @return true if it is the white player's turn 
+     */
+    public boolean isWhitesTurn() {
+        return whitesTurn;
+    }
+
+    /**
+     * Changes the turn 
+     */
+    public void flipTurn() {
+        whitesTurn = !whitesTurn;
+    }
+
+    /**
+     * @return true if there is a checkmate in the
+     *  game
+     */
+    public boolean getHasCheckmate() {
+        return hasCheckmate;
+    }
+
+    /**
+     * Sets the hasCheckmate field to true
+     */
+    public void setHasCheckmate() {
+    	hasCheckmate = true;
+    }
     
+    /**
+     * Checks if the game is over from a draw or 
+     * checkmate
+     * @return true if the game is over
+     */
+    public boolean getIsOver() {
+        return isOver;
+    }
+    
+    /**
+     * Sets the isOver field to true
+     */
+    public void setIsOver() {
+    	isOver = true;
+    }
+
+    /**
+     * USing two location on Chess board, execute the inidcate move on 
+     * the current board in the GameModel
+     * @param fromLoc location the Piece starts on
+     * @param toLoc location the Piece ends on
+     * @return true if the move was valid, false otherwise
+     */
+    public boolean movePieceFromLocs(String fromLoc, String toLoc) {
+        Piece p = currentBoard.get(fromLoc);
+        ArrayList<String> moveMap = currentBoard.getMoves(p.getKind(), whitesTurn, this);
+        for (String entry : moveMap) {
+            if (fromLoc.equals(entry.split(":")[0])) {
+                String move = entry.split(":")[1];
+                String moveLoc = getLocFromMove(move);
+                if (moveLoc.equals(toLoc)) {
+                    return makeMove(entry.split(":")[1]);
+                }
+            }
+        }
+        return false;
+    }
+
+    
+    /**
+     * Makes the specified move on the current board
+     * @param move algebraic notation of a chess move
+     * @return  true if the move was valid, false otherwise
+     */
+    public boolean makeMove(String move) {
+        return makeMove(move, currentBoard);
+    }
+
+    /**
+     * Makes the specified move on the specified board
+     * @param move algebraic notation of a chess move
+     * @param b Board to move on
+     * @return true if the move was valid, false otherwise
+     */
+    public boolean makeMove(String move, Board b) {
+        // check for kingside castle move
+        if (move.equals("0-0")) { 
+            if (canCastleKingside(b)) {
+                castleKingside(b);
+                flipTurn();
+                count++;
+                return true;
+            }
+        } 
+        // check for queenside castle move
+        else if (move.equals("0-0-0")) {
+            if (canCastleQueenside(b)) {
+                castleQueenside(b);
+                flipTurn();
+                count++;
+                return true;
+            }
+        } 
+        // typical moves
+        else {
+            char kind = getKindFromMove(move);
+            // logic for keeping track of 50 move rule
+            if (move.contains("x") || kind == Piece.PAWN) {
+            	count = 0;
+            } else {
+            	count++;
+            }
+        
+            ArrayList<String> moveMap = b.getMoves(kind, whitesTurn, this);
+            for (String entry : moveMap) {
+                String loc = entry.split(":")[0];
+                String m = entry.split(":")[1];
+                if (m.equals(move)) {
+                    b.moveAndSave(loc, m);
+                    // "#" in chess notation indicates a checkmate
+                    if (move.charAt(move.length()-1) == '#') {
+                        hasCheckmate = true;
+                        isOver = true;
+                    } else {
+                        flipTurn();
+                    }      
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the piece that would be captured if the specified move
+     * was made
+     * @param loc Location to move from
+     * @param move move to make
+     * @param b Board to move on
+     * @return  the Piece captured
+     */
+    public Piece getPieceCaptured(String loc, String move, Board b) {
+        Board futureBoard = b.copy();
+        return futureBoard.move(loc, move);
+    }
+
+    /**
+     * Gets all the moves possible from the specified location
+     * @param loc String, location on board in algebraic notation
+     * @return ArrayList of moves
+     */
+    public ArrayList<String> getPossibleMoves(String loc) {
+        Piece p = currentBoard.get(loc);
+        return getPossibleMoves(p);
+    }
+
+    /**
+     * Gets all the moves possible of the specified Piece
+     * @param p Piece to move
+     * @return ArrayList of moves
+     */
+    public ArrayList<String> getPossibleMoves(Piece p) {
+        ArrayList<String> moveMap = new ArrayList<>();
+        String loc = p.getLoc();
+        String[] validMoves = p.getValidMoves(currentBoard, this);
+        for (String move : validMoves) {
+            moveMap.add(loc + ":" + move);
+        }
+        return moveMap;
+    }
+
+    /**
+     * Gets all the possible moves on the current board
+     * @return ArrayList of moves
+     */
+    public ArrayList<String> getAllPossibleMoves() {
+        return getAllPossibleMoves(currentBoard);
+    }
+
+    /**
+     * Gets all the possible moves on the specified board
+     * @param b Board to get moves on
+     * @return ArrayList of moves
+     */
+    public ArrayList<String> getAllPossibleMoves(Board b) {
+        ArrayList<String> moves = new ArrayList<>();
+        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
+        for (char kind : pieceKinds) {
+            moves.addAll(b.getMoves(kind, whitesTurn, this));
+        }
+        return moves;
+    }
+
+    /**
+     * Gets all the possibles moves for the opposite player 
+     * on the curernt board
+     * @return ArrayList of moves
+     */
+    public ArrayList<String> getAllPossibleOpMoves() {
+        return getAllPossibleOpMoves(currentBoard); 
+    }
+
+    /**
+     * Gets all the possible moves for the opposite player on 
+     * the specified board
+     * @param b Board to get moves on
+     * @return ArrayList of moves
+     */
+    public ArrayList<String> getAllPossibleOpMoves(Board b) {
+        flipTurn();
+        ArrayList<String> moves = getAllPossibleMoves(b);
+        flipTurn();
+        return moves;
+    }
+
+    /**
+     * Adds a check or checkmate to a move string
+     * @param loc location the move starts from
+     * @param move original move
+     * @param b Board to work with
+     * @return move string with the check flag
+     */
+    public String addCheck(String loc, String move, Board b) {
+        Board futureBoard = b.copy();
+        futureBoard.move(loc, move);
+
+        if (futureBoard.hasCheck(whitesTurn)) {
+            flipTurn();
+            if (futureBoard.hasCheckmate(whitesTurn, this)) {
+                flipTurn();
+                return move + "#";
+            } else {
+                flipTurn();
+                return move + "+";
+            }
+        }
+
+        return move;
+    }
+
+    /**
+     * Checks if a move would create a check
+     * @param loc location the move starts from
+     * @param move original move
+     * @param b Board to work with
+     * @return true if the move would put in a check
+     */
+    public boolean wouldPutInCheck(String loc, String move, Board b) {
+        Board futureBoard = b.copy();
+        futureBoard.move(loc, move);
+        return futureBoard.hasCheck(!whitesTurn);
+    }
+
+    /**
+     * Prints a string representation of the current board
+     */
+    public void printBoard() {
+        System.out.println(currentBoard.toString());
+    }
+
+    /**
+     * Check if a castle is possible on the current board
+     * @return true if there can be a kindside castle
+     */
+    public boolean canCastleKingside() {
+        return canCastleKingside(currentBoard);
+    }
+
+    /**
+     * Check if a castle is possible on the specified board
+     * @return true if there can be a kindside castle
+     */
+    public boolean canCastleKingside(Board b) {
+        boolean result;
+        if (whitesTurn) {
+            // If either piece has moved, abandon
+            if (b.getWhiteKingHasMoved() || b.getWhiteKingRookHasMoved() || b.hasCheck(!whitesTurn))
+                return false;
+
+            // Check if King would be in check moving across
+            String f1 = "Kf1";
+            String g1 = "Kg1";
+            result = !wouldPutInCheck("e1", f1, b) && !wouldPutInCheck("e1", g1, b)
+                && b.isEmpty(1, 6) && b.isEmpty(1, 7);
+        } else {
+            if (b.getBlackKingHasMoved() || b.getBlackKingRookHasMoved() || b.hasCheck(!whitesTurn))
+                return false;
+            
+            String f8 = "Kf8";
+            String g8 = "Kg8";
+            result = !wouldPutInCheck("e8", f8, b) && !wouldPutInCheck("e8", g8, b)
+                && b.isEmpty(8, 6) && b.isEmpty(8, 7);
+        }
+
+        return result;
+    }
+
+    /**
+     * Performs a kingside castle
+     * @param b Board to castle
+     * @return ture if the castle happen 
+     */
+    public boolean castleKingside(Board b) {
+        if (whitesTurn) {
+            b.moveAndSave("e1", "0-0");    
+            return true;
+        } else {
+            b.moveAndSave("e8", "0-0");     
+            return true;
+        }
+    }
+
+    /**
+     * Check if a castle is possible on the current board
+     * @return true if there can be a kindside castle
+     */
+    public boolean canCastleQueenside() {
+        return canCastleQueenside(currentBoard);
+    }
+
+    /**
+     * Check if a castle is possible on the specified board
+     * @return true if there can be a kindside castle
+     */
+    public boolean canCastleQueenside(Board b) {
+        boolean result;
+        if (whitesTurn) {
+            if (b.getWhiteKingHasMoved() || b.getWhiteQueenRookHasMoved() || b.hasCheck(!whitesTurn)) {
+                return false;
+            }
+
+            String d1 = "Kd1";
+            String c1 = "Kc1";
+            result = !wouldPutInCheck("e1", d1, b) && !wouldPutInCheck("e1", c1, b)
+                && b.isEmpty(1, 2) && b.isEmpty(1, 3) && b.isEmpty(1, 4);
+        } else {
+            if (b.getBlackKingHasMoved() || b.getBlackQueenRookHasMoved() || b.hasCheck(!whitesTurn)) {
+                return false;
+            }
+            String d8 = "Kd8";
+            String c8 = "Kc8";
+            result = !wouldPutInCheck("e8", d8, b) && !wouldPutInCheck("e8", c8, b)
+                && b.isEmpty(8, 2) && b.isEmpty(8, 3) && b.isEmpty(8, 4);
+        }
+
+        return result;
+    }
+
+    /**
+     * Performs a kingside castle
+     * @param b Board to castle
+     * @return ture if the castle happen 
+     */
+    public boolean castleQueenside(Board b) {
+        if (whitesTurn && canCastleQueenside()) {
+            b.moveAndSave("e1", "0-0-0");
+            return true;
+        } else if (canCastleQueenside()) {
+            b.moveAndSave("e8", "0-0-0");
+            return true;
+        }
+        return false;
+    }
+
+    // ----PRIVATE METHODS----
+
+    /**
+     * Checks for a stalemate and sets the isOver field to
+     * true if there is
+     */
     private void checkStalemate() {
     	int[] numColors = currentBoard.getNumColors();
     	//System.out.println("White: " + numColors[0]);
@@ -64,7 +460,12 @@ public class GameModel implements Serializable {
     		}
     	}
     }
-    
+
+    /**
+     * Checks if there is combination of piece that would
+     * never result in a check make and needs to be a draw.
+     * Sets the isOver field to true if so.
+     */
     private void checkCombo() {
     	int[] numColors = currentBoard.getNumColors();
     	if (numColors[0] == 1 && numColors[1] == 1) { //Only two kings left
@@ -84,248 +485,35 @@ public class GameModel implements Serializable {
     	}
     }
     
+    /**
+     * Check if there is a draw from the 50 move rule and
+     * sets the isOver field accordingly
+     */
     private void check50MoveRule() {
     	if (count >= 50) {
     		isOver = true;
     	}
     }
 
-    public Board getCurrentBoard() {
-        return currentBoard;
-    }
+    // ----Move Parser stuff----
 
-    public void setCurrentBoard(Board board) {
-        this.currentBoard = board;
-    }
-
-    public boolean isWhitesTurn() {
-        return whitesTurn;
-    }
-
-    public void flipTurn() {
-        whitesTurn = !whitesTurn;
-    }
-
-    public boolean getHasCheckmate() {
-        return hasCheckmate;
-    }
-    
-    public boolean getIsOver() {
-        return isOver;
-    }
-    
-    public void setIsOver() {
-    	isOver = true;
-    }
-    
-    public void setHasCheckmate() {
-    	hasCheckmate = true;
-    }
-    
-    public boolean makeMove(String move) {
-        return makeMove(move, currentBoard);
-    }
-
-    public boolean makeMove(String move, Board b) {
-        if (move.equals("0-0")) {
-            if (canCastleKingside(b)) {
-                castleKingside(b);
-                flipTurn();
-                count++;
-                return true;
-            }
-        } else if (move.equals("0-0-0")) {
-            if (canCastleQueenside(b)) {
-                castleQueenside(b);
-                flipTurn();
-                count++;
-                return true;
-            }
-        } else {
-            char kind = getKindFromMove(move);
-            if (move.contains("x") || kind == Piece.PAWN) {
-            	count = 0;
-            } else {
-            	count++;
-            }
-            ArrayList<String> moveMap = b.getMoves(kind, whitesTurn, this);
-            for (String entry : moveMap) {
-                String loc = entry.split(":")[0];
-                String m = entry.split(":")[1];
-                if (m.equals(move)) {
-                    //addHasMoved(loc, m);
-                    b.moveAndSave(loc, m);
-                    if (move.charAt(move.length()-1) == '#') {
-                        hasCheckmate = true;
-                        isOver = true;
-                    } else {
-                        flipTurn();
-                    }      
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public Piece getPieceCaptured(String loc, String move, Board b) {
-        Board futureBoard = b.copy();
-        return futureBoard.move(loc, move);
-    }
-
-    public ArrayList<String> getPossibleMoves(String loc) {
-        Piece p = currentBoard.get(loc);
-        return getPossibleMoves(p);
-    }
-
-    public ArrayList<String> getPossibleMoves(Piece p) {
-        ArrayList<String> moveMap = new ArrayList<>();
-        String loc = p.getLoc();
-        String[] validMoves = p.getValidMoves(currentBoard, this);
-        for (String move : validMoves) {
-            moveMap.add(loc + ":" + move);
-        }
-
-        return moveMap;
-    }
-
-    public ArrayList<String> getAllPossibleMoves() {
-        return getAllPossibleMoves(currentBoard);
-    }
-
-    public ArrayList<String> getAllPossibleMoves(Board b) {
-        ArrayList<String> moves = new ArrayList<>();
-        char[] pieceKinds = {Piece.PAWN, Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.QUEEN, Piece.KING};
-        for (char kind : pieceKinds) {
-            moves.addAll(b.getMoves(kind, whitesTurn, this));
-        }
-        return moves;
-    }
-
-    public ArrayList<String> getAllPossibleOpMoves() {
-        return getAllPossibleOpMoves(currentBoard); 
-    }
-
-    public ArrayList<String> getAllPossibleOpMoves(Board b) {
-        flipTurn();
-        ArrayList<String> moves = getAllPossibleMoves(b);
-        flipTurn();
-        return moves;
-    }
-
-    public String addCheck(String loc, String move, Board b) {
-        Board futureBoard = b.copy();
-        futureBoard.move(loc, move);
-
-        if (futureBoard.hasCheck(whitesTurn)) {
-            flipTurn();
-            if (futureBoard.hasCheckmate(whitesTurn, this)) {
-                flipTurn();
-                return move + "#";
-            } else {
-                flipTurn();
-                return move + "+";
-            }
-        }
-
-        return move;
-    }
-
-    public boolean wouldPutInCheck(String loc, String move, Board b) {
-        Board futureBoard = b.copy();
-        futureBoard.move(loc, move);
-        return futureBoard.hasCheck(!whitesTurn);
-    }
-
-    public void printBoard() {
-        System.out.println(currentBoard.toString());
-    }
-
-    public boolean canCastleKingside() {
-        return canCastleKingside(currentBoard);
-    }
-
-    public boolean canCastleKingside(Board b) {
-        boolean result;
-        if (whitesTurn) {
-            // If either piece has moved, abandon
-            if (b.getWhiteKingHasMoved() || b.getWhiteKingRookHasMoved())
-                return false;
-
-            // Check if King would be in check moving across
-            String f1 = "Kf1";
-            String g1 = "Kg1";
-            result = !wouldPutInCheck("e1", f1, b) && !wouldPutInCheck("e1", g1, b)
-                && b.isEmpty(1, 6) && b.isEmpty(1, 7);
-        } else {
-            if (b.getBlackKingHasMoved() || b.getBlackKingRookHasMoved())
-                return false;
-            
-            String f8 = "Kf8";
-            String g8 = "Kg8";
-            result = !wouldPutInCheck("e8", f8, b) && !wouldPutInCheck("e8", g8, b)
-                && b.isEmpty(8, 6) && b.isEmpty(8, 7);
-        }
-
-        return result;
-    }
-
-    public boolean castleKingside(Board b) {
-        if (whitesTurn) {
-            b.moveAndSave("e1", "0-0");    
-            return true;
-        } else {
-            b.moveAndSave("e8", "0-0");     
-            return true;
-        }
-    }
-
-    public boolean canCastleQueenside() {
-        return canCastleQueenside(currentBoard);
-    }
-
-    public boolean canCastleQueenside(Board b) {
-        boolean result;
-        if (whitesTurn) {
-            if (b.getWhiteKingHasMoved() || b.getWhiteQueenRookHasMoved()) {
-                return false;
-            }
-
-            String d1 = "Kd1";
-            String c1 = "Kc1";
-            result = !wouldPutInCheck("e1", d1, b) && !wouldPutInCheck("e1", c1, b)
-                && b.isEmpty(1, 2) && b.isEmpty(1, 3) && b.isEmpty(1, 4);
-        } else {
-            if (b.getBlackKingHasMoved() || b.getBlackQueenRookHasMoved()) {
-                return false;
-            }
-            String d8 = "Kd8";
-            String c8 = "Kc8";
-            result = !wouldPutInCheck("e8", d8, b) && !wouldPutInCheck("e8", c8, b)
-                && b.isEmpty(8, 2) && b.isEmpty(8, 3) && b.isEmpty(8, 4);
-        }
-
-        return result;
-    }
-
-    public boolean castleQueenside(Board b) {
-        if (whitesTurn && canCastleQueenside()) {
-            b.moveAndSave("e1", "0-0-0");
-            return true;
-        } else if (canCastleQueenside()) {
-            b.moveAndSave("e8", "0-0-0");
-            return true;
-        }
-        return false;
-    }
-
-    // Move Parser stuff ///////////////////////////////////////////////////////////
-
+    /**
+     * Gets what kind of piece is used in the specified move
+     * @param move Move string to check
+     * @return char of piece type ex Q for queen, K for king
+     */
     private char getKindFromMove(String move) {
         return move.charAt(0) >= 'a' && move.charAt(0) <= 'h' ? 0 : move.charAt(0);
     }
 
+    /**
+     * Constructs an algebraic notion move string from the give info
+     * @param p Piece being moved
+     * @param toRank rank moving to
+     * @param toFile file moving to
+     * @param addCapture if this move is a capture
+     * @return the move String
+     */
     public String constructMove(Piece p, int toRank, int toFile, boolean addCapture) {
         StringBuilder out = new StringBuilder();
         if (p.getKind() != 0) {
@@ -354,6 +542,12 @@ public class GameModel implements Serializable {
         return String.format("%c%d=%c", toFile + 'a' - 1, toRank, newType);
     }
     
+    /**
+     * Converts an algebraic notion move string to two locations
+     * (start and end). 
+     * @param move algebraic move string to convert
+     * @return String in format "<fromRank><fromFile <toRank><toFile>"
+     */
     public String convertAlgebraicToLocs(String move) {
         char kind = getKindFromMove(move);
         ArrayList<String> moveMap = currentBoard.getMoves(kind, whitesTurn, this);
@@ -378,6 +572,11 @@ public class GameModel implements Serializable {
         return fromLoc + " " + toLoc;
     }
 
+    /**
+     * Extracts the end location from an algebraic notion move string
+     * @param move algebraic notion string
+     * @return end location in format <toRank><toFile>
+     */
     public String getLocFromMove(String move) {
         if (move.equals("0-0")) {
             if (whitesTurn) {
@@ -399,6 +598,12 @@ public class GameModel implements Serializable {
         return move.substring(move.length()-2);
     }
 
+    /**
+     * Checks if a String represents a rank-file location on chess
+     * board. Rank can be a-h inclusive, file can be 1-8 inclusive
+     * @param loc String
+     * @return true if the string is a location
+     */
     public static boolean isValidLoc(String loc) {
         if (loc.length() != 2) {
             return false;
@@ -412,22 +617,7 @@ public class GameModel implements Serializable {
         return true;
     }
 
-    public boolean movePieceFromLocs(String fromLoc, String toLoc) {
-        Piece p = currentBoard.get(fromLoc);
-        ArrayList<String> moveMap = currentBoard.getMoves(p.getKind(), whitesTurn, this);
-        for (String entry : moveMap) {
-            if (fromLoc.equals(entry.split(":")[0])) {
-                String move = entry.split(":")[1];
-                String moveLoc = getLocFromMove(move);
-                if (moveLoc.equals(toLoc)) {
-                    return makeMove(entry.split(":")[1]);
-                }
-            }
-        }
-        return false;
-    }
-
-    // SAVE AND LOAD GAME
+    // -----SAVE AND LOAD GAME-----
     
     /**
      * Saves the current game state to a file that 

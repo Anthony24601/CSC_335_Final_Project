@@ -1,0 +1,13 @@
+e4
+e5
+Bc4
+Bc5
+Nf3
+Bxf2+
+Kxf2
+Nf6
+Nc3
+Nxe4+
+Nxe4
+f6
+turn:white
