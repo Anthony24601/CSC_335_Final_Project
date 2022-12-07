@@ -10,6 +10,7 @@ import ServerClient.LocalPlayer;
 import ServerClient.NetworkedPlayer;
 import ServerClient.Server;
 import UI.MainMenu;
+import Game.GameModel;
 
 public class Main {
 

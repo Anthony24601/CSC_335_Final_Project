@@ -50,9 +50,14 @@ public class GameModel implements Serializable {
         }
         return instance;
     }
-
+    
+    /**
+     * Resets the instance to null. Used when quitting to menu
+     * to clear the game state.
+     * @return null
+     */
     public static void resetInstance() {
-	instance = null;
+    	instance = null;
     }
     
     /**

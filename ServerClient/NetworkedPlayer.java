@@ -29,6 +29,9 @@ public class NetworkedPlayer extends Player {
 		client.openConnection();
 	}
 
+	/**
+	 * Closes the connection to the server
+	 */
 	public void close() {
 		client.closeConnection();
 	}
