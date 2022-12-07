@@ -1,3 +1,11 @@
+/**
+File: MainMenu.java
+Author: Miles Gendreau
+Course: CSC 335
+Purpose: Creates the MainMenu of the Game. Allows for several options to player(s).
+MainMenu objects are instantiated with the default constructor
+*/
+
 package UI;
 import java.io.File;
 import org.eclipse.swt.SWT;
@@ -12,8 +20,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-
-import ServerClient.Main;
+import Start.Main;
 
 public class MainMenu {
 	
@@ -31,11 +38,15 @@ public class MainMenu {
 		this.display = new Display();
 	}
 	
+	/**
+     * creates and runs the canvas for users to view
+     * @param N/A
+     * @return None
+     */
 	public void run() {
 		// layouts and layout data
         GridLayout comp_layout = new GridLayout();
         comp_layout.numColumns = 3;
-        //comp_layout.makeColumnsEqualWidth = true;
 		
 		GridData fill_cells = new GridData();
 		fill_cells.horizontalAlignment = GridData.FILL;
@@ -213,13 +224,11 @@ public class MainMenu {
         display.dispose();
 	}
 	
-	/*
-	public static void main(String[] args) {
-		MainMenu menu = new MainMenu();
-		menu.run();
-	}
-	*/
-	
+	/**
+     * Gets the File names of all saved games on computer
+     * @param N/A
+     * @return An array of strings
+     */
 	private String[] getGameFileNames() {
 		File game_file_dir = new File("games");
 		File[] list_of_files = game_file_dir.listFiles();

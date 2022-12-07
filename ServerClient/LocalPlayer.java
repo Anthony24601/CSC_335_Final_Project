@@ -1,6 +1,12 @@
-package ServerClient;
-import java.util.Scanner;
+/**
+ * File: LocalPlayer.java
+ * Author: Miles Gendreau
+ * Course: CSC 335, Fall 2022
+ * Description: LocalPlayer extends the Player class and represents a Player in a Local Game
+ * Local Player objects are created with a string representing the ai type
+ */
 
+package ServerClient;
 import Game.AI;
 import Game.Board;
 import Game.GameModel;
@@ -12,9 +18,13 @@ public class LocalPlayer extends Player {
 	
 	private GameModel model;
 
-	private AI ai;
+	AI ai;
 	final boolean HAS_AI;
 	
+	/**
+	 * LocalPlayer Constructor
+	 * @param ai_type is a string representing the ai type
+	 */
 	public LocalPlayer(String ai_type) {
 		super();
 		this.model = GameModel.getInstance();
@@ -27,10 +37,19 @@ public class LocalPlayer extends Player {
 		else { HAS_AI = false; }
 	}
 	
+	/**
+	 * Gets the model of the current game
+	 * @return null
+	 */
 	public GameModel getModel() {
 		return model;
 	}
 	
+	/**
+	 * Overrides the move method in Player class
+	 * @param select is a String representing a square a player selected
+	 * @return None
+	 */
 	@Override
 	public void move(String select) {
 		if (select.equals("Forfeit")) {
@@ -40,7 +59,12 @@ public class LocalPlayer extends Player {
 		} else {
 			int rank = select.charAt(1)-'0';
 			int file = select.charAt(0)-'a'+1;
-			
+			System.out.println("==============");
+			System.out.println(rank + " " + file);
+			for (String x: possible_moves) {
+				System.out.println(x);
+			}
+	
 			if (selected1 == null || possible_moves.size() == 0) {
 				if (board.get(rank, file).getColor() == COLORS[turn]) {
 					selected1 = select;
@@ -53,15 +77,14 @@ public class LocalPlayer extends Player {
 					boolean result = model.movePieceFromLocs(selected1, selected2);
 					board = model.getCurrentBoard();
 					if (result) {
-						Thread.yield();
-						ui.update();
+						ui.moveSound();
 						turn = (turn + 1) % 2;
 					}
 					if (HAS_AI && !model.getHasCheckmate()) {
 						model.makeMove(ai.decideOnMove());
-						board = model.getCurrentBoard();
-						ui.update();
+						ui.moveSound();
 						turn = (turn + 1) % 2;
+						board = model.getCurrentBoard();
 					}
 				}
 				selected1 = null;
@@ -73,32 +96,21 @@ public class LocalPlayer extends Player {
 	}
 	
 	/**
-	 * Prompts user whether they want to load an existing game. 
-	 * If yes, asks for a file to load from and then loads the
-	 * info into the GameModel
+	 * Overrides the updateBoard method in the Player class.
+	 * Updates the board in UI
+	 * @param board is a Board object
+	 * @return null
 	 */
-	private void loadGame() {
-		Scanner s = new Scanner(System.in);
-		System.out.println("Load game from a file? y/n");
-		String loadGame = s.nextLine();
-		if(loadGame.equals("y")){;
-			boolean success;
-			String fileName;
-			do{
-				System.out.println("Enter file name or s to stop: ");
-				fileName = s.nextLine();
-				success = model.loadGame(fileName);
-			}
-			while(!(success || fileName.equals("s")));
-		}
-		s.close();
-
-		if(!model.isWhitesTurn()){
-			turn = 1;
-		}
+	@Override
+	public void updateBoard(Board board) {
+		super.updateBoard(board);
 	}
-	
-	// new loadGame - called from main
+
+	/**
+	 * Loads a pre-created game in
+	 * @param game_file is a String representing the game file's name
+	 * @return true if loadGame worked, false if otherwise
+	 */
 	public boolean loadGame(String game_file) {
 		boolean success = model.loadGame(game_file);
 		
@@ -108,15 +120,28 @@ public class LocalPlayer extends Player {
 		return success;
 	}
 	
+	/**
+	 * Saves the game to a txt file
+	 * @param fileName is the name of the saved file
+	 * @return None
+	 */
 	@Override
 	public void saveGame(String fileName) {
 		model.saveGame(fileName);
 	}
 	
+	/**
+	 * gets the Type of Player
+	 * @return "Local"
+	 */
 	public String getType() {
 		return "Local";
 	}
 	
+	/**
+	 * Gets the color of the Player
+	 * @return Blank. Since its a local player, there is no specified color attached
+	 */
 	public int getColor() {
 		return Piece.BLANK;
 	}
