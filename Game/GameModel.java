@@ -50,6 +50,10 @@ public class GameModel implements Serializable {
         }
         return instance;
     }
+
+    public static void resetInstance() {
+	instance = null;
+    }
     
     /**
      * Checks for all types of draws and sets the isOver

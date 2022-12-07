@@ -59,11 +59,6 @@ public class LocalPlayer extends Player {
 		} else {
 			int rank = select.charAt(1)-'0';
 			int file = select.charAt(0)-'a'+1;
-			System.out.println("==============");
-			System.out.println(rank + " " + file);
-			for (String x: possible_moves) {
-				System.out.println(x);
-			}
 	
 			if (selected1 == null || possible_moves.size() == 0) {
 				if (board.get(rank, file).getColor() == COLORS[turn]) {

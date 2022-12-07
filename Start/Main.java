@@ -28,6 +28,8 @@ public class Main {
      */
 	public static void start() {
 		setConfig(null, null, 0);
+		GameModel.resetInstance();
+
 		MainMenu menu = new MainMenu();
 		menu.run();
 		
@@ -90,7 +92,11 @@ public class Main {
 		NetworkedPlayer player = new NetworkedPlayer();
 		player.open();
 		player.run();
-		if (player.finished) { start(); }
+		if (player.finished) { 
+			player.close();
+			server.closeServer();
+			start(); 
+		}
 	}
 	
 	/**
@@ -102,6 +108,9 @@ public class Main {
 		NetworkedPlayer player = new NetworkedPlayer();
 		player.open();
 		player.run();
-		if (player.finished) { start(); }
+		if (player.finished) { 
+			player.close();
+			start(); 
+		}
 	}
 }

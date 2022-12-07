@@ -28,6 +28,10 @@ public class NetworkedPlayer extends Player {
 	public void open() {
 		client.openConnection();
 	}
+
+	public void close() {
+		client.closeConnection();
+	}
 	
 	/**
 	 * Returns the GameModel of the game
