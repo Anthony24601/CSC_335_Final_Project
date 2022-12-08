@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class AI {
 	public static final String[] VALID_TYPES = new String[]{"random", "greedy", "minimax", "Noob", "Easy", "Hard"};
 	
-    private static GameModel gameModel = GameModel.getInstance();
+    private GameModel gameModel;
     private static Map<String, Integer> scoreVals;
     private static Map<String, Boolean> selfHasMoved;
     private static Map<String, Boolean> opHasMoved;
@@ -38,6 +38,7 @@ public class AI {
     public AI(boolean isWhite, String type) {
         this.isWhite = isWhite;
         this.AI_TYPE = type;
+        this.gameModel = GameModel.getInstance();
         initializeScoreVals();
         initializedHasMoved();
     }
@@ -81,7 +82,7 @@ public class AI {
      * Picks a random move from all available moves
      * @return  A random move string
      */
-    private static String pickRandomMove() {
+    private String pickRandomMove() {
         Random rand = new Random();
         ArrayList<String> allMoves = gameModel.getAllPossibleMoves();
         return allMoves.get(rand.nextInt(allMoves.size()));

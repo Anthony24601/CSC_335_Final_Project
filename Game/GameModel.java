@@ -52,6 +52,15 @@ public class GameModel implements Serializable {
     }
     
     /**
+     * Resets the instance to null. Used when quitting to menu
+     * to clear the game state.
+     * @return null
+     */
+    public static void resetInstance() {
+    	instance = null;
+    }
+    
+    /**
      * Checks for all types of draws and sets the isOver
      * field accordingly. The tree types of draws are 
      * stalemate, combo and 50 move rule
